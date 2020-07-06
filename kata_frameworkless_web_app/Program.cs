@@ -21,15 +21,23 @@ namespace kata_frameworkless_web_app
             Console.WriteLine($"Listening on port {_port}");
            // while (true)
            // {
-                var context = server.GetContext();  // Gets the request
-                Console.WriteLine($"{context.Request.HttpMethod} {context.Request.Url}");
+                var context = server.GetContext();  // provides access to request/response objects
+                var request = context.Request;
+                Console.WriteLine($"{request.HttpMethod} {request.Url}");
+
+                var response = context.Response;
                 var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
-                var buffer = System.Text.Encoding.UTF8.GetBytes($"Hello Nhan - the time on the server is {currentDatetime}");
-                context.Response.ContentLength64 = buffer.Length;
-                context.Response.OutputStream.Write(buffer, 0, buffer.Length);  // forces send of response
+                const string user = "Nhan";
+                var responseString = $"Hello {user} - the time on the server is {currentDatetime}";
+                var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                //encoding is the process of transforming a set of unicode chars into bytes
+                //byte[] contains encoded data
+                
+               response.ContentLength64 = buffer.Length; //this property must be set explicitly before writing to the returned Stream object
+               response.OutputStream.Write(buffer, 0, buffer.Length);  // forces send of response
                 //
            // }
-            context.Response.OutputStream.Close();
+            response.OutputStream.Close(); //sends the response
             server.Stop();  // never reached...
 
         }
