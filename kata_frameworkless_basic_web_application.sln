@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata_frameworkless_web_app", "kata_frameworkless_web_app\kata_frameworkless_web_app.csproj", "{77E28D26-68B8-414D-B679-745CB62F7367}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata_frameworkless_basic_web_application.tests", "kata_frameworkless_basic_web_application.tests\kata_frameworkless_basic_web_application.tests.csproj", "{8FC81E96-7485-4444-924D-87284719BCE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{77E28D26-68B8-414D-B679-745CB62F7367}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77E28D26-68B8-414D-B679-745CB62F7367}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77E28D26-68B8-414D-B679-745CB62F7367}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FC81E96-7485-4444-924D-87284719BCE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FC81E96-7485-4444-924D-87284719BCE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FC81E96-7485-4444-924D-87284719BCE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FC81E96-7485-4444-924D-87284719BCE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
