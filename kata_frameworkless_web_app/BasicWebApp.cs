@@ -41,8 +41,7 @@ namespace kata_frameworkless_web_app
                 response.OutputStream.Close();
            // } ; 
         }
-
-
+        
 
         public void Stop()
         {
