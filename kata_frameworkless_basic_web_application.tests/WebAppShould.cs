@@ -19,8 +19,8 @@ namespace kata_frameworkless_basic_web_application.tests
             new Thread(() => 
             {
                 Thread.CurrentThread.IsBackground = true;
-                var basicWebApp = new BasicWebApp();
-                basicWebApp.Run();
+                var basicWebApp = new BasicWebApp(8080);
+                basicWebApp.GetResponse();
             }).Start();
             
             var request =
