@@ -2,7 +2,6 @@ steps:
   - label: "Restore"
     command: "dotnet restore"
     agents:
-      dotnet: "true"
       queue: "katherine-lab"
     
   - wait
@@ -10,7 +9,6 @@ steps:
   - label: "Build"
     command: "dotnet build"
     agents:
-      dotnet: "true"
       queue: "katherine-lab"
     
   - wait
@@ -18,5 +16,4 @@ steps:
   - label: "Test"
     command: "dotnet test"
     agents:
-      dotnet: "true"
       queue: "katherine-lab"
