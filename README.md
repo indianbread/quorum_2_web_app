@@ -1,0 +1,1 @@
+[![build status](https://badge.buildkite.com/215ec3dec3e4f9032f29960909974004c6a6345ee9b97e3df2.svg?branch=master&theme=00aa65,ce2554,2b74df,8241aa,fff,fff)](https://buildkite.com/myob/nhan-frameworkless-web-app)
