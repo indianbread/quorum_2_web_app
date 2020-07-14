@@ -4,6 +4,7 @@ steps:
       - .buildkite/test.sh
     plugins:
       - docker-compose#v3.4.0:
+          run: app
           config:
             - docker-compose.yml
     agents:
