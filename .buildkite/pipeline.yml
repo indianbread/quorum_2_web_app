@@ -1,6 +1,10 @@
 steps:
   - label: "Test"
-    command: "ls"
+    command: .buildkite/test.sh
+    plugins:
+      - docker-compose#v3.4.0:
+          config:
+            - docker-compose.yml
     agents:
       queue: "katherine-lab"
     
