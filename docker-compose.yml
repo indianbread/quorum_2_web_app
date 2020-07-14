@@ -2,4 +2,4 @@ version: '2.1'
 services:
   build:
     image: mcr.microsoft.com/dotnet/core/sdk
-    command: dotnet test
+    command: ls
