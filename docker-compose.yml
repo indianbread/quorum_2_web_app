@@ -1,0 +1,4 @@
+services:
+  test:
+    image: mcr.microsoft.com/dotnet/core/sdk
+    command: ls
