@@ -1,4 +1,5 @@
+version: '2.1'
 services:
-  test:
+  build-bfs:
     image: mcr.microsoft.com/dotnet/core/sdk
     command: ls
