@@ -1,6 +1,9 @@
 version: '3.8'
 services:
-  build: .
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
 
     
     
