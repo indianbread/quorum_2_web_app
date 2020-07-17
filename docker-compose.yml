@@ -3,3 +3,5 @@ services:
   build:
     image: mcr.microsoft.com/dotnet/core/sdk
     command: ls
+    
+    
