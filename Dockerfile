@@ -2,9 +2,9 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /app
 
 # copy sln and csproj files into the image
-COPY ./*.sln ./
-COPY ./kata_frameworkless_web_app/*.csproj ./kata_frameworkless_web_app/
-COPY ./kata_frameworkless_basic_web_application.tests/*.csproj ./kata_frameworkless_basic_web_application.tests/
+COPY *.sln ./
+COPY kata_frameworkless_web_app/*.csproj ./kata_frameworkless_web_app/
+COPY kata_frameworkless_basic_web_application.tests/*.csproj ./kata_frameworkless_basic_web_application.tests/
 RUN dotnet restore
 
 # Copy everything else and build
@@ -20,7 +20,6 @@ FROM build AS test
 WORKDIR /app/kata_frameworkless_basic_web_application.tests
 RUN dotnet test
 
-#RUN dotnet test
 RUN dotnet publish -c Release -o out
 #RUN ls -al
 
