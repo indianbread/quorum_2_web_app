@@ -2,7 +2,6 @@ steps:
   - label: "Test"
     command: 
       - .buildkite/test.sh
-      - "dotnet restore"
     agents:
       queue: "katherine-lab"
     
