@@ -1,7 +1,7 @@
 steps:
-  - label: "Test"
+  - label: "Unit Tests"
     command: 
-      - .buildkite/test.sh
+      - .ops/bin/test.sh
     agents:
       queue: "katherine-lab"
     
