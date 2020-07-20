@@ -1,7 +1,7 @@
 steps:
   - label: "Unit Tests"
     command: 
-      - ./ops/bin/test.sh
+      - ./ops/scripts/test.sh
     agents:
       queue: "katherine-lab"
     
