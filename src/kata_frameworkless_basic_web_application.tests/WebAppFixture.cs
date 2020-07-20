@@ -19,7 +19,7 @@ namespace kata_frameworkless_basic_web_application.tests
 
         public void Dispose()
         {
-            _basicWebApp.Stop();
+          //  _basicWebApp.Stop();
         }
     }
 }

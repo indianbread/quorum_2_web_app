@@ -17,16 +17,18 @@ namespace kata_frameworkless_web_app
         
         public void Start()
         {
-            _server.Prefixes.Add($"http://localhost:{_port}/");
+            //TODO: microsoft docs recommend not to use these top level wildcards
+            _server.Prefixes.Add($"http://*:{_port}/");
+            _server.Prefixes.Add($"http://+:{_port}/");
             _server.Start();
             Console.WriteLine($"Listening on port {_port}");
         }
         
         public void GetResponse()
         {
-            // while (true)
-            // {
-            //     
+            while (true)
+            {
+                
                 var context = _server.GetContext(); // provides access to request/response objects
                 var request = context.Request;
                 Console.WriteLine($"{request.HttpMethod} {request.Url}");
@@ -39,7 +41,7 @@ namespace kata_frameworkless_web_app
                 //ContentLength64 property must be set explicitly before writing to the returned Stream object
                 response.OutputStream.Write(buffer, 0, buffer.Length); // forces send of response
                 response.OutputStream.Close();
-           // } ; 
+            } ; 
         }
         
 

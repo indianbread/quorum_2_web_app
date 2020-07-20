@@ -11,10 +11,6 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet build
 
-FROM build AS testrunner
-WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
-CMD ["dotnet", "test"]
-
 #run the unit tests
 FROM build AS test
 WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
@@ -28,11 +24,12 @@ RUN dotnet publish -c Release -o publish
 # Load Image for deploy image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
+
 
 # Build runtime image
 FROM base AS runtime
 WORKDIR /app
 COPY --from=publish /app/src/kata_frameworkless_web_app/publish ./
 RUN ls .
-ENTRYPOINT ["dotnet", "kata_frameworkless_web_app.dll"]
+ENTRYPOINT ["dotnet", "kata_frameworkless_web_app.dll", "http://*:8080"]
