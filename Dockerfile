@@ -32,4 +32,4 @@ FROM base AS runtime
 WORKDIR /app
 COPY --from=publish /app/src/kata_frameworkless_web_app/publish ./
 RUN ls .
-ENTRYPOINT ["dotnet", "kata_frameworkless_web_app.dll", "http://*:8080"]
+ENTRYPOINT ["dotnet", "kata_frameworkless_web_app.dll"]

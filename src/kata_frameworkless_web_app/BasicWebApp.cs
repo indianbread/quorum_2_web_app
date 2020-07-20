@@ -19,7 +19,6 @@ namespace kata_frameworkless_web_app
         {
             //TODO: microsoft docs recommend not to use these top level wildcards
             _server.Prefixes.Add($"http://*:{_port}/");
-            _server.Prefixes.Add($"http://+:{_port}/");
             _server.Start();
             Console.WriteLine($"Listening on port {_port}");
         }
