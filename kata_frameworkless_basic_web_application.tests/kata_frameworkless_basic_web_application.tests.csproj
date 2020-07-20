@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\kata_frameworkless_web_app\kata_frameworkless_web_app.csproj" />
+      <ProjectReference Include="..\src\kata_frameworkless_web_app\kata_frameworkless_web_app.csproj" />
     </ItemGroup>
 
 </Project>
