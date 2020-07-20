@@ -1,19 +1,7 @@
 steps:
-  - label: "Restore"
-    command: "dotnet restore"
+  - label: "Unit Tests"
+    command: 
+      - ./ops/scripts/test.sh
     agents:
       queue: "katherine-lab"
     
-  - wait
-    
-  - label: "Build"
-    command: "dotnet build"
-    agents:
-      queue: "katherine-lab"
-    
-  - wait
-    
-  - label: "Test"
-    command: "dotnet test"
-    agents:
-      queue: "katherine-lab"
