@@ -10,8 +10,15 @@ namespace kata_frameworkless_web_app
         public BasicWebApp()
         {
             _listener = new HttpListener();
-            _listener.Prefixes.Add($"http://*:{Port}/");
+            AddPrefixes();
         }
+
+        private void AddPrefixes()
+        {
+            _listener.Prefixes.Add($"http://*:{Port}/");
+            _listener.Prefixes.Add($"http://*:{Port}/names/");
+        }
+
         private const int Port = 8080;
         private readonly HttpListener _listener;
         public bool IsListening;
