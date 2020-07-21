@@ -29,11 +29,15 @@ namespace kata_frameworkless_web_app
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = context.Response;
+            await GenerateResponse(response);
+        }
+
+        private static async Task GenerateResponse(HttpListenerResponse response)
+        {
             var responseString = GetResponseString();
             var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
-            //ContentLength64 property must be set explicitly before writing to the returned Stream object
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length); // forces send of response
+            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
             response.OutputStream.Close();
             response.Close();
         }
