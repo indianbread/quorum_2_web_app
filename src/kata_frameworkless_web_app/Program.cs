@@ -9,9 +9,13 @@ namespace kata_frameworkless_web_app
     {
         static void Main(string[] args)
         {
-            var basicWebApp = new BasicWebApp(8080);
+            var basicWebApp = new BasicWebApp();
             basicWebApp.Start();
-            basicWebApp.GetResponse();
+            while (basicWebApp.IsListening)
+            {
+                basicWebApp.ProcessRequest();
+            }
+
             basicWebApp.Stop();
             
         }

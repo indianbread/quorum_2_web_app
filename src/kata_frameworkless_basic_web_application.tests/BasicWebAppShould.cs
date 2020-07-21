@@ -18,6 +18,27 @@ namespace kata_frameworkless_basic_web_application.tests
             _webAppFixture = webAppFixture;
         }
 
+        // [Fact]
+        // public void ReturnMessageWithNameAndTime()
+        // {
+        //     var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
+        //     var request =
+        //         (HttpWebRequest)WebRequest.Create("http://localhost:8080/");
+        //     
+        //     var response = (HttpWebResponse) request.GetResponse();
+        //     var dataStream = response.GetResponseStream();
+        //     var reader = new StreamReader(dataStream);
+        //     var responseString = reader.ReadToEnd();
+        //     
+        //     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        //     Assert.Contains($"Hello Nhan - the time on the server is {currentDatetime}", responseString);
+        //     
+        //     reader.Close();
+        //     dataStream.Close();
+        //     response.Dispose();
+        //
+        // }
+        
         [Fact]
         public void ReturnMessageWithNameAndTime()
         {
