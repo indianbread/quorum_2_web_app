@@ -36,6 +36,7 @@ namespace kata_frameworkless_basic_web_application.tests
             reader.Close();
             dataStream.Close();
             response.Dispose();
+
         }
     }
 }
