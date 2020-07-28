@@ -23,7 +23,7 @@ namespace kata_frameworkless_basic_web_application.tests
         }
 
         [Fact]
-        public async Task GET_Index_ReturnsMessageWithNameAndTime()
+        public void GET_Index_ReturnsMessageWithNameAndTime()
         {
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
             var response = _client.GetAsync("http://localhost:8080/").GetAwaiter().GetResult();
@@ -37,7 +37,7 @@ namespace kata_frameworkless_basic_web_application.tests
         }
 
         [Fact]
-        public async Task POST_Names_ReturnsStatus200_IfAddedSuccessfully()
+        public void POST_Name_ReturnsStatus200_IfAddedSuccessfully()
         {
             HttpContent content = new StringContent("Bob", Encoding.UTF8);
         
@@ -49,6 +49,22 @@ namespace kata_frameworkless_basic_web_application.tests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             response.Dispose();
+        }
+
+        [Fact]
+        public async void POST_Name_ReturnsStatus409_IfNameAlreadyExists()
+        {
+            HttpContent content = new StringContent("Bob", Encoding.UTF8);
+            var response1 = await _client.PostAsync("http://localhost:8080/add/names/", content);
+            response1.Dispose();
+            var response2 = await _client.PostAsync("http://localhost:8080/add/names/", content);
+            var response2Body = response2.Content.ReadAsStringAsync().Result;
+            
+            Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
+            Assert.Contains("User already exists", response2Body);
+
+            response2.Dispose();
+
         }
 
 

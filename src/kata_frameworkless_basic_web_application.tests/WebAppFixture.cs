@@ -13,7 +13,6 @@ namespace kata_frameworkless_basic_web_application.tests
             _basicWebApp = new BasicWebApp();
             _basicWebApp.Start();
             _basicWebApp.ProcessRequest();
-            
         }
 
         public void Dispose()

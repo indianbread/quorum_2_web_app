@@ -37,33 +37,64 @@ namespace kata_frameworkless_web_app
 
         public async void ProcessRequest()
         {
-            var context = await _listener.GetContextAsync(); // provides access to request/response objects
+            var context = await _listener.GetContextAsync();
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = context.Response;
+            ProcessResponse(request, response);
+            
+        }
+
+        private static void ProcessResponse(HttpListenerRequest request, HttpListenerResponse response)
+        {
             switch (request.HttpMethod)
             {
                 case "GET":
                     var responseString = GetIndexResponseString();
-                    GenerateResponse(response, responseString);
+                    GenerateResponseBody(response, responseString);
                     break;
                 case "POST":
-                    var body = request.InputStream;
-                    var reader = new StreamReader(body, Encoding.UTF8);
-                    var name = reader.ReadToEnd();
-                    _users.Add(name);
-                    response.StatusCode = 200;
+                    AddUser(request, response);
                     break;
                 default:
                     response.StatusCode = 404;
                     break;
             }
+
             response.Close();
         }
 
-        private async Task GenerateResponse(HttpListenerResponse response, string responseString)
+        private static void AddUser(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+            try
+            {
+                var name = GetNameFromRequestBody(request);
+                if (_users.Contains(name))
+                {
+                    response.StatusCode = 409;
+                    throw new ArgumentException("Error: User already exists");
+                }
+                _users.Add(name);
+                response.StatusCode = 200;
+            }
+            catch (Exception e)
+            {
+                GenerateResponseBody(response, e.Message);
+            }
+
+        }
+
+        private static string GetNameFromRequestBody(HttpListenerRequest request)
+        {
+            var body = request.InputStream;
+            var reader = new StreamReader(body, Encoding.UTF8);
+            var name = reader.ReadToEnd();
+            return name;
+        }
+
+        private static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
+        {
+            var buffer = Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
             response.OutputStream.Close();
