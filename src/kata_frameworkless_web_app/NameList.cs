@@ -8,26 +8,32 @@ using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app
 {
-    public class UserList
+    public class NameList
     {
-        public UserList()
+        public NameList()
         {
             Names = new List<string>() {"Nhan"};
         }
 
         public List<string> Names { get; }
 
-        public async Task AddUser(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task AddName(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var name = GetNameFromRequestBody(request);
-            if (Names.Contains(name))
+            try
             {
-                response.StatusCode = 409;
-                throw new ArgumentException("Error: User already exists");
+                var name = GetNameFromRequestBody(request);
+                if (Names.Contains(name))
+                {
+                    response.StatusCode = 409;
+                    throw new ArgumentException("Error: User already exists");
+                }
+                Names.Add(name);
+                response.StatusCode = 200;
             }
-
-            Names.Add(name);
-            response.StatusCode = 200;
+            catch (Exception e)
+            {
+                ResponseFormatter.GenerateResponseBody(response, e.Message);
+            }
         }
         
         private static string GetNameFromRequestBody(HttpListenerRequest request)

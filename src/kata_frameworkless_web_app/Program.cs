@@ -10,7 +10,7 @@ namespace kata_frameworkless_web_app
     {
         static void Main(string[] args)
         {
-            var userList = new UserList();
+            var userList = new NameList();
             var basicWebApp = new BasicWebApp(userList);
             basicWebApp.Start();
             basicWebApp.Stop();

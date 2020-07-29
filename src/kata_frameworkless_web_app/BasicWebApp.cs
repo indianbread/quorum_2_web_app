@@ -11,17 +11,18 @@ namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
     { 
-        public BasicWebApp(UserList userList)
+        public BasicWebApp(NameList nameList)
         {
-            _userList = userList;
+            _nameList = nameList;
             _listener = new HttpListener();
 
         }
         
-        private readonly UserList _userList;
-        private const int Port = 8080;
+        private readonly NameList _nameList;
+
         private readonly HttpListener _listener;
         private bool _isListening;
+        private const int Port = 8080;
 
         private void AddPrefixes()
         {
@@ -55,14 +56,14 @@ namespace kata_frameworkless_web_app
             switch (request.HttpMethod)
             {
                 case "GET":
-                    var responseString = ResponseFormatter.GetGreeting(_userList.Names);
-                    await GenerateResponseBody(response, responseString);
+                    var responseString = ResponseFormatter.GetGreeting(_nameList.Names);
+                    await ResponseFormatter.GenerateResponseBody(response, responseString);
                     break;
                 case "POST":
                     switch (request.Url.AbsolutePath)
                     {
                         case "/names/add/":
-                            await AddName(request, response);
+                            await _nameList.AddName(request, response);
                             break;
                         default:
                             response.StatusCode = 404;
@@ -76,23 +77,6 @@ namespace kata_frameworkless_web_app
             }
 
             response.Close();
-        }
-
-        private async Task AddName(HttpListenerRequest request, HttpListenerResponse response)
-        { 
-            var addUserTaskResult = _userList.AddUser(request, response);
-            if (!addUserTaskResult.IsCompletedSuccessfully)
-            {
-                GenerateResponseBody(response, addUserTaskResult.Exception.Message);
-            }
-        }
-        
-        private async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
-        {
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            response.OutputStream.Close();
         }
         
         public void Stop()

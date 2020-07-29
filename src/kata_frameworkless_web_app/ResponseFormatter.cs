@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app
 {
@@ -18,6 +21,14 @@ namespace kata_frameworkless_web_app
             usersString += " and " + names.Last();
 
             return "Hello " + usersString + " - the time on the server is " + currentDatetime;
+        }
+        
+        public static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
+        {
+            var buffer = Encoding.UTF8.GetBytes(responseString);
+            response.ContentLength64 = buffer.Length;
+            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+            response.OutputStream.Close();
         }
         
     }
