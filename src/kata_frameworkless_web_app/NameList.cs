@@ -25,14 +25,14 @@ namespace kata_frameworkless_web_app
                 if (Names.Contains(name))
                 {
                     response.StatusCode = 409;
-                    throw new ArgumentException("Error: User already exists");
+                    throw new ArgumentException("Error: Name already exists");
                 }
                 Names.Add(name);
                 response.StatusCode = 200;
             }
             catch (Exception e)
             {
-                ResponseFormatter.GenerateResponseBody(response, e.Message);
+                await ResponseFormatter.GenerateResponseBody(response, e.Message);
             }
         }
         
