@@ -65,7 +65,7 @@ namespace kata_frameworkless_basic_web_application.tests
             var response2Body = response2.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
-            Assert.Contains("User already exists", response2Body);
+            Assert.Contains("Name already exists", response2Body);
 
             response2.Dispose();
 
