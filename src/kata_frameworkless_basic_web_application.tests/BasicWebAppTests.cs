@@ -45,7 +45,7 @@ namespace kata_frameworkless_basic_web_application.tests
         {
             HttpContent content = new StringContent("Jane", Encoding.UTF8);
             
-            var response = await _httpClientFixture.Client.PostAsync("http://localhost:8080/add/names/", content);
+            var response = await _httpClientFixture.Client.PostAsync("http://localhost:8080/names/add/", content);
             //var response = _httpClient.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
             
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -57,10 +57,10 @@ namespace kata_frameworkless_basic_web_application.tests
         public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists() 
         {
             HttpContent content = new StringContent("Bob", Encoding.UTF8);
-           var response1 = await _httpClientFixture.Client.PostAsync("http://localhost:8080/add/names/", content);
+           var response1 = await _httpClientFixture.Client.PostAsync("http://localhost:8080/names/add/", content);
             //var response1 = _httpClient.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
             response1.Dispose();
-           var response2 = await _httpClientFixture.Client.PostAsync("http://localhost:8080/add/names/", content);
+           var response2 = await _httpClientFixture.Client.PostAsync("http://localhost:8080/names/add/", content);
             //var response2 = _httpClient.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
             var response2Body = response2.Content.ReadAsStringAsync().Result;
             

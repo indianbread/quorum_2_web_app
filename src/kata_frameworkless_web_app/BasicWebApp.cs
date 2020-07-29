@@ -58,7 +58,16 @@ namespace kata_frameworkless_web_app
                     await GenerateResponseBody(response, responseString);
                     break;
                 case "POST":
-                    await AddUser(request, response);
+                    switch (request.Url.AbsolutePath)
+                    {
+                        case "/names/add/":
+                            await AddUser(request, response);
+                            break;
+                        default:
+                            response.StatusCode = 404;
+                            break;
+                    }
+                    response.Close();
                     break;
                 default:
                     response.StatusCode = 404;
