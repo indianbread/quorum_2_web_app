@@ -10,26 +10,27 @@ using System.Threading.Tasks;
 namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
-    {
-        public BasicWebApp()
+    { 
+        public BasicWebApp(UserList userList)
         {
+            _userList = userList;
             _listener = new HttpListener();
-            AddPrefixes();
+
         }
         
-        private static readonly List<string> _users = new List<string>() {"Nhan"};
+        private readonly UserList _userList;
+        private const int Port = 8080;
+        private readonly HttpListener _listener;
+        private bool _isListening;
 
         private void AddPrefixes()
         {
             _listener.Prefixes.Add($"http://*:{Port}/");
         }
-
-        private const int Port = 8080;
-        private readonly HttpListener _listener;
-        private bool _isListening;
         
         public void Start()
         {
+            AddPrefixes();
             _isListening = true;
             _listener.Start();
             Console.WriteLine($"Listening on port {Port}" );
@@ -49,19 +50,19 @@ namespace kata_frameworkless_web_app
             await ProcessResponse(request, response);
         }
 
-        private static async Task ProcessResponse(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task ProcessResponse(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.HttpMethod)
             {
                 case "GET":
-                    var responseString = GetIndexResponseString();
+                    var responseString = ResponseFormatter.GetGreeting(_userList.Names);
                     await GenerateResponseBody(response, responseString);
                     break;
                 case "POST":
                     switch (request.Url.AbsolutePath)
                     {
                         case "/names/add/":
-                            await AddUser(request, response);
+                            await AddName(request, response);
                             break;
                         default:
                             response.StatusCode = 404;
@@ -77,55 +78,21 @@ namespace kata_frameworkless_web_app
             response.Close();
         }
 
-        private static async Task AddUser(HttpListenerRequest request, HttpListenerResponse response)
-        {
-            try
+        private async Task AddName(HttpListenerRequest request, HttpListenerResponse response)
+        { 
+            var addUserTaskResult = _userList.AddUser(request, response);
+            if (!addUserTaskResult.IsCompletedSuccessfully)
             {
-                var name = GetNameFromRequestBody(request);
-                if (_users.Contains(name))
-                {
-                    response.StatusCode = 409;
-                    throw new ArgumentException("Error: User already exists");
-                }
-                _users.Add(name);
-                response.StatusCode = 200;
+                GenerateResponseBody(response, addUserTaskResult.Exception.Message);
             }
-            catch (Exception e)
-            {
-                await GenerateResponseBody(response, e.Message);
-            }
-
         }
-
-        private static string GetNameFromRequestBody(HttpListenerRequest request)
-        {
-            var body = request.InputStream;
-            var reader = new StreamReader(body, Encoding.UTF8);
-            var name = reader.ReadToEnd();
-            reader.Close();
-            return name;
-        }
-
-        private static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
+        
+        private async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
         {
             var buffer = Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
             response.OutputStream.Close();
-        }
-
-        private static string GetIndexResponseString()
-        {
-            var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
-            var usersString = _users.First();
-            if (_users.Count <= 1) return "Hello " + usersString + " - the time on the server is " + currentDatetime;;
-            for (var i = 1; i < _users.Count - 1; i++)
-            {
-                usersString += ", " + _users[i];
-            }
-            usersString += " and " + _users.Last();
-
-            return "Hello " + usersString + " - the time on the server is " + currentDatetime;
         }
         
         public void Stop()

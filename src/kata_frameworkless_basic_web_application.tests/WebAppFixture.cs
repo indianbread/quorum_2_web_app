@@ -11,7 +11,7 @@ namespace kata_frameworkless_basic_web_application.tests
 
         public WebAppFixture()
         {
-            _basicWebApp = new BasicWebApp();
+            _basicWebApp = new BasicWebApp(new UserList());
             _webAppThread = new Thread(_basicWebApp.Start);
             _webAppThread.Start();
         }
