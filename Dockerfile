@@ -22,7 +22,7 @@ RUN dotnet publish -c Release -o publish
 #RUN ls -al
 
 # Load Image for deploy image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS base
 WORKDIR /app
 EXPOSE 8080
 

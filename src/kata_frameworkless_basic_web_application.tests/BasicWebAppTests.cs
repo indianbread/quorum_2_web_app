@@ -70,7 +70,5 @@ namespace kata_frameworkless_basic_web_application.tests
             response2.Dispose();
 
         }
-
-
     }
 }
