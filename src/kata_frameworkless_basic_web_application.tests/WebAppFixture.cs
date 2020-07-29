@@ -7,19 +7,18 @@ namespace kata_frameworkless_basic_web_application.tests
     public class WebAppFixture : IDisposable
     {
         private readonly BasicWebApp _basicWebApp;
-        private readonly Thread _webAppThread;
-
+        
         public WebAppFixture()
         {
-            _basicWebApp = new BasicWebApp(8080);
+            _basicWebApp = new BasicWebApp();
             _basicWebApp.Start();
-            _webAppThread = new Thread(_basicWebApp.GetResponse) {IsBackground = true};
-            _webAppThread.Start();
+            _basicWebApp.ProcessRequest();
+            
         }
 
         public void Dispose()
         {
-          //  _basicWebApp.Stop();
+            _basicWebApp.Stop();
         }
     }
 }

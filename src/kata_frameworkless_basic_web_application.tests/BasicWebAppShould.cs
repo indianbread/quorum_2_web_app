@@ -12,35 +12,26 @@ namespace kata_frameworkless_basic_web_application.tests
     public class BasicWebAppShould : IClassFixture<WebAppFixture>
     {
         private WebAppFixture _webAppFixture;
+        private readonly HttpClient _client;
 
         public BasicWebAppShould(WebAppFixture webAppFixture)
         {
             _webAppFixture = webAppFixture;
+            _client = new HttpClient();
         }
 
         [Fact]
-        public void ReturnMessageWithNameAndTime()
+        public async void ReturnMessageWithNameAndTime()
         {
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
-            var request =
-                (HttpWebRequest)WebRequest.Create("http://localhost:8080/");
-            
-            var response = (HttpWebResponse) request.GetResponse();
-            var dataStream = response.GetResponseStream();
-            var reader = new StreamReader(dataStream);
-            var responseString = reader.ReadToEnd();
+            var response = await _client.GetAsync("http://localhost:8080/");
+            var responseBody = await response.Content.ReadAsStringAsync();
             
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains($"Hello Nhan - the time on the server is {currentDatetime}", responseString);
-            
-            reader.Close();
-            dataStream.Close();
+            Assert.Contains($"Hello Nhan - the time on the server is {currentDatetime}", responseBody);
+ 
             response.Dispose();
 
         }
     }
 }
-
-//before test: start server
-// after test: close server
-//check if need to dispose server manually
