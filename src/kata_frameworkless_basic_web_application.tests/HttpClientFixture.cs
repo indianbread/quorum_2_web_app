@@ -16,7 +16,7 @@ namespace kata_frameworkless_basic_web_application.tests
 
         public void Dispose()
         {
-           // Client.Dispose();
+            Client.Dispose();
         }
     }
 }

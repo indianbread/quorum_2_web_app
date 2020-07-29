@@ -12,11 +12,6 @@ namespace kata_frameworkless_web_app
         {
             var basicWebApp = new BasicWebApp();
             basicWebApp.Start();
-            while (basicWebApp.IsListening)
-            {
-                basicWebApp.ProcessRequest();
-            }
-
             basicWebApp.Stop();
             
         }

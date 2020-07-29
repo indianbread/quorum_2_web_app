@@ -26,35 +26,39 @@ namespace kata_frameworkless_web_app
 
         private const int Port = 8080;
         private readonly HttpListener _listener;
-        public bool IsListening;
+        private bool _isListening;
         
         public void Start()
         {
-            IsListening = true;
+            _isListening = true;
             _listener.Start();
             Console.WriteLine($"Listening on port {Port}" );
+            while (_isListening)
+            { 
+                _listener.BeginGetContext(ProcessRequest, null);
+            }
         }
 
-        public async void ProcessRequest()
+        private async void ProcessRequest(IAsyncResult asyncResult)
         {
-            var context = await _listener.GetContextAsync();
+            var context = _listener.EndGetContext(asyncResult);
+            _listener.BeginGetContext(ProcessRequest, null);
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = context.Response;
-            ProcessResponse(request, response);
-            
+            await ProcessResponse(request, response);
         }
 
-        private static void ProcessResponse(HttpListenerRequest request, HttpListenerResponse response)
+        private static async Task ProcessResponse(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.HttpMethod)
             {
                 case "GET":
                     var responseString = GetIndexResponseString();
-                    GenerateResponseBody(response, responseString);
+                    await GenerateResponseBody(response, responseString);
                     break;
                 case "POST":
-                    AddUser(request, response);
+                    await AddUser(request, response);
                     break;
                 default:
                     response.StatusCode = 404;
@@ -64,7 +68,7 @@ namespace kata_frameworkless_web_app
             response.Close();
         }
 
-        private static void AddUser(HttpListenerRequest request, HttpListenerResponse response)
+        private static async Task AddUser(HttpListenerRequest request, HttpListenerResponse response)
         {
             try
             {
@@ -79,7 +83,7 @@ namespace kata_frameworkless_web_app
             }
             catch (Exception e)
             {
-                GenerateResponseBody(response, e.Message);
+                await GenerateResponseBody(response, e.Message);
             }
 
         }
@@ -117,7 +121,7 @@ namespace kata_frameworkless_web_app
         
         public void Stop()
         {
-            IsListening = false;
+            _isListening = false;
             _listener.Stop();
         }
 
