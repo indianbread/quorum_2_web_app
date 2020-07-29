@@ -11,22 +11,23 @@ using Xunit;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
-    public class BasicWebAppTests : IClassFixture<WebAppFixture>
+    public class BasicWebAppTests : IClassFixture<WebAppFixture>, IClassFixture<HttpClientFixture>
     {
         private WebAppFixture _webAppFixture;
-        private readonly HttpClient _client;
-
-        public BasicWebAppTests(WebAppFixture webAppFixture)
+        private readonly HttpClientFixture _httpClientFixture;
+        
+        public BasicWebAppTests(WebAppFixture webAppFixture, HttpClientFixture httpClientFixture)
         {
             _webAppFixture = webAppFixture;
-            _client = new HttpClient();
+            _httpClientFixture = httpClientFixture;
         }
 
         [Fact]
-        public void GET_Index_ReturnsMessageWithNameAndTime()
+        public async Task GET_Index_ReturnsMessageWithNameAndTime()
         {
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
-            var response = _client.GetAsync("http://localhost:8080/").GetAwaiter().GetResult();
+            var response = _httpClientFixture.Client.GetAsync("http://localhost:8080/").GetAwaiter().GetResult();
+            //var response = _httpClientFixture.GetAsync("http://localhost:8080/").GetAwaiter().GetResult();
             var responseBody = response.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -37,27 +38,27 @@ namespace kata_frameworkless_basic_web_application.tests
         }
 
         [Fact]
-        public void POST_Name_ReturnsStatus200_IfAddedSuccessfully()
+        public async Task POST_Name_ReturnsStatus200_IfAddedSuccessfully()
         {
             HttpContent content = new StringContent("Bob", Encoding.UTF8);
-        
-            var response = _client.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
-            //get awaiter - track the request
-            // get result = wait until i get a result
-            //guarantees a response, and is blocking because we want it to block until a response as been received before we assert
-
+            
+            var response = _httpClientFixture.Client.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
+            //var response = _httpClientFixture.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
+            
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             response.Dispose();
         }
 
         [Fact]
-        public async void POST_Name_ReturnsStatus409_IfNameAlreadyExists()
+        public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists()
         {
             HttpContent content = new StringContent("Bob", Encoding.UTF8);
-            var response1 = await _client.PostAsync("http://localhost:8080/add/names/", content);
+            var response1 = _httpClientFixture.Client.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
+            //var response1 = _httpClientFixture.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
             response1.Dispose();
-            var response2 = await _client.PostAsync("http://localhost:8080/add/names/", content);
+            var response2 = _httpClientFixture.Client.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
+            //var response2 = _httpClientFixture.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
             var response2Body = response2.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);

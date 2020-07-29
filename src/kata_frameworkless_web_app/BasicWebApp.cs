@@ -89,6 +89,7 @@ namespace kata_frameworkless_web_app
             var body = request.InputStream;
             var reader = new StreamReader(body, Encoding.UTF8);
             var name = reader.ReadToEnd();
+            reader.Close();
             return name;
         }
 
