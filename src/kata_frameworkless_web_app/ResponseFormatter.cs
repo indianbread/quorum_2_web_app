@@ -11,17 +11,9 @@ namespace kata_frameworkless_web_app
     {
         public static string GetGreeting(List<string> names)
         {
-            //TODO: refactor this to have only one return and use a string formatter
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
-            var usersString = names.First();
-            if (names.Count <= 1) return "Hello " + usersString + " - the time on the server is " + currentDatetime;;
-            for (var i = 1; i < names.Count - 1; i++)
-            {
-                usersString += ", " + names[i];
-            }
-            usersString += " and " + names.Last();
-
-            return "Hello " + usersString + " - the time on the server is " + currentDatetime;
+            var namesString = string.Join(", ", names.Take(names.Count - 1)) + (names.Count <= 1 ? "" : " and ") + names.LastOrDefault();
+            return "Hello " + namesString + " - the time on the server is " + currentDatetime;
         }
         
         public static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)

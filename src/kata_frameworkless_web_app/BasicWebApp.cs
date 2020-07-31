@@ -55,21 +55,11 @@ namespace kata_frameworkless_web_app
         {
             switch (request.HttpMethod)
             {
-                case "GET": //TODO: make a method called handle get
-                    var responseString = ResponseFormatter.GetGreeting(_nameList.Names);
-                    await ResponseFormatter.GenerateResponseBody(response, responseString);
+                case "GET":
+                    await HandleGetRequest(response);
                     break;
-                case "POST": //TODO: make a method called handle post response
-                    switch (request.Url.AbsolutePath)
-                    {
-                        case "/names/add/":
-                            await _nameList.AddName(request, response);
-                            break;
-                        default:
-                            response.StatusCode = 404;
-                            break;
-                    }
-                    response.Close();
+                case "POST":
+                    await HandlePostRequest(request, response);
                     break;
                 default:
                     response.StatusCode = 404;
@@ -78,7 +68,28 @@ namespace kata_frameworkless_web_app
 
             response.Close();
         }
-        
+
+        private async Task HandlePostRequest(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            switch (request.Url.AbsolutePath)
+            {
+                case "/names/add/":
+                    await _nameList.AddName(request, response);
+                    break;
+                default:
+                    response.StatusCode = 404;
+                    break;
+            }
+
+            response.Close();
+        }
+
+        private async Task HandleGetRequest(HttpListenerResponse response)
+        {
+            var responseString = ResponseFormatter.GetGreeting(_nameList.Names);
+            await ResponseFormatter.GenerateResponseBody(response, responseString);
+        }
+
         public void Stop()
         {
             _isListening = false;
