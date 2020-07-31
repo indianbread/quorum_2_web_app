@@ -11,26 +11,23 @@ using Xunit;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
-    public class BasicWebAppTests : IClassFixture<WebAppFixture>, IClassFixture<HttpClientFixture>
+    [Collection("HttpListener collection")]
+    public class GetRequestTests
     {
-        private WebAppFixture _webAppFixture;
-
-        //private HttpClient _httpClient;
-        private readonly HttpClientFixture _httpClientFixture;
-        
-        public BasicWebAppTests(WebAppFixture webAppFixture, HttpClientFixture httpClientFixture)
+        public GetRequestTests(HttpListenerFixture httpListenerFixture)
         {
-            _webAppFixture = webAppFixture;
-           _httpClientFixture = httpClientFixture;
-           //_httpClient = new HttpClient();
+            _httpListenerFixture = httpListenerFixture;
+            _httpClient = new HttpClient();
         }
+        
+        private HttpListenerFixture _httpListenerFixture;
+        private readonly HttpClient _httpClient;
 
         [Fact]
         public async Task GET_Index_ReturnsMessageWithNameAndTime()
         {
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
-            var response = await _httpClientFixture.Client.GetAsync("http://localhost:8080/");
-            //var response = _httpClient.GetAsync("http://localhost:8080/").GetAwaiter().GetResult();
+            var response = await _httpClient.GetAsync("http://localhost:8080/");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -45,8 +42,7 @@ namespace kata_frameworkless_basic_web_application.tests
         {
             HttpContent content = new StringContent("Jane", Encoding.UTF8);
             
-            var response = await _httpClientFixture.Client.PostAsync("http://localhost:8080/names/add/", content);
-            //var response = _httpClient.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
+            var response = await _httpClient.PostAsync("http://localhost:8080/names/add/", content);
             
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -55,13 +51,11 @@ namespace kata_frameworkless_basic_web_application.tests
 
         [Fact]
         public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists() 
-        {
+        { 
             HttpContent content = new StringContent("Bob", Encoding.UTF8);
-           var response1 = await _httpClientFixture.Client.PostAsync("http://localhost:8080/names/add/", content);
-            //var response1 = _httpClient.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
+            var response1 = await _httpClient.PostAsync("http://localhost:8080/names/add/", content);
             response1.Dispose();
-           var response2 = await _httpClientFixture.Client.PostAsync("http://localhost:8080/names/add/", content);
-            //var response2 = _httpClient.PostAsync("http://localhost:8080/add/names/", content).GetAwaiter().GetResult();
+            var response2 = await _httpClient.PostAsync("http://localhost:8080/names/add/", content);
             var response2Body = response2.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,11 +25,11 @@ namespace kata_frameworkless_web_app
                 var name = GetNameFromRequestBody(request);
                 if (Names.Contains(name))
                 {
-                    response.StatusCode = 409;
+                    response.StatusCode = (int) HttpStatusCode.Conflict;
                     throw new ArgumentException("Error: Name already exists");
                 }
                 Names.Add(name);
-                response.StatusCode = 200;
+                response.StatusCode= (int)HttpStatusCode.OK;
             }
             catch (Exception e)
             {

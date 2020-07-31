@@ -11,6 +11,7 @@ namespace kata_frameworkless_web_app
     {
         public static string GetGreeting(List<string> names)
         {
+            //TODO: refactor this to have only one return and use a string formatter
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
             var usersString = names.First();
             if (names.Count <= 1) return "Hello " + usersString + " - the time on the server is " + currentDatetime;;

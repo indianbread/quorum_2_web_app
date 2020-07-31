@@ -4,12 +4,12 @@ using kata_frameworkless_web_app;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
-    public class WebAppFixture
+    public class HttpListenerFixture
     {
         private readonly BasicWebApp _basicWebApp;
         private Thread _webAppThread;
 
-        public WebAppFixture()
+        public HttpListenerFixture()
         {
             _basicWebApp = new BasicWebApp(new NameList());
             _webAppThread = new Thread(_basicWebApp.Start);

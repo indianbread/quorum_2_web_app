@@ -55,11 +55,11 @@ namespace kata_frameworkless_web_app
         {
             switch (request.HttpMethod)
             {
-                case "GET":
+                case "GET": //TODO: make a method called handle get
                     var responseString = ResponseFormatter.GetGreeting(_nameList.Names);
                     await ResponseFormatter.GenerateResponseBody(response, responseString);
                     break;
-                case "POST":
+                case "POST": //TODO: make a method called handle post response
                     switch (request.Url.AbsolutePath)
                     {
                         case "/names/add/":
