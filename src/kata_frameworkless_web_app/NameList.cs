@@ -14,7 +14,7 @@ namespace kata_frameworkless_web_app
     {
         public NameList()
         {
-            Names = new List<string>() {"Nhan"};
+            Names = new List<string>() {"Nhan"}; //TODO: replace this with a look up to secret store
         }
 
         public List<string> Names { get; }
