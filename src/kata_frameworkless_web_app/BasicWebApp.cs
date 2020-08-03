@@ -11,15 +11,15 @@ namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
     { 
-        public BasicWebApp(NameList nameList)
+        public BasicWebApp(NameController nameController, NameList nameList)
         {
+            _nameController = nameController;
             _nameList = nameList;
             _listener = new HttpListener();
-
         }
         
+        private readonly NameController _nameController;
         private readonly NameList _nameList;
-
         private readonly HttpListener _listener;
         private bool _isListening;
         private const int Port = 8080;
@@ -51,40 +51,25 @@ namespace kata_frameworkless_web_app
             await HandleRequest(request, response);
         }
 
-        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response) //todo: make a new request handler class and put this there
-        {
-            switch (request.HttpMethod)
-            {
-                case "GET":
-                    await HandleGetRequest(response);
-                    break;
-                case "POST":
-                    await HandlePostRequest(request, response);
-                    break;
-                default:
-                    response.StatusCode = 404;
-                    break;
-            }
-
-            response.Close();
-        }
-
-        private async Task HandlePostRequest(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.Url.AbsolutePath)
             {
-                case "/names/add/":
-                    await _nameList.AddName(request, response);
+                case "/":
+                    await HandleGetIndexRequest(response);
+                    break;
+                case "/names":
+                    await _nameController.HandleRequest(request, response);
                     break;
                 default:
-                    response.StatusCode = 404;
+                    response.StatusCode = (int) HttpStatusCode.Conflict;
                     break;
             }
-
             response.Close();
         }
 
-        private async Task HandleGetRequest(HttpListenerResponse response)
+        
+        private async Task HandleGetIndexRequest(HttpListenerResponse response)
         {
             var responseString = ResponseFormatter.GetGreeting(_nameList.Names);
             await ResponseFormatter.GenerateResponseBody(response, responseString);

@@ -23,7 +23,7 @@ namespace kata_frameworkless_basic_web_application.tests
         {
             HttpContent content = new StringContent("Jane", Encoding.UTF8);
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/names/add/", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             response.Dispose();
@@ -33,9 +33,9 @@ namespace kata_frameworkless_basic_web_application.tests
         public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists() 
         { 
             HttpContent content = new StringContent("Bob", Encoding.UTF8);
-            var response1 = await _httpClient.PostAsync("http://localhost:8080/names/add/", content);
+            var response1 = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
             response1.Dispose();
-            var response2 = await _httpClient.PostAsync("http://localhost:8080/names/add/", content);
+            var response2 = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
             var response2Body = response2.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);

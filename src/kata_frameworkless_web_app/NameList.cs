@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app
@@ -30,6 +31,7 @@ namespace kata_frameworkless_web_app
                 }
                 Names.Add(name);
                 response.StatusCode= (int)HttpStatusCode.OK;
+                await ResponseFormatter.GenerateResponseBody(response, JsonSerializer.Serialize(Names));
             }
             catch (Exception e)
             {

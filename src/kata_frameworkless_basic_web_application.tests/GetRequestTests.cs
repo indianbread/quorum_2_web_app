@@ -35,6 +35,29 @@ namespace kata_frameworkless_basic_web_application.tests
  
             response.Dispose();
         }
+
+        [Fact]
+        public async Task GET_Names_ReturnsListOfNames()
+        {
+            var response = await _httpClient.GetAsync("http://localhost:8080/names?");
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            
+            Assert.Contains("Name List", responseBody);
+            
+            response.Dispose();
+        }
+        
+        [Theory]
+        [InlineData("http://localhost:8080/names?action=put")]
+        public async Task GET_IncorrectPath_ReturnsStatus404(string url)
+        {
+            var response = await _httpClient.GetAsync("http://localhost:8080/names");
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            
+            Assert.Contains("Name List", responseBody);
+            
+            response.Dispose();
+        }
         
     }
 }
