@@ -11,15 +11,15 @@ namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
     { 
-        public BasicWebApp(NameController nameController, NameList nameList)
+        public BasicWebApp(SqLiteDbContext userDb)
         {
-            _nameController = nameController;
-            _nameList = nameList;
+            _userController = new UserController(userDb);
+            _userDb = userDb;
             _listener = new HttpListener();
         }
         
-        private readonly NameController _nameController;
-        private readonly NameList _nameList;
+        private readonly UserController _userController;
+        private readonly SqLiteDbContext _userDb;
         private readonly HttpListener _listener;
         private bool _isListening;
         private const int Port = 8080;
@@ -59,7 +59,7 @@ namespace kata_frameworkless_web_app
                     await HandleGetIndexRequest(response);
                     break;
                 case "/names":
-                    await _nameController.HandleRequest(request, response);
+                    await _userController.HandleRequest(request, response);
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.Conflict;
@@ -71,7 +71,7 @@ namespace kata_frameworkless_web_app
         
         private async Task HandleGetIndexRequest(HttpListenerResponse response)
         {
-            var responseString = ResponseFormatter.GetGreeting(_nameList.Names);
+            var responseString = ResponseFormatter.GetGreeting(_userDb.Users.ToList());
             await ResponseFormatter.GenerateResponseBody(response, responseString);
         }
 

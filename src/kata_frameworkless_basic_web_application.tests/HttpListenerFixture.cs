@@ -8,11 +8,11 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         private readonly BasicWebApp _basicWebApp;
         private Thread _webAppThread;
-        private readonly NameList _nameList = new NameList();
+        private readonly UserService _userService = new UserService();
 
         public HttpListenerFixture()
         {
-            _basicWebApp = new BasicWebApp(new NameController(_nameList), _nameList );
+            _basicWebApp = new BasicWebApp(new UserController(_userService), _userService );
             _webAppThread = new Thread(_basicWebApp.Start);
             _webAppThread.Start();
         }

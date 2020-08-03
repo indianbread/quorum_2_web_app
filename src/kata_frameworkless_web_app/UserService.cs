@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app
 {
-    public class NameList
+    public class UserService
     {
-        public NameList()
+        public UserService()
         {
             Names = new List<string>() {"Nhan"}; //TODO: replace this with a look up to secret store
         }
