@@ -48,10 +48,10 @@ namespace kata_frameworkless_web_app
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = context.Response;
-            await ProcessResponse(request, response);
+            await HandleRequest(request, response);
         }
 
-        private async Task ProcessResponse(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response) //todo: make a new request handler class and put this there
         {
             switch (request.HttpMethod)
             {
