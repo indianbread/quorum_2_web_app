@@ -8,7 +8,7 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         private readonly BasicWebApp _basicWebApp;
         private Thread _webAppThread;
-        private NameList _nameList = new NameList();
+        private readonly NameList _nameList = new NameList();
 
         public HttpListenerFixture()
         {

@@ -38,15 +38,13 @@ namespace kata_frameworkless_web_app
         {
             switch (request.Url.PathAndQuery)
             {
-                case "/":
-                    GetNameList(response);
+                case "/names?":
+                   await GetNameList(response);
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
-
-            await GetNameList(response);
         }
 
         private async Task GetNameList(HttpListenerResponse response)
