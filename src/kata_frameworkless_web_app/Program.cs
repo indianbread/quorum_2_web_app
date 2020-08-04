@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace kata_frameworkless_web_app
@@ -9,13 +10,10 @@ namespace kata_frameworkless_web_app
     {
         static void Main(string[] args)
         {
-            var basicWebApp = new BasicWebApp();
+            var nameList = new NameList();
+            var nameController = new NameController(nameList);
+            var basicWebApp = new BasicWebApp(nameController, nameList);
             basicWebApp.Start();
-            while (basicWebApp.IsListening)
-            {
-                basicWebApp.ProcessRequest();
-            }
-
             basicWebApp.Stop();
             
         }

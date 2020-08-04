@@ -1,65 +1,83 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
+
 
 namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
-    {
-        public BasicWebApp()
+    { 
+        public BasicWebApp(NameController nameController, NameList nameList)
         {
+            _nameController = nameController;
+            _nameList = nameList;
             _listener = new HttpListener();
-            AddPrefixes();
         }
+        
+        private readonly NameController _nameController;
+        private readonly NameList _nameList;
+        private readonly HttpListener _listener;
+        private bool _isListening;
+        private const int Port = 8080;
 
         private void AddPrefixes()
         {
             _listener.Prefixes.Add($"http://*:{Port}/");
-            _listener.Prefixes.Add($"http://*:{Port}/names/");
         }
-
-        private const int Port = 8080;
-        private readonly HttpListener _listener;
-        public bool IsListening;
         
         public void Start()
         {
-            IsListening = true;
+            AddPrefixes();
+            _isListening = true;
             _listener.Start();
             Console.WriteLine($"Listening on port {Port}" );
+            while (_isListening)
+            { 
+                _listener.BeginGetContext(ProcessRequest, null);
+            }
         }
 
-        public async void ProcessRequest()
+        private async void ProcessRequest(IAsyncResult asyncResult)
         {
-            var context = await _listener.GetContextAsync(); // provides access to request/response objects
+            var context = _listener.EndGetContext(asyncResult);
+            _listener.BeginGetContext(ProcessRequest, null);
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = context.Response;
-            await GenerateResponse(response);
+            await HandleRequest(request, response);
         }
 
-        private static async Task GenerateResponse(HttpListenerResponse response)
+        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var responseString = GetResponseString();
-            var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            response.OutputStream.Close();
+            switch (request.Url.AbsolutePath)
+            {
+                case "/":
+                    await HandleGetIndexRequest(response);
+                    break;
+                case "/names":
+                    await _nameController.HandleRequest(request, response);
+                    break;
+                default:
+                    response.StatusCode = (int) HttpStatusCode.Conflict;
+                    break;
+            }
             response.Close();
         }
 
-        private static string GetResponseString()
-        {
-            var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
-            const string user = "Nhan";
-            var responseString = $"<HTML><BODY>Hello {user} - the time on the server is {currentDatetime}</BODY></HTML>";
-            return responseString;
-        }
         
+        private async Task HandleGetIndexRequest(HttpListenerResponse response)
+        {
+            var responseString = ResponseFormatter.GetGreeting(_nameList.Names);
+            await ResponseFormatter.GenerateResponseBody(response, responseString);
+        }
+
         public void Stop()
         {
-            IsListening = false;
+            _isListening = false;
             _listener.Stop();
         }
 
