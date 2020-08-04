@@ -6,7 +6,6 @@ COPY *.sln .
 COPY src/kata_frameworkless_web_app/*.csproj ./src/kata_frameworkless_web_app/
 COPY src/kata_frameworkless_basic_web_application.tests/*.csproj ./src/kata_frameworkless_basic_web_application.tests/
 RUN dotnet restore
-RUN ls -al
 
 # Copy everything else and build
 COPY . ./
@@ -20,7 +19,7 @@ RUN dotnet test
 FROM build AS publish
 WORKDIR /app/src/kata_frameworkless_web_app
 RUN dotnet publish -c Release -o publish
-#RUN ls -al
+
 
 # Load Image for deploy image
 FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS base
@@ -32,6 +31,4 @@ EXPOSE 8080
 FROM base AS runtime
 WORKDIR /app
 COPY --from=publish /app/src/kata_frameworkless_web_app/publish ./ 
-#without --from it will only look at the local machine
-RUN ls .
 ENTRYPOINT ["dotnet", "kata_frameworkless_web_app.dll"]
