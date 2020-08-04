@@ -25,7 +25,7 @@ namespace kata_frameworkless_web_app
         }
 
 
-        public async Task AddName(string name, HttpListenerResponse response)
+        public async Task<string> AddName(string name, HttpListenerResponse response)
         {
             try
             {
@@ -36,11 +36,11 @@ namespace kata_frameworkless_web_app
                 }
                 response.StatusCode= (int)HttpStatusCode.OK;
                _userRepository.AddUser(name);
-                await ResponseFormatter.GenerateResponseBody(response, JsonSerializer.Serialize(_userRepository.GetUsers()));
+                return JsonSerializer.Serialize(_userRepository.GetUsers());
             }
             catch (Exception e)
             {
-                await ResponseFormatter.GenerateResponseBody(response, e.Message);
+                return e.Message;
             }
         }
 

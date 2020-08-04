@@ -39,7 +39,7 @@ namespace kata_frameworkless_web_app
         {
             var names = _userService.GetNameList();
             var responseString = ResponseFormatter.GetGreeting(names.ToList());
-            await ResponseFormatter.GenerateResponseBody(response, responseString);
+            await GenerateResponseBody(response, responseString);
         }
         
         private async Task HandleGetRequest(HttpListenerRequest request, HttpListenerResponse response)
@@ -59,7 +59,7 @@ namespace kata_frameworkless_web_app
         {
             var names = _userService.GetNameList();
             var nameListFormatted = ResponseFormatter.GenerateNamesListBody(names);
-            await ResponseFormatter.GenerateResponseBody(response, nameListFormatted);
+            await GenerateResponseBody(response, nameListFormatted);
         }
 
         private async Task HandlePostRequest(HttpListenerRequest request, HttpListenerResponse response)
@@ -67,15 +67,21 @@ namespace kata_frameworkless_web_app
             switch (request.QueryString["action"])
             {
                 case "add":
-                    var newUserName = GetNameFromRequestBody(request);
-                    await _userService.AddName(newUserName, response);
+                    await HandlePostNameRequest(request, response);
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
         }
-        
+
+        private async Task HandlePostNameRequest(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            var newUserName = GetNameFromRequestBody(request);
+            var result = await _userService.AddName(newUserName, response);
+            await GenerateResponseBody(response, result);
+        }
+
         private static string GetNameFromRequestBody(HttpListenerRequest request)
         {
             var body = request.InputStream;
@@ -83,6 +89,14 @@ namespace kata_frameworkless_web_app
             var name = reader.ReadToEnd();
             reader.Close();
             return name;
+        }
+        
+        public static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
+        {
+            var buffer = Encoding.UTF8.GetBytes(responseString);
+            response.ContentLength64 = buffer.Length;
+            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+            response.OutputStream.Close();
         }
     }
 }

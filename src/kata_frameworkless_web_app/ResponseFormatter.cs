@@ -25,13 +25,7 @@ namespace kata_frameworkless_web_app
             return nameList;
         }
         
-        public static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
-        {
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            response.OutputStream.Close();
-        }
+
         
     }
 }
