@@ -10,27 +10,48 @@ namespace kata_frameworkless_web_app
 {
     public class UserRepository
     {
-        public UserRepository(SqLiteDbContext database)
+        public UserRepository()
         {
-            _database = database;
+            _context = InitializeDatabase();
+            RemoveDataFromUsers();
         }
-        private readonly SqLiteDbContext _database;
-        
+        private readonly SqLiteDbContext _context;
 
+        private static SqLiteDbContext InitializeDatabase()
+        {
+            var context = new SqLiteDbContext();
+            try
+            {
+                context.Database.EnsureCreated();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Database error");
+
+            }
+            return context;
+        }
+
+        private void RemoveDataFromUsers()
+        {
+            _context.Users.RemoveRange(_context.Users);
+            _context.SaveChanges();
+        }
+        
         public IEnumerable<string> GetUsers()
         {
-            return _database.Users.Select(user => user.FirstName);
+            return _context.Users.Select(user => user.FirstName);
         }
 
         public User FindUserByName(string name)
         {
-            return _database.Users.FirstOrDefault(users => users.FirstName == name);
+            return _context.Users.FirstOrDefault(users => users.FirstName == name);
         }
 
         public void AddUser(string name)
         {
-            _database.Users.Add(new User() {FirstName = name});
-            _database.SaveChanges();
+            _context.Users.Add(new User() {FirstName = name});
+            _context.SaveChanges();
         }
     }
 }
