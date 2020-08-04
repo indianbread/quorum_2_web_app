@@ -11,15 +11,13 @@ namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
     { 
-        public BasicWebApp(SqLiteDbContext userDb)
+        public BasicWebApp()
         {
-            _userController = new UserController(userDb);
-            _userDb = userDb;
+            _userController = new UserController();
             _listener = new HttpListener();
         }
         
         private readonly UserController _userController;
-        private readonly SqLiteDbContext _userDb;
         private readonly HttpListener _listener;
         private bool _isListening;
         private const int Port = 8080;
@@ -51,12 +49,12 @@ namespace kata_frameworkless_web_app
             await HandleRequest(request, response);
         }
 
-        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response) //TODO: may be make a new class called index controller
         {
             switch (request.Url.AbsolutePath)
             {
                 case "/":
-                    await HandleGetIndexRequest(response);
+                    await _userController.HandleGetIndexRequest(response);
                     break;
                 case "/names":
                     await _userController.HandleRequest(request, response);
@@ -67,14 +65,7 @@ namespace kata_frameworkless_web_app
             }
             response.Close();
         }
-
         
-        private async Task HandleGetIndexRequest(HttpListenerResponse response)
-        {
-            var responseString = ResponseFormatter.GetGreeting(_userDb.Users.ToList());
-            await ResponseFormatter.GenerateResponseBody(response, responseString);
-        }
-
         public void Stop()
         {
             _isListening = false;

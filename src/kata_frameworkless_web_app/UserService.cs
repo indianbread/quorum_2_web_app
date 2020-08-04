@@ -12,31 +12,18 @@ namespace kata_frameworkless_web_app
 {
     public class UserService
     {
-        public UserService()
+        public UserService(UserRepository userRepository) //instantiating the repository layer
         {
-            Names = new List<string>() {"Nhan"}; //TODO: replace this with a look up to secret store
+            _userRepository = userRepository;
         }
-
-        public List<string> Names { get; }
-
-        public async Task AddName(HttpListenerRequest request, HttpListenerResponse response)
+        
+        private readonly UserRepository _userRepository;
+        
+        public async Task GetNameList(HttpListenerResponse response)
         {
-            try
-            {
-                var name = GetNameFromRequestBody(request);
-                if (Names.Contains(name))
-                {
-                    response.StatusCode = (int) HttpStatusCode.Conflict;
-                    throw new ArgumentException("Error: Name already exists");
-                }
-                Names.Add(name);
-                response.StatusCode= (int)HttpStatusCode.OK;
-                await ResponseFormatter.GenerateResponseBody(response, JsonSerializer.Serialize(Names));
-            }
-            catch (Exception e)
-            {
-                await ResponseFormatter.GenerateResponseBody(response, e.Message);
-            }
+            var names = _userRepository.GetNames();
+            var nameList = ResponseFormatter.GenerateNamesList(names);
+            await ResponseFormatter.GenerateResponseBody(response, nameList);
         }
         
         private static string GetNameFromRequestBody(HttpListenerRequest request)

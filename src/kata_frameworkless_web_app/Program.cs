@@ -10,8 +10,7 @@ namespace kata_frameworkless_web_app
     {
         static void Main(string[] args)
         {
-            var usersDatabase = new SqLiteDbContext();
-            var basicWebApp = new BasicWebApp(usersDatabase);
+            var basicWebApp = new BasicWebApp();
             basicWebApp.Start();
             basicWebApp.Stop();
             

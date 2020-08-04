@@ -12,12 +12,12 @@ namespace kata_frameworkless_web_app
 {
     public class UserController
     {
-        public UserController(DbContext usersDatabase)
+        public UserController()
         {
-            _usersDatabase = usersDatabase;
+            _userService = new UserService(TODO);
         }
 
-        private readonly DbContext _usersDatabase;
+        private readonly UserService _userService;
 
         public async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
@@ -35,31 +35,33 @@ namespace kata_frameworkless_web_app
             }
         }
 
+        public async Task HandleGetIndexRequest(HttpListenerResponse response)
+        {
+            var responseString = ResponseFormatter.GetGreeting(TODO users);
+            await ResponseFormatter.GenerateResponseBody(response, responseString);
+        }
+        
+        
+
         private async Task HandleGetRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.Url.PathAndQuery)
             {
                 case "/names?":
-                   await GetNameList(response);
+                   await _userService.GetNameList(response);
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
         }
-
-        private async Task GetNameList(HttpListenerResponse response)
-        {
-            var nameList = ResponseFormatter.GenerateNamesList(_usersDatabase.Names); //TODO: move this to user service
-            await ResponseFormatter.GenerateResponseBody(response, nameList);
-        }
-
+        
         private async Task HandlePostRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.QueryString["action"])
             {
                 case "add":
-                    await _usersDatabase.AddName(request, response); //todo: move this to user service
+                    await _userService.AddName(request, response); //todo: move this to user service
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;

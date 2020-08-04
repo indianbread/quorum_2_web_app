@@ -8,7 +8,7 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         private readonly BasicWebApp _basicWebApp;
         private Thread _webAppThread;
-        private readonly UserService _userService = new UserService();
+        private readonly UserService _userService = new UserService(TODO);
 
         public HttpListenerFixture()
         {
