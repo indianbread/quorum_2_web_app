@@ -10,15 +10,14 @@ namespace kata_frameworkless_web_app
 {
     public class ResponseFormatter
     {
-        public static string GetGreeting(List<User> users)
+        public static string GetGreeting(List<string> names)
         {
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
-            var names = users.Select(user => user.FirstName).ToList();
-            var namesString = string.Join(", ", names.Take(users.Count - 1)) + (names.Count <= 1 ? "" : " and ") + names.LastOrDefault();
+            var namesString = string.Join(", ", names.Take(names.Count - 1)) + (names.Count <= 1 ? "" : " and ") + names.LastOrDefault();
             return "Hello " + namesString + " - the time on the server is " + currentDatetime;
         }
 
-        public static string GenerateNamesList(List<string> names)
+        public static string GenerateNamesListBody(IEnumerable<string> names)
         {
             var nameList = "Name List:" + Environment.NewLine;
             nameList =

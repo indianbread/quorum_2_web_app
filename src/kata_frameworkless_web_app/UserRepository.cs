@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,25 +15,15 @@ namespace kata_frameworkless_web_app
         }
         private readonly DbContext _usersDatabase;
         
-        public async Task AddName(HttpListenerRequest request, HttpListenerResponse response)
+
+        public async Task<List<string>> GetUsers()
         {
-            try
-            {
-                var name = GetNameFromRequestBody(request);
-                if (Names.Contains(name))
-                {
-                    response.StatusCode = (int) HttpStatusCode.Conflict;
-                    throw new ArgumentException("Error: Name already exists");
-                }
-                Names.Add(name);
-                response.StatusCode= (int)HttpStatusCode.OK;
-                await ResponseFormatter.GenerateResponseBody(response, JsonSerializer.Serialize(Names));
-            }
-            catch (Exception e)
-            {
-                await ResponseFormatter.GenerateResponseBody(response, e.Message);
-            }
+            throw new NotImplementedException();
         }
 
+        public async Task<User> FindUserByName(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

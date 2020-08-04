@@ -12,9 +12,9 @@ namespace kata_frameworkless_web_app
 {
     public class UserController
     {
-        public UserController()
+        public UserController(UserService userService)
         {
-            _userService = new UserService(TODO);
+            _userService = userService;
         }
 
         private readonly UserService _userService;
@@ -37,18 +37,38 @@ namespace kata_frameworkless_web_app
 
         public async Task HandleGetIndexRequest(HttpListenerResponse response)
         {
-            var responseString = ResponseFormatter.GetGreeting(TODO users);
+            var names = await _userService.GetNameList();
+            var responseString = ResponseFormatter.GetGreeting(names);
             await ResponseFormatter.GenerateResponseBody(response, responseString);
         }
         
-        
-
         private async Task HandleGetRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.Url.PathAndQuery)
             {
                 case "/names?":
-                   await _userService.GetNameList(response);
+                   await HandleGetNameListRequest(response);
+                   break;
+                default:
+                    response.StatusCode = (int) HttpStatusCode.NotFound;
+                    break;
+            }
+        }
+
+        private async Task HandleGetNameListRequest(HttpListenerResponse response)
+        {
+            var names = await _userService.GetNameList();
+            var nameListFormatted = ResponseFormatter.GenerateNamesListBody(names);
+            await ResponseFormatter.GenerateResponseBody(response, nameListFormatted);
+        }
+
+        private async Task HandlePostRequest(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            switch (request.QueryString["action"])
+            {
+                case "add":
+                    var newUserName = GetNameFromRequestBody(request);
+                    await _userService.AddName(newUserName, response); //todo: move this to user service
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;
@@ -56,17 +76,13 @@ namespace kata_frameworkless_web_app
             }
         }
         
-        private async Task HandlePostRequest(HttpListenerRequest request, HttpListenerResponse response)
+        private static string GetNameFromRequestBody(HttpListenerRequest request)
         {
-            switch (request.QueryString["action"])
-            {
-                case "add":
-                    await _userService.AddName(request, response); //todo: move this to user service
-                    break;
-                default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
-            }
+            var body = request.InputStream;
+            var reader = new StreamReader(body, Encoding.UTF8);
+            var name = reader.ReadToEnd();
+            reader.Close();
+            return name;
         }
     }
 }

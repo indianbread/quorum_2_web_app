@@ -11,9 +11,9 @@ namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
     { 
-        public BasicWebApp()
+        public BasicWebApp(UserController userController)
         {
-            _userController = new UserController();
+            _userController = userController;
             _listener = new HttpListener();
         }
         

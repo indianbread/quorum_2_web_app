@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.EntityFrameworkCore;
 
 namespace kata_frameworkless_web_app
 {
@@ -10,10 +11,13 @@ namespace kata_frameworkless_web_app
     {
         static void Main(string[] args)
         {
-            var basicWebApp = new BasicWebApp();
+            DbContext userDatabase = new SqLiteDbContext();
+            var userRepository = new UserRepository(userDatabase);
+            var userService = new UserService(userRepository);
+            var userController = new UserController(userService);
+            var basicWebApp = new BasicWebApp(userController);
             basicWebApp.Start();
             basicWebApp.Stop();
-            
         }
         
     }
