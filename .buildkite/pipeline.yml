@@ -9,7 +9,7 @@ steps:
     
   - label: "Build and push to ECR"
     command:
-      - "./ops/scripts/build_deploy_image.sh ${BUILDKITE_BUILD_NUMBER}"
+      - "./ops/scripts/build_push_image.sh ${BUILDKITE_BUILD_NUMBER}"
     agents:
       queue: "katherine-lab"
     plugins:
