@@ -19,9 +19,9 @@ namespace kata_frameworkless_web_app
         
         private readonly UserRepository _userRepository;
         
-        public async Task<List<string>> GetNameList()
+        public IEnumerable<string> GetNameList()
         {
-            return await _userRepository.GetUsers();
+            return _userRepository.GetUsers();
         }
 
 
@@ -35,6 +35,7 @@ namespace kata_frameworkless_web_app
                     throw new ArgumentException("Error: Name already exists");
                 }
                 response.StatusCode= (int)HttpStatusCode.OK;
+               _userRepository.AddUser(name);
                 await ResponseFormatter.GenerateResponseBody(response, JsonSerializer.Serialize(_userRepository.GetUsers()));
             }
             catch (Exception e)
@@ -45,7 +46,7 @@ namespace kata_frameworkless_web_app
 
         private bool UserExists(string name)
         {
-            return !(_userRepository.FindUserByName(name) == null);
+            return _userRepository.FindUserByName(name) != null;
         }
     }
 }

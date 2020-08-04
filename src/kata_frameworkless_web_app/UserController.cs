@@ -37,8 +37,8 @@ namespace kata_frameworkless_web_app
 
         public async Task HandleGetIndexRequest(HttpListenerResponse response)
         {
-            var names = await _userService.GetNameList();
-            var responseString = ResponseFormatter.GetGreeting(names);
+            var names = _userService.GetNameList();
+            var responseString = ResponseFormatter.GetGreeting(names.ToList());
             await ResponseFormatter.GenerateResponseBody(response, responseString);
         }
         
@@ -57,7 +57,7 @@ namespace kata_frameworkless_web_app
 
         private async Task HandleGetNameListRequest(HttpListenerResponse response)
         {
-            var names = await _userService.GetNameList();
+            var names = _userService.GetNameList();
             var nameListFormatted = ResponseFormatter.GenerateNamesListBody(names);
             await ResponseFormatter.GenerateResponseBody(response, nameListFormatted);
         }
@@ -68,7 +68,7 @@ namespace kata_frameworkless_web_app
             {
                 case "add":
                     var newUserName = GetNameFromRequestBody(request);
-                    await _userService.AddName(newUserName, response); //todo: move this to user service
+                    await _userService.AddName(newUserName, response);
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;

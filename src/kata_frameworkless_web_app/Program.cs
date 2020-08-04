@@ -11,8 +11,12 @@ namespace kata_frameworkless_web_app
     {
         static void Main(string[] args)
         {
-            DbContext userDatabase = new SqLiteDbContext();
-            var userRepository = new UserRepository(userDatabase);
+            //wrap db in try-catch
+            //ensure error message is user friendly
+            //move lines 17 and 18 to repository
+            var context = new SqLiteDbContext();
+            context.Database.EnsureCreated(); //need this to ensure db is created before its used to prevent errors
+            var userRepository = new UserRepository(context);
             var userService = new UserService(userRepository);
             var userController = new UserController(userService);
             var basicWebApp = new BasicWebApp(userController);
