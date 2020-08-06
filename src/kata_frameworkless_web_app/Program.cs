@@ -12,6 +12,8 @@ namespace kata_frameworkless_web_app
         static void Main(string[] args)
         {
             var userRepository = new UserRepository();
+            userRepository.RemoveDataFromUsers();
+            userRepository.AddUser(AwsSecretManager.GetSecret());
             var userService = new UserService(userRepository);
             var userController = new UserController(userService);
             var basicWebApp = new BasicWebApp(userController);
