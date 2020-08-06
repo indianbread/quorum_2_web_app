@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
 using kata_frameworkless_web_app;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
@@ -8,11 +10,17 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         private readonly BasicWebApp _basicWebApp;
         private Thread _webAppThread;
-        private readonly NameList _nameList = new NameList();
+        private readonly UserService _userService;
+        private UserController _userController;
+        private UserRepository _userRepository;
+        private readonly DbSet<User> _userEntity;
 
         public HttpListenerFixture()
         {
-            _basicWebApp = new BasicWebApp(new NameController(_nameList), _nameList );
+            _userRepository = new UserRepository();
+            _userService = new UserService(_userRepository);
+            _userController = new UserController(_userService);
+            _basicWebApp = new BasicWebApp(_userController);
             _webAppThread = new Thread(_basicWebApp.Start);
             _webAppThread.Start();
         }

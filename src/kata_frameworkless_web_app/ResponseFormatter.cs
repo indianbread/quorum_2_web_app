@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace kata_frameworkless_web_app
 {
@@ -16,7 +17,7 @@ namespace kata_frameworkless_web_app
             return "Hello " + namesString + " - the time on the server is " + currentDatetime;
         }
 
-        public static string GenerateNamesList(List<string> names)
+        public static string GenerateNamesListBody(IEnumerable<string> names)
         {
             var nameList = "Name List:" + Environment.NewLine;
             nameList =
@@ -24,13 +25,7 @@ namespace kata_frameworkless_web_app
             return nameList;
         }
         
-        public static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
-        {
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            response.OutputStream.Close();
-        }
+
         
     }
 }
