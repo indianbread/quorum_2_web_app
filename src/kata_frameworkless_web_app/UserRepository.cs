@@ -13,11 +13,12 @@ namespace kata_frameworkless_web_app
         public UserRepository()
         {
             _context = InitializeDatabase();
+            RemoveDataFromUsers();
         }
         
         private readonly SqLiteDbContext _context;
 
-        public void RemoveDataFromUsers()
+        private void RemoveDataFromUsers()
         {
             _context.Users.RemoveRange(_context.Users);
             _context.SaveChanges();
