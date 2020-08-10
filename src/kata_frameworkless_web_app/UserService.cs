@@ -15,11 +15,16 @@ namespace kata_frameworkless_web_app
         public UserService(IRepository userRepository) 
         {
             _userRepository = userRepository;
-            _names = new List<string>() {AwsSecretManager.GetSecret()};
+            _names = new List<string>();
         }
         
         private readonly IRepository _userRepository;
-        private readonly List<string> _names;
+        public List<string> _names;
+
+        public void AddSecretUserName(string name)
+        {
+            _names.Add(name);
+        }
 
         public IEnumerable<string> GetNameList()
         {

@@ -10,7 +10,6 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         public HttpListenerFixture()
         {
-            Environment.SetEnvironmentVariable("SECRET_NAME", "frameworkless_web_app/root_user");
             _userRepository = new UserRepository();
             _userRepository.RemoveData();
             _userService = new UserService(_userRepository);
