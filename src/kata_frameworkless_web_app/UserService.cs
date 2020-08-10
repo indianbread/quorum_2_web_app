@@ -25,17 +25,15 @@ namespace kata_frameworkless_web_app
         }
 
 
-        public async Task<string> AddName(string name, HttpListenerResponse response)
+        public async Task<string> AddName(string name)
         {
             try
             {
                 if (UserExists(name))
                 {
-                    response.StatusCode = (int) HttpStatusCode.Conflict;
                     throw new ArgumentException("Error: Name already exists");
                 }
-                response.StatusCode= (int)HttpStatusCode.OK;
-               _userRepository.AddUser(name);
+                _userRepository.AddUser(name);
                 return JsonSerializer.Serialize(_userRepository.GetUsers());
             }
             catch (Exception e)
