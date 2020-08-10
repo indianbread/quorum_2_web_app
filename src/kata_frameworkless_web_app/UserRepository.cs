@@ -8,17 +8,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace kata_frameworkless_web_app
 {
-    public class UserRepository
+    public class UserRepository : IRepository
     {
         public UserRepository()
         {
             _context = InitializeDatabase();
-            RemoveDataFromUsers();
         }
         
         private readonly SqLiteDbContext _context;
 
-        private void RemoveDataFromUsers()
+        public void RemoveData()
         {
             _context.Users.RemoveRange(_context.Users);
             _context.SaveChanges();

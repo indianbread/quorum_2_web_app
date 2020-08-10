@@ -60,7 +60,7 @@ namespace kata_frameworkless_web_app
                     await _userController.HandleRequest(request, response);
                     break;
                 default:
-                    response.StatusCode = (int) HttpStatusCode.Conflict;
+                    response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
             response.Close();

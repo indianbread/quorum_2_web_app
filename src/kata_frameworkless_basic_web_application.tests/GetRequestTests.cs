@@ -52,7 +52,7 @@ namespace kata_frameworkless_basic_web_application.tests
         [InlineData("http://localhost:8080/notapath")]
         public async Task GET_IncorrectPath_ReturnsStatus404(string url)
         {
-            var response = await _httpClient.GetAsync("http://localhost:8080/names");
+            var response = await _httpClient.GetAsync(url);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
