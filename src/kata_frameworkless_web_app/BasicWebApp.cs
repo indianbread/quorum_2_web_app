@@ -11,15 +11,13 @@ namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
     { 
-        public BasicWebApp(NameController nameController, NameList nameList)
+        public BasicWebApp(UserController userController)
         {
-            _nameController = nameController;
-            _nameList = nameList;
+            _userController = userController;
             _listener = new HttpListener();
         }
         
-        private readonly NameController _nameController;
-        private readonly NameList _nameList;
+        private readonly UserController _userController;
         private readonly HttpListener _listener;
         private bool _isListening;
         private const int Port = 8080;
@@ -51,30 +49,23 @@ namespace kata_frameworkless_web_app
             await HandleRequest(request, response);
         }
 
-        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response) //TODO: may be make a new class called index controller
         {
             switch (request.Url.AbsolutePath)
             {
                 case "/":
-                    await HandleGetIndexRequest(response);
+                    await _userController.HandleGetIndexRequest(response);
                     break;
                 case "/names":
-                    await _nameController.HandleRequest(request, response);
+                    await _userController.HandleRequest(request, response);
                     break;
                 default:
-                    response.StatusCode = (int) HttpStatusCode.Conflict;
+                    response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
             response.Close();
         }
-
         
-        private async Task HandleGetIndexRequest(HttpListenerResponse response)
-        {
-            var responseString = ResponseFormatter.GetGreeting(_nameList.Names);
-            await ResponseFormatter.GenerateResponseBody(response, responseString);
-        }
-
         public void Stop()
         {
             _isListening = false;
