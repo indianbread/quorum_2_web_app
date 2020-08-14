@@ -16,7 +16,7 @@ spec:
         app: "nhan-frameworkless-web-app"
     spec:
       containers:
-        - image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:${BUILDKITE_BUILD_NUMBER}"
+        - image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:latest"
           name: nhan-frameworkless-app
           ports:
             - containerPort: 8080
