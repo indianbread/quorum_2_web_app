@@ -1,0 +1,61 @@
+# This is an example of a deployment - a declaration of pods.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "nhan-frameworkless-web-app-deployment"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      #must be consistent for deployment, service and ingress
+      app: "nhan-frameworkless-web-app"
+  template:
+    metadata:
+      labels:
+        app: "nhan-frameworkless-web-app"
+    spec:
+      containers:
+        - image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:${BUILDKITE_BUILD_NUMBER}"
+          name: nhan-frameworkless-app
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+  name: "nhan-frameworkless-web-app-service"
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: "nhan-frameworkless-web-app"
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    #handling TLS
+    "kubernetes.io/tls-acme": "true"
+  name: "nhan-frameworkless-web-app-ingress"
+  labels:
+    app: "nhan-frameworkless-web-app"
+    repo: "nhan-frameworkless-web-app"
+spec:
+  rules:
+    - host: "nhan-basic-web-app.svc.platform.myobdev.com"
+      http:
+        paths:
+          - backend:
+              serviceName: "nhan-frameworkless-web-app-service"
+              servicePort: 80
+            path: /
+  tls:
+    - hosts:
+        - "nhan-basic-web-app.svc.platform.myobdev.com"
+      secretName: "nhan-basic-web-app-tls"
