@@ -9,7 +9,7 @@ steps:
 
   - label: ":hammer: Test, Build and push to ECR"
     command:
-      - "./ops/scripts/build_push_image.sh"
+      - "./ops/scripts/build_push_image.sh ${BUILDKITE_BUILD_NUMBER}"
     agents:
       queue: "katherine-lab"
     plugins:
@@ -20,7 +20,7 @@ steps:
     
   - label: ":rocket: Deploy to Jupiter"
     command:
-      - "./ops/scripts/deploy.sh"
+      - "./ops/scripts/deploy.sh ${BUILDKITE_BUILD_NUMBER}"
     #branches: master
     agents:
       queue: "europa-preprod-fma"
