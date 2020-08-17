@@ -18,8 +18,8 @@ spec:
         date: "12345"
     spec:
       containers:
-        - image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:$(tag)"
-#        - image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:latest"
+#        - image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:$(imageTag)"
+        - image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:latest"
           name: nhan-frameworkless-app
           ports:
             - containerPort: 8080
@@ -62,3 +62,9 @@ spec:
     - hosts:
         - "nhan-basic-web-app.svc.platform.myobdev.com"
       secretName: "nhan-frameworkless-web-app-tls"
+
+#parameters:
+#  - name: "imageTag"
+#    description: "Image Tag"
+#    required: true
+#    parameterType: int
