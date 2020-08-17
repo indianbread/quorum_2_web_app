@@ -36,7 +36,6 @@ namespace kata_frameworkless_web_app
             while (_isListening)
             { 
                 _listener.BeginGetContext(ProcessRequest, null);
-                Console.WriteLine();
             }
         }
 
