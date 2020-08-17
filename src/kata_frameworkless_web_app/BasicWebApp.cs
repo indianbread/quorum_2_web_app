@@ -19,7 +19,7 @@ namespace kata_frameworkless_web_app
         
         private readonly UserController _userController;
         private readonly HttpListener _listener;
-        private bool _isListening;
+        public bool IsListening;
         private const int Port = 8080;
 
         private void AddPrefixes()
@@ -30,16 +30,12 @@ namespace kata_frameworkless_web_app
         public void Start()
         {
             AddPrefixes();
-            _isListening = true;
+            IsListening = true;
             _listener.Start();
             Console.WriteLine($"Listening on port {Port}" );
-            while (_isListening)
-            {
-                ProcessRequest();
-            }
         }
 
-        private async Task ProcessRequest()
+        public async Task ProcessRequest()
         {
             var context = await _listener.GetContextAsync();
             var request = context.Request;
@@ -48,7 +44,7 @@ namespace kata_frameworkless_web_app
             await HandleRequest(request, response);
         }
 
-        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response) //TODO: may be make a new class called index controller
+        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.Url.AbsolutePath)
             {
@@ -67,7 +63,7 @@ namespace kata_frameworkless_web_app
         
         public void Stop()
         {
-            _isListening = false;
+            IsListening = false;
             _listener.Stop();
         }
 
