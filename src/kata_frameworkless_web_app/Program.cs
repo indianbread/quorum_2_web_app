@@ -20,11 +20,6 @@ namespace kata_frameworkless_web_app
             var userController = new UserController(userService);
             var basicWebApp = new BasicWebApp(userController);
             basicWebApp.Start();
-            // while (basicWebApp.IsListening)
-            // {
-            //     basicWebApp.ProcessRequest();
-            // }
-            // basicWebApp.Stop();
         }
         
     }

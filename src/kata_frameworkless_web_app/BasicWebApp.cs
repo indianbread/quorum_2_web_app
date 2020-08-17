@@ -19,7 +19,7 @@ namespace kata_frameworkless_web_app
         
         private readonly UserController _userController;
         private readonly HttpListener _listener;
-        public bool IsListening;
+        private bool IsListening;
         private const int Port = 8080;
 
         private void AddPrefixes()
@@ -39,7 +39,7 @@ namespace kata_frameworkless_web_app
             }
         }
 
-        public async void ProcessRequest()
+        private async void ProcessRequest()
         {
             var context = _listener.GetContextAsync().GetAwaiter().GetResult();
             var request = context.Request;
