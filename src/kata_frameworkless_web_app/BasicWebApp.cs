@@ -34,15 +34,14 @@ namespace kata_frameworkless_web_app
             _listener.Start();
             Console.WriteLine($"Listening on port {Port}" );
             while (_isListening)
-            { 
-                _listener.BeginGetContext(ProcessRequest, null);
+            {
+                ProcessRequest();
             }
         }
 
-        private async void ProcessRequest(IAsyncResult asyncResult)
+        private async Task ProcessRequest()
         {
-            var context = _listener.EndGetContext(asyncResult);
-            _listener.BeginGetContext(ProcessRequest, null);
+            var context = await _listener.GetContextAsync();
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = context.Response;
