@@ -15,7 +15,7 @@ spec:
       labels:
         app: "nhan-frameworkless-web-app"
         repo: "nhan-frameworkless-web-app"
-        date: "17-08-2020"
+        date: "17-8-2020"
     spec:
       containers:
 #        - image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:$1"
