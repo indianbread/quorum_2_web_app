@@ -65,7 +65,6 @@ namespace kata_frameworkless_web_app
                     response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
-            //response.Close();
         }
         
         public void Stop()

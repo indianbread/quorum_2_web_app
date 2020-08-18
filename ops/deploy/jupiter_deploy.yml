@@ -27,7 +27,7 @@ objects:
             app: "nhan-frameworkless-web-app"
             repo: "nhan-frameworkless-web-app"
           annotations:
-            iam.amazonaws.com/role: arn:aws:iam::741922737521:role/nhan-secrets-manager-role
+            iam.amazonaws.com/role: arn:aws:iam::741922737521:role/k8s/NhanFrameworklessWebApp
         spec:
           containers:
             - name: nhan-frameworkless-app

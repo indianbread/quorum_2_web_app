@@ -582,3 +582,4 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/rider,csharp,visualstudio
 /src/kata_frameworkless_basic_web_application.tests/web.config
+/aws/
