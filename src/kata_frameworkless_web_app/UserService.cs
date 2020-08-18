@@ -34,7 +34,7 @@ namespace kata_frameworkless_web_app
         }
 
 
-        public async Task<string> AddName(string name)
+        public string AddName(string name)
         {
             try
             {

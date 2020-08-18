@@ -44,8 +44,11 @@ namespace kata_frameworkless_web_app
             var context = await _listener.GetContextAsync();
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
-            var response = context.Response;
-            await HandleRequestAsync(request, response);
+            using (var response = context.Response)
+            {
+                await HandleRequestAsync(request, response);
+                
+            }
         }
 
         private async Task HandleRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
@@ -62,7 +65,7 @@ namespace kata_frameworkless_web_app
                     response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
-            response.Close();
+            //response.Close();
         }
         
         public void Stop()
