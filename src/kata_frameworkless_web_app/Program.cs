@@ -13,8 +13,8 @@ namespace kata_frameworkless_web_app
         {
             Console.WriteLine("starting app");
             var userRepository = new UserRepository();
-           // var userRepository = new ListRepository();
             var userService = new UserService(userRepository);
+            userRepository.RemoveData();
            //var secretUser = AwsSecretManager.GetSecret();
           // userService.AddSecretUserName(secretUser);
             var userController = new UserController(userService);

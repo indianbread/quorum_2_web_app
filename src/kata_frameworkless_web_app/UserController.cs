@@ -5,8 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace kata_frameworkless_web_app
 {
@@ -87,9 +90,10 @@ namespace kata_frameworkless_web_app
         {
             var body = request.InputStream;
             var reader = new StreamReader(body, Encoding.UTF8);
-            var name = reader.ReadToEnd();
+            var data = reader.ReadToEnd();
             reader.Close();
-            return name;
+            var user = JObject.Parse(data);
+            return user["FirstName"].Value<string>();
         }
         
         public static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)

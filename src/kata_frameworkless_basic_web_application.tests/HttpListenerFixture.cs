@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using kata_frameworkless_web_app;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,11 @@ namespace kata_frameworkless_basic_web_application.tests
         private readonly UserService _userService;
         private UserController _userController;
         private IRepository _userRepository;
+
+        public IEnumerable<string> GetNameList()
+        {
+            return _userService.GetNameList();
+        }
 
     }
 }
