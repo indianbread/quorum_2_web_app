@@ -1,14 +1,8 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace kata_frameworkless_web_app
@@ -82,8 +76,9 @@ namespace kata_frameworkless_web_app
         {
             var newUserName = GetNameFromRequestBody(request);
             var result = _userService.AddName(newUserName);
-            response.StatusCode = result.Contains("Error") ? (int) HttpStatusCode.Conflict : (int)HttpStatusCode.OK;
-            await GenerateResponseBody(response, result);
+            response.StatusCode = (int) result.StatusCode;
+            var responseMessage = result.IsSuccess ? result.SuccessMessage : result.ErrorMessage;
+            await GenerateResponseBody(response, responseMessage);
         }
 
         private static string GetNameFromRequestBody(HttpListenerRequest request)

@@ -42,16 +42,29 @@ namespace kata_frameworkless_basic_web_application.tests
             var userToAdd = new User() {FirstName = "Bob"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response1 = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
-            response1.Dispose();
+            var response = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
             
-            var response2 = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
-            var response2Body = response2.Content.ReadAsStringAsync().Result;
-            
-            Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
-            Assert.Contains("Name already exists", response2Body);
+            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+            Assert.Contains("Name already exists", responseBody);
 
-            response2.Dispose();
+            response.Dispose();
+        }
+
+        [Fact]
+        public async Task POST_Name_ReturnsStatus400_IfPostRequestIsEmpty()
+        {
+            var userToAdd = new User() {FirstName = ""};
+            var jsonContent = JsonConvert.SerializeObject(userToAdd);
+            HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            
+            var response = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Contains("Name cannot be empty", responseBody);
+            
+            response.Dispose();
         }
         
     }

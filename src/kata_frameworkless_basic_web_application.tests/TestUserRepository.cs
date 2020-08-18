@@ -7,7 +7,7 @@ namespace kata_frameworkless_basic_web_application.tests
 {
     public class TestUserRepository : IRepository
     {
-        private List<User> _users;
+        private readonly List<User> _users;
 
         public TestUserRepository()
         {
@@ -25,7 +25,7 @@ namespace kata_frameworkless_basic_web_application.tests
 
         public User FindUserByName(string name)
         {
-            return _users.FirstOrDefault(users => users.FirstName == name);
+            return _users.FirstOrDefault(user => user.FirstName == name);
         }
 
         public void AddUser(string name)
