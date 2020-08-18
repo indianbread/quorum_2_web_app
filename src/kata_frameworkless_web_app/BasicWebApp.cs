@@ -39,7 +39,7 @@ namespace kata_frameworkless_web_app
             }
         }
 
-        private async Task ProcessRequestAsync() //TODO: log the result
+        private async Task ProcessRequestAsync()
         {
             var context = await _listener.GetContextAsync();
             var request = context.Request;
@@ -47,7 +47,6 @@ namespace kata_frameworkless_web_app
             using (var response = context.Response)
             {
                 await HandleRequestAsync(request, response);
-                
             }
         }
 
