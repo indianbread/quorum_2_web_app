@@ -19,7 +19,7 @@ namespace kata_frameworkless_web_app
         
         private readonly UserController _userController;
         private readonly HttpListener _listener;
-        private bool _isListening;
+        private bool IsListening;
         private const int Port = 8080;
 
         private void AddPrefixes()
@@ -30,26 +30,27 @@ namespace kata_frameworkless_web_app
         public void Start()
         {
             AddPrefixes();
-            _isListening = true;
+            IsListening = true;
             _listener.Start();
             Console.WriteLine($"Listening on port {Port}" );
-            while (_isListening)
-            { 
-                _listener.BeginGetContext(ProcessRequest, null);
+            while (IsListening)
+            {
+                ProcessRequestAsync().GetAwaiter().GetResult();
             }
         }
 
-        private async void ProcessRequest(IAsyncResult asyncResult)
+        private async Task ProcessRequestAsync()
         {
-            var context = _listener.EndGetContext(asyncResult);
-            _listener.BeginGetContext(ProcessRequest, null);
+            var context = await _listener.GetContextAsync();
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
-            var response = context.Response;
-            await HandleRequest(request, response);
+            using (var response = context.Response)
+            {
+                await HandleRequestAsync(request, response);
+            }
         }
 
-        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response) //TODO: may be make a new class called index controller
+        private async Task HandleRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.Url.AbsolutePath)
             {
@@ -63,12 +64,11 @@ namespace kata_frameworkless_web_app
                     response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
-            response.Close();
         }
         
         public void Stop()
         {
-            _isListening = false;
+            IsListening = false;
             _listener.Stop();
         }
 

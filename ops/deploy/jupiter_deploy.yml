@@ -1,0 +1,83 @@
+# Basic application with templating
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "nhan-frameworkless-web-app"
+  annotations:
+    description: "nhan frameworkless web app release template"
+objects:
+
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: "nhan-frameworkless-web-app-deployment"
+      namespace: "fma"
+      labels:
+        app: "nhan-frameworkless-web-app"
+        repo: "nhan-frameworkless-web-app"
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: "nhan-frameworkless-web-app"
+      template:
+        metadata:
+          labels:
+            app: "nhan-frameworkless-web-app"
+            repo: "nhan-frameworkless-web-app"
+          annotations:
+            iam.amazonaws.com/role: arn:aws:iam::741922737521:role/k8s/NhanFrameworklessWebApp
+        spec:
+          containers:
+            - name: nhan-frameworkless-app
+              image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:$(imageTag)"
+              ports:
+                - containerPort: 8080
+
+  - kind: Ingress
+    apiVersion: networking.k8s.io/v1beta1
+    metadata:
+      name: "nhan-frameworkless-web-app-ingress"
+      namespace: "fma"
+      labels:
+        app: "nhan-frameworkless-web-app"
+        repo: "nhan-frameworkless-web-app"
+      annotations:
+        kubernetes.io/tls-acme: "true"
+    spec:
+      tls:
+        - hosts:
+            - "nhan-basic-web-app.svc.platform.myobdev.com"
+          secretName: "nhan-frameworkless-web-app-tls"
+      rules:
+        - host: "nhan-basic-web-app.svc.platform.myobdev.com"
+          http:
+            paths:
+              - path: /
+                backend:
+                  serviceName: "nhan-frameworkless-web-app-service"
+                  servicePort: 80
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "nhan-frameworkless-web-app-service"
+      namespace: "fma"
+      labels:
+        app: "nhan-frameworkless-web-app"
+        repo: "nhan-frameworkless-web-app"
+      annotations:
+        prometheus.io/scrape: "true"
+    spec:
+      ports:
+        - port: 80
+          targetPort: 8080
+      selector:
+        app: "nhan-frameworkless-web-app"
+
+parameters:
+  - name: "imageTag"
+    description: "Docker image tag"
+    required: true
+    parameterType: int
