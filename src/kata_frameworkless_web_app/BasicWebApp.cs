@@ -35,20 +35,20 @@ namespace kata_frameworkless_web_app
             Console.WriteLine($"Listening on port {Port}" );
             while (IsListening)
             {
-                ProcessRequest();
+                ProcessRequestAsync().GetAwaiter().GetResult();
             }
         }
 
-        private async void ProcessRequest()
+        private async Task ProcessRequestAsync() //TODO: log the result
         {
-            var context = _listener.GetContextAsync().GetAwaiter().GetResult();
+            var context = await _listener.GetContextAsync();
             var request = context.Request;
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = context.Response;
-            await HandleRequest(request, response);
+            await HandleRequestAsync(request, response);
         }
 
-        private async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandleRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.Url.AbsolutePath)
             {
