@@ -78,7 +78,7 @@ namespace kata_frameworkless_web_app
         private async Task HandlePostNameRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
             var newUserName = GetNameFromRequestBody(request);
-            var result = await _userService.AddName(newUserName);
+            var result = _userService.AddName(newUserName);
             response.StatusCode = result.Contains("Error") ? (int) HttpStatusCode.Conflict : (int)HttpStatusCode.OK;
             await GenerateResponseBody(response, result);
         }

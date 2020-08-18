@@ -44,7 +44,7 @@ namespace kata_frameworkless_basic_web_application.tests
             const string nameToAdd = "Nhan";
             var actual = _sut.AddName(nameToAdd);
             
-            Assert.Contains("already exists", actual.Result);
+            Assert.Contains("already exists", actual);
         }
         
 
