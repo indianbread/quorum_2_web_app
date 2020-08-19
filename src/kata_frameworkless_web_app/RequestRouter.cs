@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app
 {
-    public class RequestHandler
+    public class RequestRouter
     {
-        public RequestHandler(UserController userController)
+        public RequestRouter(UserController userController)
         {
             _userController = userController;
         }
@@ -18,7 +18,7 @@ namespace kata_frameworkless_web_app
                 case "/":
                     await _userController.HandleGetIndexRequest(response);
                     break;
-                case "/names":
+                case "/users":
                     await _userController.HandleRequest(request, response);
                     break;
                 default:

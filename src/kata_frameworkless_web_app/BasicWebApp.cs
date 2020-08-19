@@ -13,11 +13,11 @@ namespace kata_frameworkless_web_app
     {
         public BasicWebApp(UserController userController)
         {
-            _requestHandler = new RequestHandler(userController);
+            _requestRouter = new RequestRouter(userController);
             _listener = new HttpListener();
         }
         
-        private readonly RequestHandler _requestHandler;
+        private readonly RequestRouter _requestRouter;
         private readonly HttpListener _listener;
         private bool IsListening;
         private const int Port = 8080;
@@ -46,7 +46,7 @@ namespace kata_frameworkless_web_app
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             using (var response = context.Response)
             {
-                await _requestHandler.HandleRequestAsync(request, response);
+                await _requestRouter.HandleRequestAsync(request, response);
             }
         }
         

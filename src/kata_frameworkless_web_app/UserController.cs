@@ -43,7 +43,7 @@ namespace kata_frameworkless_web_app
         {
             switch (request.Url.PathAndQuery)
             {
-                case "/names?":
+                case "/names":
                    await HandleGetNameListRequest(response);
                    break;
                 default:
