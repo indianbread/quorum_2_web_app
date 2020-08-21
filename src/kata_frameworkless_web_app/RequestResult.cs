@@ -9,13 +9,13 @@ namespace kata_frameworkless_web_app
         public string ErrorMessage { get; set; }
         public HttpStatusCode StatusCode { get; set; }
 
-        internal static RequestResult CreateSuccess(string successMessage)
+        internal static RequestResult CreateSuccess(string successMessage, HttpStatusCode resultStatusCode)
         {
             return new RequestResult
             {
                 IsSuccess = true,
                 SuccessMessage = successMessage,
-                StatusCode = HttpStatusCode.OK
+                StatusCode = resultStatusCode
             };
         }
 

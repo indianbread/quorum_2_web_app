@@ -22,7 +22,7 @@ namespace kata_frameworkless_basic_web_application.tests
         private readonly HttpClient _httpClient;
         
         [Fact]
-        public async Task POST_Name_ReturnsStatus200_IfAddedSuccessfully()
+        public async Task POST_Name_ReturnsStatus201_IfAddedSuccessfully()
         {
             var userToAdd = new User() {FirstName = "Jane"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
@@ -30,7 +30,8 @@ namespace kata_frameworkless_basic_web_application.tests
             
             var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal("/users/Jane/", response.Headers.Location.ToString());
             Assert.Contains(userToAdd.FirstName, _httpListenerFixture.GetNameList());
 
             response.Dispose();

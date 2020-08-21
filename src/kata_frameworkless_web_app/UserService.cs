@@ -46,7 +46,7 @@ namespace kata_frameworkless_web_app
                 return RequestResult.CreateError("Name already exists", HttpStatusCode.Conflict);
             }
             _userRepository.AddUser(name);
-            return RequestResult.CreateSuccess("User added successfully");
+            return RequestResult.CreateSuccess("User added successfully", HttpStatusCode.Created);
         }
         
         private bool UserExists(string name)

@@ -78,6 +78,7 @@ namespace kata_frameworkless_web_app
             var result = _userService.AddName(newUserName);
             response.StatusCode = (int) result.StatusCode;
             var responseMessage = result.IsSuccess ? result.SuccessMessage : result.ErrorMessage;
+            response.AppendHeader("Location", $"/users/{newUserName}/");
             await GenerateResponseBody(response, responseMessage);
         }
 
