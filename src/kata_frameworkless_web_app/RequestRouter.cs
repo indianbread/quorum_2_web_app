@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -13,12 +14,22 @@ namespace kata_frameworkless_web_app
         
         public async Task HandleRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            switch (request.Url.AbsolutePath)
+            if (request.Url.Segments.Length == 1)
             {
-                case "/":
-                    await _userController.HandleGetIndexRequest(response);
-                    break;
-                case "/users":
+               await _userController.HandleGetIndexRequest(response);
+            }
+            else
+            {
+                await HandleResourceGroupRequest(request, response);
+            }
+
+        }
+
+        private async Task HandleResourceGroupRequest(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            switch (request.Url.Segments[1])
+            {
+                case "users/":
                     await _userController.HandleRequest(request, response);
                     break;
                 default:
@@ -26,6 +37,5 @@ namespace kata_frameworkless_web_app
                     break;
             }
         }
-        
     }
 }

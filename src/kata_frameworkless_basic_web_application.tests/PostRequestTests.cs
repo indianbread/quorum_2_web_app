@@ -28,7 +28,7 @@ namespace kata_frameworkless_basic_web_application.tests
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains(userToAdd.FirstName, _httpListenerFixture.GetNameList());
@@ -42,7 +42,7 @@ namespace kata_frameworkless_basic_web_application.tests
             var userToAdd = new User() {FirstName = "Bob"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
@@ -58,7 +58,7 @@ namespace kata_frameworkless_basic_web_application.tests
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

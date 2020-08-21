@@ -41,9 +41,9 @@ namespace kata_frameworkless_web_app
         
         private async Task HandleGetRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
-            switch (request.Url.PathAndQuery)
+            switch (request.Url.Segments[2])
             {
-                case "/names":
+                case "names/":
                    await HandleGetNameListRequest(response);
                    break;
                 default:
@@ -61,9 +61,9 @@ namespace kata_frameworkless_web_app
 
         private async Task HandlePostRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
-            switch (request.QueryString["action"])
+            switch (request.Url.Segments[2])
             {
-                case "add":
+                case "add/":
                     await HandlePostNameRequest(request, response);
                     break;
                 default:
@@ -90,13 +90,13 @@ namespace kata_frameworkless_web_app
             var user = JObject.Parse(data);
             return user["FirstName"].Value<string>();
         }
-        
-        public static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
+
+        private static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
         {
             var buffer = Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            response.OutputStream.Close();
+            await response.OutputStream.DisposeAsync();
         }
     }
 }
