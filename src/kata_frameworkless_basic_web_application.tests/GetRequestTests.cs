@@ -39,7 +39,7 @@ namespace kata_frameworkless_basic_web_application.tests
         [Fact]
         public async Task GET_Names_ReturnsListOfNames()
         {
-            var response = await _httpClient.GetAsync("http://localhost:8080/names?");
+            var response = await _httpClient.GetAsync("http://localhost:8080/users/names/");
             var responseBody = response.Content.ReadAsStringAsync().Result;
             
             Assert.Contains("Name List", responseBody);
@@ -48,7 +48,7 @@ namespace kata_frameworkless_basic_web_application.tests
         }
         
         [Theory]
-        [InlineData("http://localhost:8080/names?action=put")]
+        [InlineData("http://localhost:8080/users/names?action=put")]
         [InlineData("http://localhost:8080/notapath")]
         public async Task GET_IncorrectPath_ReturnsStatus404(string url)
         {

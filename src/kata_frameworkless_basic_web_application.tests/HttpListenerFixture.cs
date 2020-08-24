@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using kata_frameworkless_web_app;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +11,7 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         public HttpListenerFixture()
         {
-            _userRepository = new UserRepository();
-            _userRepository.RemoveData();
+            _userRepository = new TestUserRepository();
             _userService = new UserService(_userRepository);
             _userController = new UserController(_userService);
             _basicWebApp = new BasicWebApp(_userController);
@@ -23,6 +23,11 @@ namespace kata_frameworkless_basic_web_application.tests
         private readonly UserService _userService;
         private UserController _userController;
         private IRepository _userRepository;
+
+        public IEnumerable<string> GetNameList()
+        {
+            return _userService.GetNameList();
+        }
 
     }
 }

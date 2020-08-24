@@ -19,7 +19,7 @@ namespace kata_frameworkless_web_app
         }
         
         private readonly IRepository _userRepository;
-        public List<string> _names;
+        private readonly List<string> _names;
 
         public void AddSecretUserName(string name)
         {
@@ -34,23 +34,21 @@ namespace kata_frameworkless_web_app
         }
 
 
-        public string AddName(string name)
+        public RequestResult AddName(string name)
         {
-            try
+ 
+            if (string.IsNullOrWhiteSpace(name))
             {
-                if (UserExists(name))
-                {
-                    throw new ArgumentException("Error: Name already exists");
-                }
-                _userRepository.AddUser(name);
-                return JsonSerializer.Serialize(_userRepository.GetUsers());
+                return RequestResult.CreateError("Name cannot be empty", HttpStatusCode.BadRequest);
             }
-            catch (Exception e)
+            if (UserExists(name))
             {
-                return e.Message;
+                return RequestResult.CreateError("Name already exists", HttpStatusCode.Conflict);
             }
+            _userRepository.AddUser(name);
+            return RequestResult.CreateSuccess("User added successfully", HttpStatusCode.Created);
         }
-
+        
         private bool UserExists(string name)
         {
             return _userRepository.FindUserByName(name) != null;

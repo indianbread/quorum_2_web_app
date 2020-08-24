@@ -28,7 +28,7 @@ namespace kata_frameworkless_web_app
             }
             catch (Exception e)
             {
-                Console.WriteLine("Database error");
+                Console.WriteLine("Database error: " + e.Message);
 
             }
             return context;

@@ -1,7 +1,10 @@
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using kata_frameworkless_web_app;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace kata_frameworkless_basic_web_application.tests
@@ -19,12 +22,17 @@ namespace kata_frameworkless_basic_web_application.tests
         private readonly HttpClient _httpClient;
         
         [Fact]
-        public async Task POST_Name_ReturnsStatus200_IfAddedSuccessfully()
+        public async Task POST_Name_ReturnsStatus201_IfAddedSuccessfully()
         {
-            HttpContent content = new StringContent("Jane", Encoding.UTF8);
+            var userToAdd = new User() {FirstName = "Jane"};
+            var jsonContent = JsonConvert.SerializeObject(userToAdd);
+            HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal("/users/Jane/", response.Headers.Location.ToString());
+            Assert.Contains(userToAdd.FirstName, _httpListenerFixture.GetNameList());
 
             response.Dispose();
         }
@@ -32,16 +40,32 @@ namespace kata_frameworkless_basic_web_application.tests
         [Fact]
         public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists() 
         { 
-            HttpContent content = new StringContent("Bob", Encoding.UTF8);
-            var response1 = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
-            response1.Dispose();
-            var response2 = await _httpClient.PostAsync("http://localhost:8080/names?action=add", content);
-            var response2Body = response2.Content.ReadAsStringAsync().Result;
+            var userToAdd = new User() {FirstName = "Bob"};
+            var jsonContent = JsonConvert.SerializeObject(userToAdd);
+            HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
             
-            Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
-            Assert.Contains("Name already exists", response2Body);
+            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+            Assert.Contains("Name already exists", responseBody);
 
-            response2.Dispose();
+            response.Dispose();
+        }
+
+        [Fact]
+        public async Task POST_Name_ReturnsStatus400_IfPostRequestIsEmpty()
+        {
+            var userToAdd = new User() {FirstName = ""};
+            var jsonContent = JsonConvert.SerializeObject(userToAdd);
+            HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            
+            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Contains("Name cannot be empty", responseBody);
+            
+            response.Dispose();
         }
         
     }

@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace kata_frameworkless_web_app
 {
     public class BasicWebApp
-    { 
+    {
         public BasicWebApp(UserController userController)
         {
-            _userController = userController;
+            _requestRouter = new RequestRouter(userController);
             _listener = new HttpListener();
         }
         
-        private readonly UserController _userController;
+        private readonly RequestRouter _requestRouter;
         private readonly HttpListener _listener;
         private bool IsListening;
         private const int Port = 8080;
@@ -46,23 +46,7 @@ namespace kata_frameworkless_web_app
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             using (var response = context.Response)
             {
-                await HandleRequestAsync(request, response);
-            }
-        }
-
-        private async Task HandleRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
-        {
-            switch (request.Url.AbsolutePath)
-            {
-                case "/":
-                    await _userController.HandleGetIndexRequest(response);
-                    break;
-                case "/names":
-                    await _userController.HandleRequest(request, response);
-                    break;
-                default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
+                await _requestRouter.HandleRequestAsync(request, response);
             }
         }
         
