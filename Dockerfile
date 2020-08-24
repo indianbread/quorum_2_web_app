@@ -32,7 +32,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 FROM base AS runtime
 WORKDIR /app
 COPY --from=publish /app/src/kata_frameworkless_web_app/publish ./
-COPY startup.sh /startup.sh 
+COPY ops/scripts/startup.sh /startup.sh 
 #ENTRYPOINT ["dotnet", "kata_frameworkless_web_app.dll"]
 ENTRYPOINT ["/startup.sh"]
 # ["/bin/bash"]
