@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace kata_frameworkless_web_app
+namespace kata_frameworkless_web_app.Repositories
 {
     public class ListRepository : IRepository
     {
@@ -13,9 +14,9 @@ namespace kata_frameworkless_web_app
             _users = new List<User>();
         }
 
-        public IEnumerable<string> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            return _users.Select(user => user.FirstName);
+            return _users;
         }
 
         public User FindUserByName(string name)

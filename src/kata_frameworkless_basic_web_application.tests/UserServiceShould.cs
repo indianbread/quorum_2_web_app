@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app;
+using kata_frameworkless_web_app.Repositories;
+using kata_frameworkless_web_app.Services;
 using Moq;
 using Xunit;
 
@@ -21,28 +23,29 @@ namespace kata_frameworkless_basic_web_application.tests
         
 
         [Fact]
-        public void RetrieveListOfNamesIncludingSecretUser()
+        public async Task RetrieveListOfNamesIncludingSecretUser()
         {
-            var actual = _sut.GetNameList();
+            var actual = await _sut.GetNameList();
 
             Assert.Contains("Nhan", actual);
             Assert.Contains("Bob", actual);
         }
 
         [Fact]
-        public void AddNameToDatabaseIfNewName()
+        public async Task AddNameToDatabaseIfNewName()
         {
             const string nameToAdd = "Bart";
-            var actual = _sut.AddName(nameToAdd);
+            _sut.AddUser(nameToAdd);
+            var nameList = await _sut.GetNameList();
 
-            Assert.Contains(nameToAdd, _sut.GetNameList());
+            Assert.Contains(nameToAdd, nameList);
         }
 
         [Fact]
         public async Task ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
         {
             const string nameToAdd = "Nhan";
-            var actual = _sut.AddName(nameToAdd);
+            var actual = _sut.AddUser(nameToAdd);
             
             Assert.Contains("already exists", actual.ErrorMessage);
         }

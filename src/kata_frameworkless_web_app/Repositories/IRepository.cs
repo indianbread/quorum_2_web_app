@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace kata_frameworkless_web_app
+namespace kata_frameworkless_web_app.Repositories
 {
     public interface IRepository
     {
-        IEnumerable<string> GetUsers();
+        Task<IEnumerable<User>> GetUsers();
 
         User FindUserByName(string name);
 
         void AddUser(string name);
-        void RemoveData();
+
     }
 }

@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using kata_frameworkless_web_app;
+using kata_frameworkless_web_app.Repositories;
+using kata_frameworkless_web_app.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
@@ -24,7 +27,7 @@ namespace kata_frameworkless_basic_web_application.tests
         private UserController _userController;
         private IRepository _userRepository;
 
-        public IEnumerable<string> GetNameList()
+        public Task<IEnumerable<string>> GetNameList()
         {
             return _userService.GetNameList();
         }

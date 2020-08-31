@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Castle.Core.Resource;
 using kata_frameworkless_web_app;
+using kata_frameworkless_web_app.Repositories;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
@@ -18,9 +20,9 @@ namespace kata_frameworkless_basic_web_application.tests
             };
             
         }
-        public IEnumerable<string> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            return _users.Select(user => user.FirstName);
+            return _users;
         }
 
         public User FindUserByName(string name)

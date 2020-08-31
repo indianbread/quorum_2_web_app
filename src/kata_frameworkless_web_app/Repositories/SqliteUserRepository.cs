@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace kata_frameworkless_web_app
+namespace kata_frameworkless_web_app.Repositories
 {
-    public class UserRepository : IRepository
+    public class SqliteUserRepository : IRepository
     {
-        public UserRepository()
+        public SqliteUserRepository()
         {
             _context = InitializeDatabase();
         }
@@ -35,9 +36,9 @@ namespace kata_frameworkless_web_app
         }
         
         
-        public IEnumerable<string> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            return _context.Users.Select(user => user.FirstName);
+            return _context.Users;
         }
 
         public User FindUserByName(string name)

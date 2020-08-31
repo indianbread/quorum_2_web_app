@@ -32,7 +32,8 @@ namespace kata_frameworkless_basic_web_application.tests
             
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal("/users/Jane/", response.Headers.Location.ToString());
-            Assert.Contains(userToAdd.FirstName, _httpListenerFixture.GetNameList());
+            var names = await _httpListenerFixture.GetNameList();
+            Assert.Contains(userToAdd.FirstName, names);
 
             response.Dispose();
         }

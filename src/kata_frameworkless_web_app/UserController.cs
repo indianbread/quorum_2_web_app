@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using kata_frameworkless_web_app.Services;
 using Newtonsoft.Json.Linq;
 
 namespace kata_frameworkless_web_app
@@ -34,7 +35,7 @@ namespace kata_frameworkless_web_app
 
         public async Task HandleGetIndexRequest(HttpListenerResponse response)
         {
-            var names = _userService.GetNameList();
+            var names = await _userService.GetNameList();
             var responseString = ResponseFormatter.GetGreeting(names.ToList());
             await GenerateResponseBody(response, responseString);
         }
@@ -54,7 +55,7 @@ namespace kata_frameworkless_web_app
 
         private async Task HandleGetNameListRequest(HttpListenerResponse response)
         {
-            var names = _userService.GetNameList();
+            var names = await _userService.GetNameList();
             var nameListFormatted = ResponseFormatter.GenerateNamesListBody(names);
             await GenerateResponseBody(response, nameListFormatted);
         }
@@ -75,7 +76,7 @@ namespace kata_frameworkless_web_app
         private async Task HandlePostNameRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
             var newUserName = GetNameFromRequestBody(request);
-            var result = _userService.AddName(newUserName);
+            var result = _userService.AddUser(newUserName);
             response.StatusCode = (int) result.StatusCode;
             var responseMessage = result.IsSuccess ? result.SuccessMessage : result.ErrorMessage;
             response.AppendHeader("Location", $"/users/{newUserName}/");
@@ -89,7 +90,7 @@ namespace kata_frameworkless_web_app
             var data = reader.ReadToEnd();
             reader.Close();
             var user = JObject.Parse(data);
-            return user["FirstName"].Value<string>();
+            return (user["FirstName"] ?? "").Value<string>();
         }
 
         private static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
