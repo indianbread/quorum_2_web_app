@@ -14,8 +14,8 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         public HttpListenerFixture()
         {
-            _userRepository = new TestUserRepository();
-            _userService = new UserService(_userRepository);
+            _userUserRepository = new TestUserUserRepository();
+            _userService = new UserService(_userUserRepository);
             _userController = new UserController(_userService);
             _basicWebApp = new BasicWebApp(_userController);
             _webAppThread = new Thread(_basicWebApp.Start);
@@ -25,7 +25,7 @@ namespace kata_frameworkless_basic_web_application.tests
         private Thread _webAppThread;
         private readonly UserService _userService;
         private UserController _userController;
-        private IRepository _userRepository;
+        private IUserRepository _userUserRepository;
 
         public Task<IEnumerable<string>> GetNameList()
         {

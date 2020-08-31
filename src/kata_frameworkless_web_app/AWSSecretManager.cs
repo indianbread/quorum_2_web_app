@@ -17,8 +17,7 @@ namespace kata_frameworkless_web_app
         public static string GetSecret()
         {
            var secretName = Environment.GetEnvironmentVariable("SECRET_NAME");
-           //var secretName = "frameworkless_web_app/root_user";
-            var secret = "";
+           var secret = "";
 
             var memoryStream = new MemoryStream();
 

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app.Repositories
 {
-    public class SqliteUserRepository : IRepository
+    public class SqliteUserUserRepository : IUserRepository
     {
-        public SqliteUserRepository()
+        public SqliteUserUserRepository()
         {
             _context = InitializeDatabase();
         }
@@ -36,7 +36,7 @@ namespace kata_frameworkless_web_app.Repositories
         }
         
         
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return _context.Users;
         }

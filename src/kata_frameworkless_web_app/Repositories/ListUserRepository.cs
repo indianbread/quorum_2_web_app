@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app.Repositories
 {
-    public class ListRepository : IRepository
+    public class ListUserRepository : IUserRepository
     {
 
         private readonly List<User> _users;
 
-        public ListRepository()
+        public ListUserRepository()
         {
             _users = new List<User>();
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return _users;
         }

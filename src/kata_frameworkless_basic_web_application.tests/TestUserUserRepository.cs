@@ -7,11 +7,11 @@ using kata_frameworkless_web_app.Repositories;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
-    public class TestUserRepository : IRepository
+    public class TestUserUserRepository : IUserRepository
     {
         private readonly List<User> _users;
 
-        public TestUserRepository()
+        public TestUserUserRepository()
         {
             _users = new List<User>()
             {
@@ -20,7 +20,7 @@ namespace kata_frameworkless_basic_web_application.tests
             };
             
         }
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return _users;
         }

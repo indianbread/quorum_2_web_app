@@ -14,11 +14,11 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         public UserServiceShould()
         {
-            _sut = new UserService(_testRepository);
+            _sut = new UserService(_testUserRepository);
 
         }
         
-        private readonly IRepository _testRepository = new TestUserRepository();
+        private readonly IUserRepository _testUserRepository = new TestUserUserRepository();
         private readonly UserService _sut;
         
 

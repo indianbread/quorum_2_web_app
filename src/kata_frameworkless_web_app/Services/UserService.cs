@@ -8,21 +8,21 @@ namespace kata_frameworkless_web_app.Services
 {
     public class UserService
     {
-        public UserService(IRepository userRepository) 
+        public UserService(IUserRepository userUserRepository) 
         {
-            _userRepository = userRepository;
+            _userUserRepository = userUserRepository;
         }
         
-        private readonly IRepository _userRepository;
+        private readonly IUserRepository _userUserRepository;
 
         public void AddSecretUserName(string name)
         {
-            _userRepository.AddUser(name);
+            _userUserRepository.AddUser(name);
         }
 
         public async Task<IEnumerable<string>> GetNameList()
         {
-            var users = await _userRepository.GetUsers();
+            var users = await _userUserRepository.GetUsersAsync();
             return users.Select(user => user.FirstName);
             
         }
@@ -38,13 +38,13 @@ namespace kata_frameworkless_web_app.Services
             {
                 return RequestResult.CreateError("Name already exists", HttpStatusCode.Conflict);
             }
-            _userRepository.AddUser(name);
+            _userUserRepository.AddUser(name);
             return RequestResult.CreateSuccess("User added successfully", HttpStatusCode.Created);
         }
         
         private bool UserExists(string name)
         {
-            return _userRepository.FindUserByName(name) != null;
+            return _userUserRepository.FindUserByName(name) != null;
         }
     }
 }

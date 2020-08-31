@@ -5,7 +5,7 @@ using Amazon.DynamoDBv2.DocumentModel;
 
 namespace kata_frameworkless_web_app.Repositories
 {
-    public class DynamoDbUserRepository : IRepository
+    public class DynamoDbUserRepository : IUserRepository
     {
         private readonly IDynamoDBContext _dbContext;
 
@@ -13,7 +13,7 @@ namespace kata_frameworkless_web_app.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             var conditions = new List<ScanCondition>();
             return await _dbContext.ScanAsync<User>(conditions).GetRemainingAsync();

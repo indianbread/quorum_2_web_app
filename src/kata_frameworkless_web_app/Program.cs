@@ -18,7 +18,7 @@ namespace kata_frameworkless_web_app
             // var table = new AwsDynamoDbTable(dynamoDbClient);
             // table.CreateTableAsync("Users");
             Console.WriteLine("starting app");
-            var userRepository = new SqliteUserRepository();
+            var userRepository = new SqliteUserUserRepository();
             var userService = new UserService(userRepository);
             userRepository.RemoveData();
             var secretUser = AwsSecretManager.GetSecret();
