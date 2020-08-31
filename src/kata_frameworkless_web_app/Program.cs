@@ -14,7 +14,7 @@ namespace kata_frameworkless_web_app
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
 
             var dynamoDb = new AwsDynamoDb.AwsDynamoDb();
@@ -24,7 +24,7 @@ namespace kata_frameworkless_web_app
             var dynamoDbUserContext = new DynamoDBContext(dynamoDbClient);
             var dynamoDbUserRepository = new DynamoDbUserRepository(dynamoDbUserContext);
             var table = new AwsDynamoDbTable(dynamoDbClient);
-            table.CreateTableAsync(UserTableConstant.TableName, UserTableConstant.AttributeDefinitions,
+            await table.CreateTableAsync(UserTableConstant.TableName, UserTableConstant.AttributeDefinitions,
                 UserTableConstant.KeySchemaElements, UserTableConstant.ProvisionedThroughput);
             Console.WriteLine("starting app");
             //var userRepository = new SqliteUserUserRepository();
