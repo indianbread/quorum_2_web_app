@@ -7,7 +7,7 @@ namespace kata_frameworkless_web_app.Repositories
     {
         Task<IEnumerable<User>> GetUsersAsync();
 
-        User FindUserByName(string name);
+        Task<User> FindUserByName(string name);
 
         void AddUser(string name);
 

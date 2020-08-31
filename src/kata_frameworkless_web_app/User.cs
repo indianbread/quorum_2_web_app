@@ -8,7 +8,7 @@ namespace kata_frameworkless_web_app
     public class User
     {
         [DynamoDBHashKey]
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string FirstName { get; set; }
 
         

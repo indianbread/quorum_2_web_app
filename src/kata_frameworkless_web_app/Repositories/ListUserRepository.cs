@@ -19,7 +19,7 @@ namespace kata_frameworkless_web_app.Repositories
             return _users;
         }
 
-        public User FindUserByName(string name)
+        public async Task<User> FindUserByName(string name)
         {
             return _users.FirstOrDefault(users => users.FirstName == name);
         }

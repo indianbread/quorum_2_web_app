@@ -25,7 +25,7 @@ namespace kata_frameworkless_basic_web_application.tests
             return _users;
         }
 
-        public User FindUserByName(string name)
+        public async Task<User> FindUserByName(string name)
         {
             return _users.FirstOrDefault(user => user.FirstName == name);
         }
