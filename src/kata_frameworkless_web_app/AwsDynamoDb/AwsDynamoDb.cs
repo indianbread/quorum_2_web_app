@@ -4,10 +4,11 @@ using Amazon.DynamoDBv2;
 
 namespace kata_frameworkless_web_app.AwsDynamoDb
 {
-    public class AwsDynamoDb
+    public static class AwsDynamoDb
     {
-        public AwsDynamoDbOperationResult CreateClient(bool useDynamoDBLocal)
+        public static AmazonDynamoDBClient CreateClient(bool useDynamoDBLocal)
         {
+            AmazonDynamoDBClient client;
             if (useDynamoDBLocal)
             {
                 var localFound = false;
@@ -27,41 +28,36 @@ namespace kata_frameworkless_web_app.AwsDynamoDb
 
                 if (!localFound)
                 {
-                    var errorMessage = "DynamoDB Local does not appear to have been started";
-                    Console.WriteLine("Error: " + errorMessage);
-                    return AwsDynamoDbOperationResult.Failed(errorMessage);
+                    const string errorMessage = "DynamoDB Local does not appear to have been started";
+                    throw new Exception(errorMessage);
                 }
 
                 Console.WriteLine("Setting up a DynamoDB Local client");
                 var ddbConfig = new AmazonDynamoDBConfig {ServiceURL = "http://localhost:8000"};
                 try
                 {
-                    Client = new AmazonDynamoDBClient(ddbConfig);
-
+                    client = new AmazonDynamoDBClient(ddbConfig);
+                    
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Failed to create a DynamoDBLocal client:" + e.Message);
-                    return AwsDynamoDbOperationResult.Failed(e.Message);
+                    throw new Exception("Failed to create a DynamoDBLocal client: " + e.Message);
                 }
             }
             else
             {
                 try
                 {
-                    Client = new AmazonDynamoDBClient();
+                    client = new AmazonDynamoDBClient();
 
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Failed to create a DynamoDB Client: " + e.Message);
-                    return AwsDynamoDbOperationResult.Failed(e.Message);
+                    throw new Exception("Failed to create a DynamoDB Client: " + e.Message);
                 }
             }
-            
-            return AwsDynamoDbOperationResult.Success();
-        }
 
-        public AmazonDynamoDBClient Client;
+            return client;
+        }
     }
 }
