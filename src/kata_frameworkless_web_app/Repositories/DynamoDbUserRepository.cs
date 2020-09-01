@@ -15,7 +15,7 @@ namespace kata_frameworkless_web_app.Repositories
         {
             _dbContext = dbContext;
         }
-        public IEnumerable<User> GetUsersAsync()
+        public IEnumerable<User> GetUsers()
         {
             var conditions = new List<ScanCondition>();
             return _dbContext.ScanAsync<User>(conditions).GetRemainingAsync().GetAwaiter().GetResult();
@@ -29,7 +29,7 @@ namespace kata_frameworkless_web_app.Repositories
             return searchResults.FirstOrDefault();
         }
 
-        public async Task AddUser(string name)
+        public async Task AddUserAsync(string name)
         {
             var userId = Guid.NewGuid().ToString();
             var newUser = new User() { Id = userId, FirstName = name};

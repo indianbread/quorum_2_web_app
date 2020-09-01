@@ -20,17 +20,17 @@ namespace kata_frameworkless_basic_web_application.tests
             };
             
         }
-        public async IEnumerable<User> GetUsersAsync()
+        public IEnumerable<User> GetUsers()
         {
             return _users;
         }
 
-        public async User FindUserByName(string name)
+        public User FindUserByName(string name)
         {
             return _users.FirstOrDefault(user => user.FirstName == name);
         }
 
-        public Task AddUser(string name)
+        public async Task AddUserAsync(string name)
         {
             _users.Add(new User() {FirstName = name}); 
         }

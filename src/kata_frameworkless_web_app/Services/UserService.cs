@@ -17,7 +17,7 @@ namespace kata_frameworkless_web_app.Services
 
         public IEnumerable<string> GetNameList()
         {
-            var users = _userRepository.GetUsersAsync();
+            var users = _userRepository.GetUsers();
             return users.Select(user => user.FirstName);
             
         }
@@ -33,7 +33,7 @@ namespace kata_frameworkless_web_app.Services
             {
                 return RequestResult.CreateError("Name already exists", HttpStatusCode.Conflict);
             }
-            _userRepository.AddUser(name);
+            _userRepository.AddUserAsync(name);
             return RequestResult.CreateSuccess("User added successfully", HttpStatusCode.Created);
         }
         

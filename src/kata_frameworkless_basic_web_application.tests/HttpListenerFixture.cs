@@ -27,7 +27,7 @@ namespace kata_frameworkless_basic_web_application.tests
         private UserController _userController;
         private IUserRepository _userUserRepository;
 
-        public Task<IEnumerable<string>> GetNameList()
+        public IEnumerable<string> GetNameList()
         {
             return _userService.GetNameList();
         }

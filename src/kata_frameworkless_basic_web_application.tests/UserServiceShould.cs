@@ -23,26 +23,26 @@ namespace kata_frameworkless_basic_web_application.tests
         
 
         [Fact]
-        public async Task RetrieveListOfNamesIncludingSecretUser()
+        public void RetrieveListOfNamesIncludingSecretUser()
         {
-            var actual = await _sut.GetNameList();
+            var actual = _sut.GetNameList();
 
             Assert.Contains("Nhan", actual);
             Assert.Contains("Bob", actual);
         }
 
         [Fact]
-        public async Task AddNameToDatabaseIfNewName()
+        public void AddNameToDatabaseIfNewName()
         {
             const string nameToAdd = "Bart";
             _sut.AddUser(nameToAdd);
-            var nameList = await _sut.GetNameList();
+            var nameList = _sut.GetNameList();
 
             Assert.Contains(nameToAdd, nameList);
         }
 
         [Fact]
-        public async Task ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
+        public void ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
         {
             const string nameToAdd = "Nhan";
             var actual = _sut.AddUser(nameToAdd);

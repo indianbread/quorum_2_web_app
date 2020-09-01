@@ -14,7 +14,7 @@ namespace kata_frameworkless_web_app.Repositories
             _users = new List<User>();
         }
 
-        public IEnumerable<User> GetUsersAsync()
+        public IEnumerable<User> GetUsers()
         {
             return _users;
         }
@@ -24,7 +24,7 @@ namespace kata_frameworkless_web_app.Repositories
             return _users.FirstOrDefault(users => users.FirstName == name);
         }
 
-        public async Task AddUser(string name)
+        public async Task AddUserAsync(string name)
         {
             _users.Add(new User() {FirstName = name});
         }
