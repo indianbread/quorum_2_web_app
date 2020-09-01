@@ -86,11 +86,12 @@ namespace kata_frameworkless_web_app
         private static string GetNameFromRequestBody(HttpListenerRequest request)
         {
             var body = request.InputStream;
-            var reader = new StreamReader(body, Encoding.UTF8);
-            var data = reader.ReadToEnd();
-            reader.Close();
-            var user = JObject.Parse(data);
-            return (user["FirstName"] ?? "").Value<string>();
+            using (var reader = new StreamReader(body, Encoding.UTF8))
+            {
+                var data = reader.ReadToEnd();
+                var user = JObject.Parse(data);
+                return (user["FirstName"] ?? "").Value<string>();
+            }
         }
 
         private static async Task GenerateResponseBodyAsync(HttpListenerResponse response, string responseString)

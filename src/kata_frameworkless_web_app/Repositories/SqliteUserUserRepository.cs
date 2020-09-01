@@ -48,8 +48,8 @@ namespace kata_frameworkless_web_app.Repositories
 
         public async Task AddUserAsync(string name)
         {
-            _context.Users.Add(new User() {FirstName = name});
-            _context.SaveChanges();
+            await _context.Users.AddAsync(new User() {FirstName = name});
+            await _context.SaveChangesAsync();
         }
     }
 }
