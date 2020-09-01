@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,17 +25,16 @@ namespace kata_frameworkless_basic_web_application.tests
         [Fact]
         public async Task POST_Name_ReturnsStatus201_IfAddedSuccessfully()
         {
-            var userToAdd = new User() {FirstName = "Jane"};
+            var userToAdd = new User() {FirstName= "Jane"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
             var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal("User added successfully", response.Content.ReadAsStringAsync().Result);
             Assert.Equal("/users/Jane/", response.Headers.Location.ToString());
-            var names = _httpListenerFixture.GetNameList();
-            Assert.Contains(userToAdd.FirstName, names);
-
+            
             response.Dispose();
         }
 
@@ -44,6 +44,9 @@ namespace kata_frameworkless_basic_web_application.tests
             var userToAdd = new User() {FirstName = "Bob"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response1 = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            response1.Dispose();
+            
             var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             

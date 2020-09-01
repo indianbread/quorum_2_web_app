@@ -16,8 +16,9 @@ namespace kata_frameworkless_web_app
     {
         static async Task Main(string[] args)
         {
-            var dynamoDbClient = AwsDynamoDb.AwsDynamoDb.CreateClient(true);
-            //var dbClient = new AmazonDynamoDBClient();
+           // var dynamoDbClient = AwsDynamoDb.AwsDynamoDb.CreateClient(Environment.GetEnvironmentVariable("WEBAPP_ENVIRONMENT") == "DEVELOPMENT") ;
+           var config = new AmazonDynamoDBConfig {ServiceURL = "http://localhost:8000"};
+           var dynamoDbClient = new AmazonDynamoDBClient(config);
             var dynamoDbUserContext = new DynamoDBContext(dynamoDbClient);
             var dynamoDbUserRepository = new DynamoDbUserRepository(dynamoDbUserContext);
             var table = new AwsDynamoDbTable(dynamoDbClient);

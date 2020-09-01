@@ -4,7 +4,7 @@ using Amazon.DynamoDBv2.DataModel;
 namespace kata_frameworkless_web_app
 {
     //[Table("Users", Schema = "dbo")]
-    [DynamoDBTable("User")]
+    [DynamoDBTable("NhanUser")]
     public class User
     {
         [DynamoDBHashKey]

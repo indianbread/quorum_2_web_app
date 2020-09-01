@@ -5,7 +5,7 @@ namespace kata_frameworkless_web_app.AwsDynamoDb
 {
     public class UserTableConstant
     {
-        public const string TableName = "User";
+        public const string TableName = "NhanUser";
 
         public static readonly List<AttributeDefinition> AttributeDefinitions = new List<AttributeDefinition>()
         {

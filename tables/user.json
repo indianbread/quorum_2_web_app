@@ -1,0 +1,15 @@
+{
+  "TableName": "NhanUser",
+  "KeySchema": [
+    { "AttributeName": "Id", "KeyType": "HASH" },
+    { "AttributeName": "FirstName", "KeyType": "RANGE" }
+  ],
+  "AttributeDefinitions": [
+    { "AttributeName": "Id", "AttributeType": "S" },
+    { "AttributeName": "FirstName", "AttributeType": "S" }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 5
+  }
+}
