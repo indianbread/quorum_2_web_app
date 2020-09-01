@@ -21,9 +21,9 @@ namespace kata_frameworkless_web_app
            var dynamoDbClient = new AmazonDynamoDBClient(config);
             var dynamoDbUserContext = new DynamoDBContext(dynamoDbClient);
             var dynamoDbUserRepository = new DynamoDbUserRepository(dynamoDbUserContext);
-            var table = new AwsDynamoDbTable(dynamoDbClient);
-            await table.CreateTableAsync(UserTableConstant.TableName, UserTableConstant.AttributeDefinitions,
-                UserTableConstant.KeySchemaElements, UserTableConstant.ProvisionedThroughput);
+            // var table = new AwsDynamoDbTable(dynamoDbClient);
+            // await table.CreateTableAsync(UserTableConstant.TableName, UserTableConstant.AttributeDefinitions,
+            //     UserTableConstant.KeySchemaElements, UserTableConstant.ProvisionedThroughput);
             var userService = new UserService(dynamoDbUserRepository);
             var secretUser = AwsSecretManager.GetSecret();
             userService.AddUser(secretUser);
