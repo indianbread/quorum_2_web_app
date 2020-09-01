@@ -36,17 +36,17 @@ namespace kata_frameworkless_web_app.Repositories
         }
         
         
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        public IEnumerable<User> GetUsersAsync()
         {
             return _context.Users;
         }
 
-        public async Task<User> FindUserByName(string name)
+        public User FindUserByName(string name)
         {
             return _context.Users.FirstOrDefault(users => users.FirstName == name);
         }
 
-        public void AddUser(string name)
+        public async Task AddUser(string name)
         {
             _context.Users.Add(new User() {FirstName = name});
             _context.SaveChanges();

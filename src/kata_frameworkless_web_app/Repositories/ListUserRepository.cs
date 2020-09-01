@@ -14,17 +14,17 @@ namespace kata_frameworkless_web_app.Repositories
             _users = new List<User>();
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        public IEnumerable<User> GetUsersAsync()
         {
             return _users;
         }
 
-        public async Task<User> FindUserByName(string name)
+        public User FindUserByName(string name)
         {
             return _users.FirstOrDefault(users => users.FirstName == name);
         }
 
-        public void AddUser(string name)
+        public async Task AddUser(string name)
         {
             _users.Add(new User() {FirstName = name});
         }

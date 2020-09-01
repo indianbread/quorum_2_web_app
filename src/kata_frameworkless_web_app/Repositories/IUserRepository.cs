@@ -5,11 +5,11 @@ namespace kata_frameworkless_web_app.Repositories
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetUsersAsync();
+        IEnumerable<User> GetUsersAsync();
 
-        Task<User> FindUserByName(string name);
+        User FindUserByName(string name);
 
-        void AddUser(string name);
+        Task AddUser(string name);
 
     }
 }

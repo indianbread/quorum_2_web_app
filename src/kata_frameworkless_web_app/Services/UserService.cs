@@ -15,9 +15,9 @@ namespace kata_frameworkless_web_app.Services
         
         private readonly IUserRepository _userRepository;
 
-        public async Task<IEnumerable<string>> GetNameList()
+        public IEnumerable<string> GetNameList()
         {
-            var users = await _userRepository.GetUsersAsync();
+            var users = _userRepository.GetUsersAsync();
             return users.Select(user => user.FirstName);
             
         }

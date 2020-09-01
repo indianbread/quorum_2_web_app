@@ -35,7 +35,7 @@ namespace kata_frameworkless_web_app
 
         public async Task HandleGetIndexRequestAsync(HttpListenerResponse response)
         {
-            var names = await _userService.GetNameList();
+            var names = _userService.GetNameList();
             var responseString = ResponseFormatter.GetGreeting(names.ToList());
             await GenerateResponseBodyAsync(response, responseString);
         }
@@ -55,7 +55,7 @@ namespace kata_frameworkless_web_app
 
         private async Task HandleGetNameListRequestAsync(HttpListenerResponse response)
         {
-            var names = await _userService.GetNameList();
+            var names = _userService.GetNameList();
             var nameListFormatted = ResponseFormatter.GenerateNamesListBody(names);
             await GenerateResponseBodyAsync(response, nameListFormatted);
         }
