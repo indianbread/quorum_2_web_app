@@ -10,7 +10,6 @@ namespace kata_frameworkless_web_app
         [DynamoDBHashKey]
         public string Id { get; set; }
         public string FirstName { get; set; }
-
         
     }
 }

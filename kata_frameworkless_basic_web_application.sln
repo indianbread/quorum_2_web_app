@@ -4,6 +4,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata_frameworkless_web_app"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata_frameworkless_basic_web_application.tests", "src\kata_frameworkless_basic_web_application.tests\kata_frameworkless_basic_web_application.tests.csproj", "{8FC81E96-7485-4444-924D-87284719BCE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata.users.domain", "src\kata.users.domain\kata.users.domain.csproj", "{6952C8C6-2762-4D27-8469-846C2275805E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata.users.repositories", "src\kata.users.repositories\kata.users.repositories.csproj", "{EE25C1EE-F72C-4846-B108-869B9AFC7AE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata.users.shared", "src\kata.users.shared\kata.users.shared.csproj", "{3588D631-2FA7-466A-A6DD-48486EEF49DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +24,17 @@ Global
 		{8FC81E96-7485-4444-924D-87284719BCE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FC81E96-7485-4444-924D-87284719BCE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FC81E96-7485-4444-924D-87284719BCE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6952C8C6-2762-4D27-8469-846C2275805E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6952C8C6-2762-4D27-8469-846C2275805E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6952C8C6-2762-4D27-8469-846C2275805E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6952C8C6-2762-4D27-8469-846C2275805E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE25C1EE-F72C-4846-B108-869B9AFC7AE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE25C1EE-F72C-4846-B108-869B9AFC7AE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE25C1EE-F72C-4846-B108-869B9AFC7AE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE25C1EE-F72C-4846-B108-869B9AFC7AE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3588D631-2FA7-466A-A6DD-48486EEF49DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3588D631-2FA7-466A-A6DD-48486EEF49DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3588D631-2FA7-466A-A6DD-48486EEF49DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3588D631-2FA7-466A-A6DD-48486EEF49DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
