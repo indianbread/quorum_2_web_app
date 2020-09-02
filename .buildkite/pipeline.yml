@@ -11,8 +11,8 @@ steps:
       - "./dynamodb_local/dynamodb_local_startup.sh"
     agents:
       queue: "katherine-lab"
-      plugins:
-        - docker-compose#v3.5.0:
+#      plugins:
+#        - docker-compose#v3.5.0:
 #            run: app
 #            config:
 #              - docker-compose-dynamodb-local.yml
