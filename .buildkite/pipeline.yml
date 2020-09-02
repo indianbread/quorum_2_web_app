@@ -6,11 +6,11 @@ steps:
 #      queue: "katherine-lab"
 #      
 #  - wait
-  - label: "Setting up DynamoDb Local"
-    command:
-      - "./dynamodb_local/dynamodb_local_startup.sh"
-    agents:
-      queue: "katherine-lab"
+#  - label: "Setting up DynamoDb Local"
+#    command:
+#      - "./dynamodb_local/dynamodb_local_startup.sh"
+#    agents:
+#      queue: "katherine-lab"
 #      plugins:
 #        - docker-compose#v3.5.0:
 #            run: app
@@ -20,6 +20,7 @@ steps:
       
   - label: ":hammer: Test, Build and push to ECR"
     command:
+      - "./dynamodb_local/dynamodb_local_startup.sh"
       - "./ops/scripts/build_push_image.sh ${BUILDKITE_BUILD_NUMBER}"
 #    branches: master
     agents:
