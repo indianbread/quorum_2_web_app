@@ -6,7 +6,18 @@ steps:
 #      queue: "katherine-lab"
 #      
 #  - wait
-
+  - label: "Setting up DynamoDb Local"
+    command:
+      - "./dynamodb_local/dynamodb_local_startup.sh"
+    agents:
+      queue: "katherine-lab"
+      plugins:
+        - docker-compose#v3.5.0:
+            run: app
+            config:
+              - docker-compose-dynamodb-local.yml
+  - wait
+      
   - label: ":hammer: Test, Build and push to ECR"
     command:
       - "./ops/scripts/build_push_image.sh ${BUILDKITE_BUILD_NUMBER}"
@@ -16,7 +27,7 @@ steps:
     plugins:
       - ecr#v2.1.1:
           login: true
-          
+           
   - wait
     
   - label: ":rocket: Deploy to Jupiter"
