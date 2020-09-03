@@ -11,4 +11,3 @@ mkdir ./dynamolocal
 tar -xf dynamodb_local_latest.tar -C ./dynamolocal
 cd ./dynamolocal
 java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
-dynamo
