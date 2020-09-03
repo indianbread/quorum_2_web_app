@@ -11,4 +11,4 @@ if [ "$?" != "0" ]; then
   echo "Creating User table"
   aws dynamodb create-table --table-name NhanUser --cli-input-json file://dynamodb_local/tables/user.json --endpoint-url http://localhost:8000 --output text
 fi
-echo "ABC"   
+   
