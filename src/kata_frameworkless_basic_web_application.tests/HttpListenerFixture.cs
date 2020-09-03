@@ -36,7 +36,7 @@ namespace kata_frameworkless_basic_web_application.tests
 
         private static IUserRepository CreateDynamoDbUserRepository()
         {
-            var config = new AmazonDynamoDBConfig {ServiceURL = "http://*:8000"};
+            var config = new AmazonDynamoDBConfig {ServiceURL = "http://localhost:8000"};
             var dynamoDbClient = new AmazonDynamoDBClient(config);
             var dynamoDbUserContext = new DynamoDBContext(dynamoDbClient);
             return new DynamoDbUserRepository(dynamoDbUserContext);
