@@ -1,11 +1,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Amazon.DynamoDBv2.DataModel;
 
 namespace kata_frameworkless_web_app
 {
-    [Table("Users", Schema = "dbo")]
+    //[Table("Users", Schema = "dbo")]
+    [DynamoDBTable("NhanUser")]
     public class User
     {
-        public int Id { get; set; }
+        [DynamoDBHashKey]
+        public string Id { get; set; }
         public string FirstName { get; set; }
 
         

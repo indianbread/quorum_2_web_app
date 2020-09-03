@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,25 +25,26 @@ namespace kata_frameworkless_basic_web_application.tests
         [Fact]
         public async Task POST_Name_ReturnsStatus201_IfAddedSuccessfully()
         {
-            var userToAdd = new User() {FirstName = "Jane"};
+            var userToAdd = new User() {FirstName= "Jane"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
             var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal("User added successfully", response.Content.ReadAsStringAsync().Result);
             Assert.Equal("/users/Jane/", response.Headers.Location.ToString());
-            Assert.Contains(userToAdd.FirstName, _httpListenerFixture.GetNameList());
-
+            
             response.Dispose();
         }
 
         [Fact]
-        public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists() 
-        { 
+        public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists()
+        {
             var userToAdd = new User() {FirstName = "Bob"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            
             var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             

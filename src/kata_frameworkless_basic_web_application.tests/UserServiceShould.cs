@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app;
+using kata_frameworkless_web_app.Repositories;
+using kata_frameworkless_web_app.Services;
 using Moq;
 using Xunit;
 
@@ -12,11 +14,11 @@ namespace kata_frameworkless_basic_web_application.tests
     {
         public UserServiceShould()
         {
-            _sut = new UserService(_testRepository);
+            _sut = new UserService(_testUserRepository);
 
         }
         
-        private readonly IRepository _testRepository = new TestUserRepository();
+        private readonly IUserRepository _testUserRepository = new TestUserUserRepository();
         private readonly UserService _sut;
         
 
@@ -33,16 +35,17 @@ namespace kata_frameworkless_basic_web_application.tests
         public void AddNameToDatabaseIfNewName()
         {
             const string nameToAdd = "Bart";
-            var actual = _sut.AddName(nameToAdd);
+            _sut.AddUser(nameToAdd);
+            var nameList = _sut.GetNameList();
 
-            Assert.Contains(nameToAdd, _sut.GetNameList());
+            Assert.Contains(nameToAdd, nameList);
         }
 
         [Fact]
-        public async Task ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
+        public void ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
         {
             const string nameToAdd = "Nhan";
-            var actual = _sut.AddName(nameToAdd);
+            var actual = _sut.AddUser(nameToAdd);
             
             Assert.Contains("already exists", actual.ErrorMessage);
         }

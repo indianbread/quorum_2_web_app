@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using kata_frameworkless_web_app.Services;
 using Newtonsoft.Json.Linq;
 
 namespace kata_frameworkless_web_app
@@ -16,15 +17,15 @@ namespace kata_frameworkless_web_app
 
         private readonly UserService _userService;
 
-        public async Task HandleRequest(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandleRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.HttpMethod)
             {
                 case "GET":
-                    await HandleGetRequest(request, response);
+                    await HandleGetRequestAsync(request, response);
                     break;
                 case "POST":
-                    await HandlePostRequest(request, response);
+                    await HandlePostRequestAsync(request, response);
                     break;
                 default:
                     response.StatusCode = 404;
@@ -32,19 +33,19 @@ namespace kata_frameworkless_web_app
             }
         }
 
-        public async Task HandleGetIndexRequest(HttpListenerResponse response)
+        public async Task HandleGetIndexRequestAsync(HttpListenerResponse response)
         {
             var names = _userService.GetNameList();
             var responseString = ResponseFormatter.GetGreeting(names.ToList());
-            await GenerateResponseBody(response, responseString);
+            await GenerateResponseBodyAsync(response, responseString);
         }
         
-        private async Task HandleGetRequest(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.Url.Segments[2])
             {
                 case "names/":
-                   await HandleGetNameListRequest(response);
+                   await HandleGetNameListRequestAsync(response);
                    break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;
@@ -52,19 +53,19 @@ namespace kata_frameworkless_web_app
             }
         }
 
-        private async Task HandleGetNameListRequest(HttpListenerResponse response)
+        private async Task HandleGetNameListRequestAsync(HttpListenerResponse response)
         {
             var names = _userService.GetNameList();
             var nameListFormatted = ResponseFormatter.GenerateNamesListBody(names);
-            await GenerateResponseBody(response, nameListFormatted);
+            await GenerateResponseBodyAsync(response, nameListFormatted);
         }
 
-        private async Task HandlePostRequest(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.Url.Segments[2])
             {
                 case "add/":
-                    await HandlePostNameRequest(request, response);
+                    await HandlePostNameRequestAsync(request, response);
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;
@@ -72,27 +73,28 @@ namespace kata_frameworkless_web_app
             }
         }
 
-        private async Task HandlePostNameRequest(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandlePostNameRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             var newUserName = GetNameFromRequestBody(request);
-            var result = _userService.AddName(newUserName);
+            var result = _userService.AddUser(newUserName);
             response.StatusCode = (int) result.StatusCode;
             var responseMessage = result.IsSuccess ? result.SuccessMessage : result.ErrorMessage;
             response.AppendHeader("Location", $"/users/{newUserName}/");
-            await GenerateResponseBody(response, responseMessage);
+            await GenerateResponseBodyAsync(response, responseMessage);
         }
 
         private static string GetNameFromRequestBody(HttpListenerRequest request)
         {
             var body = request.InputStream;
-            var reader = new StreamReader(body, Encoding.UTF8);
-            var data = reader.ReadToEnd();
-            reader.Close();
-            var user = JObject.Parse(data);
-            return user["FirstName"].Value<string>();
+            using (var reader = new StreamReader(body, Encoding.UTF8))
+            {
+                var data = reader.ReadToEnd();
+                var user = JObject.Parse(data);
+                return (user["FirstName"] ?? "").Value<string>();
+            }
         }
 
-        private static async Task GenerateResponseBody(HttpListenerResponse response, string responseString)
+        private static async Task GenerateResponseBodyAsync(HttpListenerResponse response, string responseString)
         {
             var buffer = Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;

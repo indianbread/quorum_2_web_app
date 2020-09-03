@@ -1,21 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace kata_frameworkless_web_app
+namespace kata_frameworkless_web_app.Repositories
 {
-    public class ListRepository : IRepository
+    public class ListUserRepository : IUserRepository
     {
 
         private readonly List<User> _users;
 
-        public ListRepository()
+        public ListUserRepository()
         {
             _users = new List<User>();
         }
 
-        public IEnumerable<string> GetUsers()
+        public IEnumerable<User> GetUsers()
         {
-            return _users.Select(user => user.FirstName);
+            return _users;
         }
 
         public User FindUserByName(string name)
@@ -23,7 +24,7 @@ namespace kata_frameworkless_web_app
             return _users.FirstOrDefault(users => users.FirstName == name);
         }
 
-        public void AddUser(string name)
+        public async Task AddUserAsync(string name)
         {
             _users.Add(new User() {FirstName = name});
         }
