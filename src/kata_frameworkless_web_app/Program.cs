@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Xml;
+using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using kata_frameworkless_web_app.AwsDynamoDb;
@@ -18,7 +19,9 @@ namespace kata_frameworkless_web_app
         {
            // var dynamoDbClient = AwsDynamoDb.AwsDynamoDb.CreateClient(Environment.GetEnvironmentVariable("WEBAPP_ENVIRONMENT") == "DEVELOPMENT") ;
            // var config = new AmazonDynamoDBConfig {ServiceURL = "http://localhost:8000"};
-            var dynamoDbClient = new AmazonDynamoDBClient();
+           var config = new AmazonDynamoDBConfig();
+           config.RegionEndpoint = RegionEndpoint.APSoutheast2;
+           var dynamoDbClient = new AmazonDynamoDBClient(config);
             var dynamoDbUserContext = new DynamoDBContext(dynamoDbClient);
             var dynamoDbUserRepository = new DynamoDbUserRepository(dynamoDbUserContext);
             // var table = new AwsDynamoDbTable(dynamoDbClient);
