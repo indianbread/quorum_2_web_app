@@ -18,6 +18,7 @@ RUN dotnet build
 FROM build AS test
 WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
 COPY /ops/scripts/test_with_dynamodb.sh ./
+COPY /dynamodb_local/tables/ ./dynamodb_local/tables/
 #RUN java -Djava.library.path=/dynamolocal/DynamoDBLocal_lib -jar /dynamolocal/DynamoDBLocal.jar -sharedDb & && dotnet test
 RUN sh test_with_dynamodb.sh
 FROM build AS publish
