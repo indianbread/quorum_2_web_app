@@ -14,7 +14,13 @@ RUN dotnet build
 #run the unit tests
 FROM build AS test
 WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
-RUN dotnet test
+COPY /dynamodb_local/ ./dynamodb_local
+COPY /ops/scripts/test.sh ./
+COPY --from=library/docker:latest /usr/local/bin/docker /usr/bin/docker
+COPY --from=docker/compose:latest /usr/local/bin/docker-compose /usr/bin/docker-compose
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && apt-get update && apt-get install unzip && unzip awscliv2.zip && ./aws/install
+RUN sh test.sh
+#RUN dotnet test
 
 FROM build AS publish
 WORKDIR /app/src/kata_frameworkless_web_app
