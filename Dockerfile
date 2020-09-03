@@ -17,8 +17,9 @@ RUN dotnet build
 #run the unit tests
 FROM build AS test
 WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
-RUN "java -Djava.library.path=/dynamolocal/DynamoDBLocal_lib -jar /dynamolocal/DynamoDBLocal.jar -sharedDb &" && dotnet test
-
+COPY /ops/scripts/test_with_dynamodb.sh ./
+#RUN java -Djava.library.path=/dynamolocal/DynamoDBLocal_lib -jar /dynamolocal/DynamoDBLocal.jar -sharedDb & && dotnet test
+RUN sh test_with_dynamodb.sh
 FROM build AS publish
 WORKDIR /app/src/kata_frameworkless_web_app
 RUN dotnet publish -c Release -o publish
