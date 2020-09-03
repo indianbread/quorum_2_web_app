@@ -39,13 +39,12 @@ namespace kata_frameworkless_basic_web_application.tests
         }
 
         [Fact]
-        public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists() 
-        { 
+        public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists()
+        {
+            await _httpListenerFixture.AddTestUser();
             var userToAdd = new User() {FirstName = "Bob"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response1 = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
-            response1.Dispose();
             
             var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;

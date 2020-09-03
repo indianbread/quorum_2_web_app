@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
@@ -9,6 +11,7 @@ using kata_frameworkless_web_app.Repositories;
 using kata_frameworkless_web_app.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Newtonsoft.Json;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
@@ -29,9 +32,13 @@ namespace kata_frameworkless_basic_web_application.tests
         private UserController _userController;
         private IUserRepository _userRepository;
 
-        public IEnumerable<string> GetNameList()
+        public async Task AddTestUser()
         {
-            return _userService.GetNameList();
+            var userToAdd = new User() {FirstName = "Bob"};
+            var jsonContent = JsonConvert.SerializeObject(userToAdd);
+            HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var httpClient = new HttpClient();
+            await httpClient.PostAsync("http://localhost:8080/users/add/", content);
         }
 
         private static IUserRepository CreateDynamoDbUserRepository()
