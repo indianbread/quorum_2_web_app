@@ -8,7 +8,8 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using kata_frameworkless_web_app;
 using kata_frameworkless_web_app.Repositories;
-using kata_frameworkless_web_app.Services;
+using kata.users.domain;
+using kata.users.repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Newtonsoft.Json;
@@ -30,7 +31,7 @@ namespace kata_frameworkless_basic_web_application.tests
         private Thread _webAppThread;
         private readonly UserService _userService;
         private UserController _userController;
-        private IUserRepository _userRepository;
+        private kata.users.shared.IUserRepository _userRepository;
         public async Task AddTestUser()
         {
             var userToAdd = new User() {FirstName = "Bob"};
@@ -40,7 +41,7 @@ namespace kata_frameworkless_basic_web_application.tests
             await httpClient.PostAsync("http://localhost:8080/users/add/", content);
         }
 
-        private static IUserRepository CreateDynamoDbUserRepository()
+        private static DynamoDbUserRepository CreateDynamoDbUserRepository()
         {
             var config = new AmazonDynamoDBConfig {ServiceURL = "http://localhost:8000"};
             var dynamoDbClient = new AmazonDynamoDBClient(config);

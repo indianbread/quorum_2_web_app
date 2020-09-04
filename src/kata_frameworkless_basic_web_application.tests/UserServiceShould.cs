@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app;
 using kata_frameworkless_web_app.Repositories;
-using kata_frameworkless_web_app.Services;
+using kata.users.domain;
+using kata.users.shared;
 using Moq;
 using Xunit;
+using IUserRepository = kata.users.shared.IUserRepository;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
@@ -23,31 +26,34 @@ namespace kata_frameworkless_basic_web_application.tests
         
 
         [Fact]
-        public void RetrieveListOfNamesIncludingSecretUser()
+        public async Task GetUsers_IncludeSecretUserAndTestUser()
         {
-            var actual = _sut.GetNameList();
-
-            Assert.Contains("Nhan", actual);
-            Assert.Contains("Bob", actual);
+            var users = await _sut.GetUsers();
+            var userNames = users.Select(user => user.FirstName);
+            
+            Assert.Contains("Nhan", userNames);
+            Assert.Contains("Bob", userNames);
         }
 
         [Fact]
-        public void AddNameToDatabaseIfNewName()
+        public async Task AddNameToDatabaseIfNewName()
         {
             const string nameToAdd = "Bart";
-            _sut.AddUser(nameToAdd);
-            var nameList = _sut.GetNameList();
+            var createUserRequest = new CreateUserRequest() {FirstName = nameToAdd};
+            await _sut.CreateUser(createUserRequest);
+            var users = await _sut.GetUsers();
+            var names = users.Select(user => user.FirstName);
 
-            Assert.Contains(nameToAdd, nameList);
+            Assert.Contains(nameToAdd, names);
         }
 
         [Fact]
         public void ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
         {
             const string nameToAdd = "Nhan";
-            var actual = _sut.AddUser(nameToAdd);
-            
-            Assert.Contains("already exists", actual.ErrorMessage);
+            var createUserRequest = new CreateUserRequest() {FirstName = nameToAdd};
+
+            Assert.Throws<Exception>(_sut.CreateUser(createUserRequest).GetAwaiter().GetResult);
         }
         
 

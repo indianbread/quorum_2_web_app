@@ -6,8 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AWSSDK.Core" Version="3.5.1.2" />
-      <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.5.0.4" />
       <PackageReference Include="AWSSDK.SecretsManager" Version="3.5.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0-preview.8.20407.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0-preview.8.20407.4" />
@@ -17,8 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\kata.useraccounts.domain\kata.useraccounts.domain.csproj" />
-      <ProjectReference Include="..\..\kata.useraccounts.shared\kata.useraccounts.shared.csproj" />
       <ProjectReference Include="..\kata.users.domain\kata.users.domain.csproj" />
       <ProjectReference Include="..\kata.users.repositories\kata.users.repositories.csproj" />
       <ProjectReference Include="..\kata.users.shared\kata.users.shared.csproj" />

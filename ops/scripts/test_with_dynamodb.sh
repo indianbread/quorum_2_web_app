@@ -1,3 +1,4 @@
+echo "Starting up Dynamodb local database"
 java -Djava.library.path=/dynamolocal/DynamoDBLocal_lib -jar /dynamolocal/DynamoDBLocal.jar -sharedDb &
 sleep 3 #allow database to start up
 echo "Checking if User table exists"

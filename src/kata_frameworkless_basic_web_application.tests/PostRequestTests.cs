@@ -57,7 +57,6 @@ namespace kata_frameworkless_basic_web_application.tests
         [Fact]
         public async Task POST_Name_ReturnsStatus400_IfPostRequestIsEmpty()
         {
-            _httpListenerFixture.AddTestUser();
             var userToAdd = new User() {FirstName = ""};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");

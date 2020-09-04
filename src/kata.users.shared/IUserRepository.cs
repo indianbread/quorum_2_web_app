@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using kata.users.shared;
 
-namespace kata.users.domain
+namespace kata.users.shared
 {
     public interface IUserRepository
     {
-        IEnumerable<User> GetUsers();
+        Task<IEnumerable<User>> GetUsersAsync();
 
         User FindUserByName(string name);
 

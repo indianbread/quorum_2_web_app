@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Resource;
-using kata_frameworkless_web_app;
-using kata_frameworkless_web_app.Repositories;
+using kata.users.shared;
+using User = kata_frameworkless_web_app.User;
+
 
 namespace kata_frameworkless_basic_web_application.tests
 {
@@ -25,6 +25,16 @@ namespace kata_frameworkless_basic_web_application.tests
             return _users;
         }
 
+        public Task<IEnumerable<kata.users.shared.User>> GetUsersAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        kata.users.shared.User IUserRepository.FindUserByName(string name)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public User FindUserByName(string name)
         {
             return _users.FirstOrDefault(user => user.FirstName == name);
@@ -32,7 +42,7 @@ namespace kata_frameworkless_basic_web_application.tests
 
         public async Task AddUserAsync(string name)
         {
-            _users.Add(new User() {FirstName = name}); 
+             _users.Add(new User() {FirstName = name}); 
         }
 
         public void RemoveData()

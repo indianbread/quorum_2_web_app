@@ -9,4 +9,9 @@
       <ProjectReference Include="..\kata.users.shared\kata.users.shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="AWSSDK.Core" Version="3.5.1.6" />
+      <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.5.0.8" />
+    </ItemGroup>
+
 </Project>

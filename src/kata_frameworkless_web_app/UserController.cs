@@ -1,9 +1,12 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using kata_frameworkless_web_app.Services;
+using kata.users.domain;
+using kata.users.shared;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace kata_frameworkless_web_app
@@ -28,15 +31,16 @@ namespace kata_frameworkless_web_app
                     await HandlePostRequestAsync(request, response);
                     break;
                 default:
-                    response.StatusCode = 404;
+                    response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
             }
         }
 
         public async Task HandleGetIndexRequestAsync(HttpListenerResponse response)
         {
-            var names = _userService.GetNameList();
-            var responseString = ResponseFormatter.GetGreeting(names.ToList());
+            var users = await _userService.GetUsers();
+            var names = users.Select(user => user.FirstName).ToList();
+            var responseString = ResponseFormatter.GetGreeting(names);
             await GenerateResponseBodyAsync(response, responseString);
         }
         
@@ -45,7 +49,7 @@ namespace kata_frameworkless_web_app
             switch (request.Url.Segments[2])
             {
                 case "names/":
-                   await HandleGetNameListRequestAsync(response);
+                   await HandleGetUsersRequestAsync(response);
                    break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;
@@ -53,34 +57,42 @@ namespace kata_frameworkless_web_app
             }
         }
 
-        private async Task HandleGetNameListRequestAsync(HttpListenerResponse response)
+        private async Task HandleGetUsersRequestAsync(HttpListenerResponse response)
         {
-            var names = _userService.GetNameList();
-            var nameListFormatted = ResponseFormatter.GenerateNamesListBody(names);
-            await GenerateResponseBodyAsync(response, nameListFormatted);
+            var users = await _userService.GetUsers();
+            var responseBody = JsonConvert.SerializeObject(users);
+            await GenerateResponseBodyAsync(response, responseBody);
         }
 
         private async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            switch (request.Url.Segments[2])
+            try
             {
-                case "add/":
-                    await HandlePostNameRequestAsync(request, response);
-                    break;
-                default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
+                switch (request.Url.Segments[2])
+                {
+                    case "add/":
+                        await HandlePostNameRequestAsync(request, response);
+                        break;
+                    default:
+                        response.StatusCode = (int) HttpStatusCode.NotFound;
+                        break;
+                }
             }
+            catch (Exception e)
+            {
+                response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                await GenerateResponseBodyAsync(response, e.Message);
+            }
+
         }
 
         private async Task HandlePostNameRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var newUserName = GetNameFromRequestBody(request);
-            var result = _userService.AddUser(newUserName);
-            response.StatusCode = (int) result.StatusCode;
-            var responseMessage = result.IsSuccess ? result.SuccessMessage : result.ErrorMessage;
-            response.AppendHeader("Location", $"/users/{newUserName}/");
-            await GenerateResponseBodyAsync(response, responseMessage);
+            var newUserFirstName = GetNameFromRequestBody(request);
+            var createUserRequest = new CreateUserRequest() {FirstName = newUserFirstName};
+            await _userService.CreateUser(createUserRequest);
+            response.AppendHeader("Location", $"/users/{newUserFirstName}/");
+            await GenerateResponseBodyAsync(response, "User added successfully");
         }
 
         private static string GetNameFromRequestBody(HttpListenerRequest request)
