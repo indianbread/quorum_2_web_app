@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using kata.users.shared;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace kata_frameworkless_basic_web_application.tests.Integration
@@ -32,18 +37,15 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         }
 
         [Fact]
-        public async Task GET_Names_ReturnsListOfNames()
+        public async Task GET_Users_ReturnsListOfUsers()
         {
-            var response = await _httpClient.GetAsync("http://localhost:8080/users/names/");
+            var response = await _httpClient.GetAsync("http://localhost:8080/users");
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            
-            Assert.Contains("Name List", responseBody);
-            
+            Assert.Contains("Bob", responseBody);
             response.Dispose();
         }
         
         [Theory]
-        [InlineData("http://localhost:8080/users/names?action=put")]
         [InlineData("http://localhost:8080/notapath")]
         public async Task GET_IncorrectPath_ReturnsStatus404(string url)
         {

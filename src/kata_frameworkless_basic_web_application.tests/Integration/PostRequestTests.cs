@@ -27,11 +27,11 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
             
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal("User added successfully", response.Content.ReadAsStringAsync().Result);
-            Assert.Equal("/users/Jane/", response.Headers.Location.ToString());
+            Assert.Equal("/users/Jane", response.Headers.Location.ToString());
             
             response.Dispose();
         }
@@ -43,10 +43,9 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            
-            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+
             Assert.Contains("Name already exists", responseBody);
 
             response.Dispose();
@@ -59,10 +58,9 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("Name cannot be empty", responseBody);
             
             response.Dispose();

@@ -13,7 +13,7 @@ namespace kata_frameworkless_web_app
     {
         public Server(UserController userController)
         {
-            _requestRouter = new RequestRouter(userController);
+            _requestRouter = new RequestRouter(userController); //TODO: how/where to pass in these dependencies?
             _listener = new HttpListener();
         }
         
