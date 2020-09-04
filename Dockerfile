@@ -1,4 +1,7 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && apt-get update && apt-get install unzip && unzip awscliv2.zip && ./aws/install
+COPY /ops/scripts/dynamo_db_local_install.sh ./
+RUN sh dynamo_db_local_install.sh
 WORKDIR /app
 
 # copy sln and csproj files into the image
@@ -14,8 +17,10 @@ RUN dotnet build
 #run the unit tests
 FROM build AS test
 WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
-RUN dotnet test
-
+COPY /ops/scripts/test_with_dynamodb.sh ./
+COPY /dynamodb_local/tables/ ./dynamodb_local/tables/
+#RUN java -Djava.library.path=/dynamolocal/DynamoDBLocal_lib -jar /dynamolocal/DynamoDBLocal.jar -sharedDb & && dotnet test
+RUN sh test_with_dynamodb.sh
 FROM build AS publish
 WORKDIR /app/src/kata_frameworkless_web_app
 RUN dotnet publish -c Release -o publish
@@ -25,7 +30,6 @@ RUN dotnet publish -c Release -o publish
 FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS base
 WORKDIR /app
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && apt-get update && apt-get install unzip && unzip awscliv2.zip && ./aws/install
-
 
 # Build runtime image
 FROM base AS runtime
