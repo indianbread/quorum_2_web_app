@@ -1,15 +1,10 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using kata_frameworkless_web_app;
 using Xunit;
 
-namespace kata_frameworkless_basic_web_application.tests
+namespace kata_frameworkless_basic_web_application.tests.Integration
 {
     [Collection("HttpListener collection")]
     public class GetRequestTests

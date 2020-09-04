@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using kata_frameworkless_web_app;
-using kata_frameworkless_web_app.Repositories;
 using kata.users.domain;
 using kata.users.shared;
-using Moq;
 using Xunit;
 using IUserRepository = kata.users.shared.IUserRepository;
 
-namespace kata_frameworkless_basic_web_application.tests
+namespace kata_frameworkless_basic_web_application.tests.Unit
 {
     public class UserServiceShould
     {

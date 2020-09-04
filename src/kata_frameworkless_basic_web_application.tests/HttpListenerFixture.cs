@@ -1,18 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using kata_frameworkless_web_app;
-using kata_frameworkless_web_app.Repositories;
 using kata.users.domain;
 using kata.users.repositories;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using Newtonsoft.Json;
+using kata.users.repositories.DynamoDb;
+
 
 namespace kata_frameworkless_basic_web_application.tests
 {
@@ -23,11 +14,11 @@ namespace kata_frameworkless_basic_web_application.tests
             _userRepository = CreateDynamoDbUserRepository();
             _userService = new UserService(_userRepository);
             _userController = new UserController(_userService);
-            _basicWebApp = new BasicWebApp(_userController);
-            _webAppThread = new Thread(_basicWebApp.Start);
+            _server = new Server(_userController);
+            _webAppThread = new Thread(_server.Start);
             _webAppThread.Start();
         }
-        private readonly BasicWebApp _basicWebApp;
+        private readonly Server _server;
         private Thread _webAppThread;
         private readonly UserService _userService;
         private UserController _userController;

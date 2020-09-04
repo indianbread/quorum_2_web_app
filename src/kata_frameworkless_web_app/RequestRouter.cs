@@ -12,7 +12,7 @@ namespace kata_frameworkless_web_app
         }
         private readonly UserController _userController;
         
-        public async Task HandleRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task RouteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             if (request.Url.Segments.Length == 1)
             {
@@ -24,6 +24,7 @@ namespace kata_frameworkless_web_app
             }
 
         }
+        
 
         private async Task HandleResourceGroupRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {

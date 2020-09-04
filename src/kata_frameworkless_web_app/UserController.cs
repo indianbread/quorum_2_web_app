@@ -1,13 +1,10 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using kata.users.domain;
 using kata.users.shared;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace kata_frameworkless_web_app
 {
@@ -35,13 +32,12 @@ namespace kata_frameworkless_web_app
                     break;
             }
         }
-
         public async Task HandleGetIndexRequestAsync(HttpListenerResponse response)
         {
             var users = await _userService.GetUsers();
             var names = users.Select(user => user.FirstName).ToList();
-            var responseString = ResponseFormatter.GetGreeting(names);
-            await GenerateResponseBodyAsync(response, responseString);
+            var responseString = Formatter.FormatGreeting(names);
+            await Response.GenerateBodyAsync(response, responseString);
         }
         
         private async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
@@ -61,7 +57,7 @@ namespace kata_frameworkless_web_app
         {
             var users = await _userService.GetUsers();
             var responseBody = JsonConvert.SerializeObject(users);
-            await GenerateResponseBodyAsync(response, responseBody);
+            await Response.GenerateBodyAsync(response, responseBody);
         }
 
         private async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
@@ -81,42 +77,19 @@ namespace kata_frameworkless_web_app
             catch (Exception e)
             {
                 response.StatusCode = (int) HttpStatusCode.InternalServerError;
-                await GenerateResponseBodyAsync(response, e.Message);
+                await Response.GenerateBodyAsync(response, e.Message);
             }
 
         }
 
         private async Task HandlePostNameRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var newUserFirstName = GetNameFromRequestBody(request);
-            var createUserRequest = new CreateUserRequest() {FirstName = FormatName(newUserFirstName)};
+            var newUserFirstName = Request.GetNameFromPayload(request);
+            var createUserRequest = new CreateUserRequest() {FirstName = Formatter.FormatName(newUserFirstName)};
             await _userService.CreateUser(createUserRequest);
             response.AppendHeader("Location", $"/users/{newUserFirstName}/");
-            await GenerateResponseBodyAsync(response, "User added successfully");
+            await Response.GenerateBodyAsync(response, "User added successfully");
         }
 
-        private static string GetNameFromRequestBody(HttpListenerRequest request)
-        {
-            var body = request.InputStream;
-            using (var reader = new StreamReader(body, Encoding.UTF8))
-            {
-                var data = reader.ReadToEnd();
-                var user = JObject.Parse(data);
-                return (user["FirstName"] ?? "").Value<string>();
-            }
-        }
-
-        private static async Task GenerateResponseBodyAsync(HttpListenerResponse response, string responseString)
-        {
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            await response.OutputStream.DisposeAsync();
-        }
-
-        private static string FormatName(string name)
-        {
-            return name.Substring(0, 1).ToUpper() + name.Substring(1, name.Length - 1);
-        }
     }
 }

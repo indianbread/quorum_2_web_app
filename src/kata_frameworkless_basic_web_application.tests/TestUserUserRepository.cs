@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using kata.users.shared;
-using User = kata_frameworkless_web_app.User;
+
 
 
 namespace kata_frameworkless_basic_web_application.tests

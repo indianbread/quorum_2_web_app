@@ -1,6 +1,7 @@
+using kata.users.shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace kata_frameworkless_web_app
+namespace kata.users.repositories.Sqlite
 {
     public class SqLiteDbContext : DbContext
     {

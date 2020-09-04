@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using kata.users.shared;
 
-namespace kata_frameworkless_web_app.Repositories
+namespace kata.users.repositories
 {
     public class ListUserRepository : IUserRepository
     {
@@ -17,6 +18,16 @@ namespace kata_frameworkless_web_app.Repositories
         public IEnumerable<User> GetUsers()
         {
             return _users;
+        }
+
+        public Task<IEnumerable<User>> GetUsersAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        Task<User> IUserRepository.FindUserByName(string name)
+        {
+            throw new System.NotImplementedException();
         }
 
         public User FindUserByName(string name)

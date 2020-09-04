@@ -1,8 +1,7 @@
 using Amazon;
 using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DocumentModel;
 
-namespace kata.users.repositories
+namespace kata.users.repositories.DynamoDb
 {
     public class DynamoDb
     {

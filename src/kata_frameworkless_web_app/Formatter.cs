@@ -5,24 +5,18 @@ using System.Linq;
 
 namespace kata_frameworkless_web_app
 {
-    public class ResponseFormatter
+    public static class Formatter
     {
-        public static string GetGreeting(List<string> names)
+        public static string FormatGreeting(List<string> names)
         {
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
             var namesString = string.Join(", ", names.Take(names.Count - 1)) + (names.Count <= 1 ? "" : " and ") + names.LastOrDefault();
             return "Hello " + namesString + " - the time on the server is " + currentDatetime;
         }
-
-        public static string GenerateNamesListBody(IEnumerable<string> names)
+        
+        public static string FormatName(string name)
         {
-            var nameList = "Name List:" + Environment.NewLine;
-            nameList =
-                names.Aggregate(nameList, (current, name) => current + (name + Environment.NewLine));
-            return nameList;
+            return name.Substring(0, 1).ToUpper() + name.Substring(1, name.Length - 1);
         }
-        
-
-        
     }
 }

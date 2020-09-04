@@ -1,24 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
-using kata.users.domain;
 using kata.users.shared;
 
-namespace kata.users.repositories
+namespace kata.users.repositories.DynamoDb
 {
     public class DynamoDbUserRepository : IUserRepository
     {
-        public DynamoDbUserRepository(AmazonDynamoDBClient client)
+        public DynamoDbUserRepository(IAmazonDynamoDB client)
         {
-            _client = client;
-            _userTable = Table.LoadTable(_client, "NhanUser");
+            _userTable = Table.LoadTable(client, "NhanUser");
         }
-        private readonly AmazonDynamoDBClient _client;
+
         private readonly Table _userTable;
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
@@ -48,7 +44,7 @@ namespace kata.users.repositories
             var id = document["Id"].AsString();
             var firstName = document["FirstName"].AsString();
             
-            return new User() {Id = id, FirstName = firstName};
+            return new User {Id = id, FirstName = firstName};
         }
 
         private static Document ConvertUserToDocument(User user)

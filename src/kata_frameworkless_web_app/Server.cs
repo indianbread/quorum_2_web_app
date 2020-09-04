@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app
 {
-    public class BasicWebApp
+    public class Server
     {
-        public BasicWebApp(UserController userController)
+        public Server(UserController userController)
         {
             _requestRouter = new RequestRouter(userController);
             _listener = new HttpListener();
@@ -19,26 +19,25 @@ namespace kata_frameworkless_web_app
         
         private readonly RequestRouter _requestRouter;
         private readonly HttpListener _listener;
-        private bool IsListening;
+        private bool _isListening;
         private const int Port = 8080;
-
-        private void AddPrefixes()
-        {
-            _listener.Prefixes.Add($"http://*:{Port}/");
-        }
         
         public void Start()
         {
             AddPrefixes();
-            IsListening = true;
+            _isListening = true;
             _listener.Start();
             Console.WriteLine($"Listening on port {Port}" );
-            while (IsListening)
+            while (_isListening)
             {
                 ProcessRequestAsync().GetAwaiter().GetResult();
             }
         }
 
+        private void AddPrefixes()
+        {
+            _listener.Prefixes.Add($"http://*:{Port}/");
+        }
         private async Task ProcessRequestAsync()
         {
             var context = await _listener.GetContextAsync();
@@ -46,15 +45,9 @@ namespace kata_frameworkless_web_app
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             using (var response = context.Response)
             {
-                await _requestRouter.HandleRequestAsync(request, response);
+                await _requestRouter.RouteRequestAsync(request, response);
             }
         }
         
-        public void Stop()
-        {
-            IsListening = false;
-            _listener.Stop();
-        }
-
     }
 }
