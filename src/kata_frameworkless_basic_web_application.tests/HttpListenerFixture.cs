@@ -32,21 +32,10 @@ namespace kata_frameworkless_basic_web_application.tests
         private readonly UserService _userService;
         private UserController _userController;
         private kata.users.shared.IUserRepository _userRepository;
-        public async Task AddTestUser()
-        {
-            var userToAdd = new User() {FirstName = "Bob"};
-            var jsonContent = JsonConvert.SerializeObject(userToAdd);
-            HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var httpClient = new HttpClient();
-            await httpClient.PostAsync("http://localhost:8080/users/add/", content);
-        }
-
         private static DynamoDbUserRepository CreateDynamoDbUserRepository()
         {
-            var config = new AmazonDynamoDBConfig {ServiceURL = "http://localhost:8000"};
-            var dynamoDbClient = new AmazonDynamoDBClient(config);
-            var dynamoDbUserContext = new DynamoDBContext(dynamoDbClient);
-            return new DynamoDbUserRepository(dynamoDbUserContext);
+            var dynamoDbClient = DynamoDb.CreatClient(true);
+            return new DynamoDbUserRepository(dynamoDbClient);
         }
     }
 }

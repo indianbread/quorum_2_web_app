@@ -30,7 +30,7 @@ namespace kata_frameworkless_basic_web_application.tests
             throw new System.NotImplementedException();
         }
 
-        kata.users.shared.User IUserRepository.FindUserByName(string name)
+        Task<kata.users.shared.User> IUserRepository.FindUserByName(string name)
         {
             throw new System.NotImplementedException();
         }

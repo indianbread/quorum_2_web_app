@@ -89,7 +89,7 @@ namespace kata_frameworkless_web_app
         private async Task HandlePostNameRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             var newUserFirstName = GetNameFromRequestBody(request);
-            var createUserRequest = new CreateUserRequest() {FirstName = newUserFirstName};
+            var createUserRequest = new CreateUserRequest() {FirstName = FormatName(newUserFirstName)};
             await _userService.CreateUser(createUserRequest);
             response.AppendHeader("Location", $"/users/{newUserFirstName}/");
             await GenerateResponseBodyAsync(response, "User added successfully");
@@ -112,6 +112,11 @@ namespace kata_frameworkless_web_app
             response.ContentLength64 = buffer.Length;
             await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
             await response.OutputStream.DisposeAsync();
+        }
+
+        private static string FormatName(string name)
+        {
+            return name.Substring(0, 1).ToUpper() + name.Substring(1, name.Length - 1);
         }
     }
 }
