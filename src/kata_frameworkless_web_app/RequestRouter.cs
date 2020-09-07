@@ -57,13 +57,13 @@ namespace kata_frameworkless_web_app
 
         private IController GetController(HttpListenerRequest request)
         {
-            Console.WriteLine(_controllers.First().GetType());
+           // Console.WriteLine(_controllers.First().GetType());
             var resourceGroup = request.Url.Segments[1];
             var controllerName = Formatter.FormatControllerName(resourceGroup) + "Controller";
             //var controllerType = typeof(IController).Assembly.GetType(controllerName, true, true);
-            //var controllerType = Type.GetType(controllerName, true, false);
+            var controllerType = Type.GetType($"kata_frameworkless_web_app.{controllerName}", true, false);
             //Console.WriteLine(controllerType);
-           // return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
+            return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
             return _controllers.FirstOrDefault();
         }
         
