@@ -25,7 +25,7 @@ namespace kata_frameworkless_web_app
             await Response.GenerateBodyAsync(response, responseBody);
         }
         
-        public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response) //TODO: change to put
+        public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             try
             {

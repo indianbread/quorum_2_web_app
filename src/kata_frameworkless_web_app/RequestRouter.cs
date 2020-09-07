@@ -59,8 +59,11 @@ namespace kata_frameworkless_web_app
             Console.WriteLine(_controllers.First().GetType());
             var resourceGroup = request.Url.Segments[1];
             var controllerName = Formatter.FormatControllerName(resourceGroup) + "Controller";
-            var controllerType = Type.GetType(controllerName, true, false);
-            return _controllers.Find(controller => controller.GetType() == controllerType);
+            //var controllerType = typeof(IController).Assembly.GetType(controllerName, true, true);
+            //var controllerType = Type.GetType(controllerName, true, false);
+            //Console.WriteLine(controllerType);
+           // return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
+            return _controllers.FirstOrDefault();
         }
         
         private static async Task HandleRequestAsync(IController controller, HttpListenerRequest request, HttpListenerResponse response) //TODO: merge 

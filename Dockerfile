@@ -7,6 +7,9 @@ WORKDIR /app
 # copy sln and csproj files into the image
 COPY *.sln .
 COPY src/kata_frameworkless_web_app/*.csproj ./src/kata_frameworkless_web_app/
+COPY src/kata.users.domain/*.csproj ./src/kata.users.domain/
+COPY src/kata.users.repositories/*.csproj ./src/kata.users.repositories/
+COPY src/kata.users.shared/*.csproj ./src/kata.users.shared/
 COPY src/kata_frameworkless_basic_web_application.tests/*.csproj ./src/kata_frameworkless_basic_web_application.tests/
 RUN dotnet restore
 
