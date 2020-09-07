@@ -5,6 +5,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using kata.users.domain;
+using kata.users.shared;
 
 namespace kata_frameworkless_web_app
 {
@@ -75,6 +76,9 @@ namespace kata_frameworkless_web_app
                     break;
                 case "POST":
                     await controller.HandlePostRequestAsync(request, response);
+                    break;
+                case "DELETE":
+                    await controller.HandleDeleteRequestAsync(request, response);
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;

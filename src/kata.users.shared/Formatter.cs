@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
-namespace kata_frameworkless_web_app
+namespace kata.users.shared
 {
     public static class Formatter
     {

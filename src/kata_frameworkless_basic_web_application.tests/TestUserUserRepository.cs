@@ -20,22 +20,13 @@ namespace kata_frameworkless_basic_web_application.tests
             };
             
         }
-        public IEnumerable<User> GetUsers()
+        
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return _users;
         }
 
-        public Task<IEnumerable<kata.users.shared.User>> GetUsersAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        Task<kata.users.shared.User> IUserRepository.FindUserByNameAsync(string name)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public User FindUserByName(string name)
+        public async Task<User> FindUserByNameAsync(string name)
         {
             return _users.FirstOrDefault(user => user.FirstName == name);
         }

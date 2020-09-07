@@ -34,8 +34,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         public async Task AddNameToDatabaseIfNewName()
         {
             const string nameToAdd = "Bart";
-            var createUserRequest = new CreateUserRequest() {FirstName = nameToAdd};
-            await _sut.CreateUser(createUserRequest);
+            await _sut.CreateUser(nameToAdd);
             var users = await _sut.GetUsers();
             var names = users.Select(user => user.FirstName);
 
@@ -46,9 +45,8 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         public void ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
         {
             const string nameToAdd = "Nhan";
-            var createUserRequest = new CreateUserRequest() {FirstName = nameToAdd};
-
-            Assert.Throws<Exception>(_sut.CreateUser(createUserRequest).GetAwaiter().GetResult);
+            
+            Assert.Throws<ArgumentException>(_sut.CreateUser(nameToAdd).GetAwaiter().GetResult);
         }
         
 

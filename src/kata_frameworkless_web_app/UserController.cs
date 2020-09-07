@@ -27,11 +27,10 @@ namespace kata_frameworkless_web_app
         
         public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
+            var newUserFirstName = Request.GetNameFromPayload(request);
             try
             {
-                var newUserFirstName = Request.GetNameFromPayload(request);
-                var createUserRequest = new CreateUserRequest() {FirstName = Formatter.FormatName(newUserFirstName)};
-                await _userService.CreateUser(createUserRequest);
+                await _userService.CreateUser(newUserFirstName);
                 response.AppendHeader("Location", $"/users/{newUserFirstName}");
                 await Response.GenerateBodyAsync(response, "User added successfully");
             }
@@ -43,6 +42,10 @@ namespace kata_frameworkless_web_app
             }
 
         }
-        
+
+        public Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

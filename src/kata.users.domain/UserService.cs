@@ -15,16 +15,15 @@ namespace kata.users.domain
 
         private readonly IUserRepository _userRepository;
 
-        public async Task CreateUser(CreateUserRequest createUserRequest)
+        public async Task CreateUser(string firstName)
         {
-            if (createUserRequest == null)
-                throw new ArgumentException("Request cannot be empty");
-            if (string.IsNullOrEmpty(createUserRequest.FirstName))
+            if (string.IsNullOrEmpty(firstName))
                 throw new ArgumentException("Name cannot be empty");
-            var user = await _userRepository.FindUserByNameAsync(createUserRequest.FirstName);
+            firstName = Formatter.FormatName(firstName);
+            var user = await _userRepository.FindUserByNameAsync(firstName);
             if (user != null)
                 throw new ArgumentException("Name already exists");
-            await  _userRepository.AddUserAsync(createUserRequest.FirstName);
+            await  _userRepository.AddUserAsync(firstName);
             
         }
         public async Task<IEnumerable<User>> GetUsers()
