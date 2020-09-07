@@ -31,22 +31,37 @@ namespace kata.users.repositories.DynamoDb
             return results.Select(ConvertDocumentToUser);
         }
         
-        public async Task<User> FindUserByNameAsync(string name)
+        public async Task<User> GetUserByNameAsync(string name)
         {
             var scanFilter = new ScanFilter();
             scanFilter.AddCondition("FirstName", ScanOperator.Equal, name);
-            var searchResults = await _userTable.Scan(scanFilter).GetRemainingAsync();
+            var searchResults = await UserTable.Scan(scanFilter).GetRemainingAsync();
             return searchResults.Count == 0 ? null : ConvertDocumentToUser(searchResults.FirstOrDefault());
         }
 
         public async Task AddUserAsync(string name)
         {
             var userId = Guid.NewGuid().ToString();
-            var newUser = new User() { Id = userId, FirstName = name};
+            var newUser = new User() { Id = userId, FirstName = name };
             var newUserDocument = ConvertUserToDocument(newUser);
-            await _userTable.PutItemAsync(newUserDocument);
+            await UserTable.PutItemAsync(newUserDocument);
         }
-        
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            var userDocument = await UserTable.GetItemAsync(userId);
+            return ConvertDocumentToUser(userDocument);
+        }
+
+        public async Task UpdateUser(User userToUpdate)
+        {
+            var user = new Document();
+            user["Id"] = userToUpdate.Id;
+            user["FirstName"] = userToUpdate.FirstName;
+
+            await UserTable.UpdateItemAsync(user);
+        }
+
         private static User ConvertDocumentToUser(Document document)
         {
             var id = document["Id"].AsString();

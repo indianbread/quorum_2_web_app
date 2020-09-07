@@ -16,12 +16,12 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
 
         }
         
-        private readonly IUserRepository _testUserRepository = new TestUserUserRepository();
+        private readonly IUserRepository _testUserRepository = new TestUserRepository();
         private readonly UserService _sut;
         
 
         [Fact]
-        public async Task GetUsers_IncludeSecretUserAndTestUser()
+        public async Task ReturnAListOfAllUsers()
         {
             var users = await _sut.GetUsers();
             var userNames = users.Select(user => user.FirstName);
@@ -48,6 +48,24 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             
             Assert.Throws<ArgumentException>(_sut.CreateUser(nameToAdd).GetAwaiter().GetResult);
         }
+
+        [Fact]
+        public async Task ChangeExistingNameIfGivenId()
+        {
+            var userToUpdate = new User()
+            {
+                Id = "1",
+                FirstName = "Monty"
+            };
+
+            await _sut.UpdateUser(userToUpdate);
+
+            var user = await _sut.GetUserById("1");
+            Assert.Equal(userToUpdate.FirstName, user.FirstName);
+
+        }
+        
+        
         
 
 

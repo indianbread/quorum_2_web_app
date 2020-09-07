@@ -20,7 +20,7 @@ namespace kata.users.domain
             if (string.IsNullOrEmpty(firstName))
                 throw new ArgumentException("Name cannot be empty");
             firstName = Formatter.FormatName(firstName);
-            var user = await _userRepository.FindUserByNameAsync(firstName);
+            var user = await _userRepository.GetUserByNameAsync(firstName);
             if (user != null)
                 throw new ArgumentException("Name already exists");
             await  _userRepository.AddUserAsync(firstName);
@@ -29,6 +29,23 @@ namespace kata.users.domain
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _userRepository.GetUsersAsync();
+        }
+
+        public async Task UpdateUser(User newUserDetails)
+        {
+            var userToUpdate = GetUserById(newUserDetails.Id);
+            var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
+            if (userWithSameName != null)
+                throw new ArgumentException("A user with this name already exists");
+            await _userRepository.UpdateUser( newUserDetails);
+        }
+
+        public async Task<User> GetUserById(string Id)
+        {
+            var user = await _userRepository.GetUserByIdAsync(Id);
+            if (user == null)
+                throw new ArgumentException("User does not exist");
+            return user;
         }
     }
 }

@@ -7,9 +7,11 @@ namespace kata.users.shared
     {
         Task<IEnumerable<User>> GetUsersAsync();
 
-        Task<User> FindUserByNameAsync(string name);
+        Task<User> GetUserByNameAsync(string name);
 
         Task AddUserAsync(string name);
-        
+
+        Task<User> GetUserByIdAsync(string userId);
+        Task UpdateUser(User userId);
     }
 }

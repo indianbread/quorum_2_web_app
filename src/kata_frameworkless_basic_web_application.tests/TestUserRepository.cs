@@ -7,16 +7,16 @@ using kata.users.shared;
 
 namespace kata_frameworkless_basic_web_application.tests
 {
-    public class TestUserUserRepository : IUserRepository
+    public class TestUserRepository : IUserRepository
     {
         private readonly List<User> _users;
 
-        public TestUserUserRepository()
+        public TestUserRepository()
         {
             _users = new List<User>()
             {
-                new User() {FirstName = "Nhan"},
-                new User() {FirstName = "Bob"}
+                new User() {Id = "1", FirstName = "Nhan"},
+                new User() {Id = "2", FirstName = "Bob"}
             };
             
         }
@@ -26,7 +26,7 @@ namespace kata_frameworkless_basic_web_application.tests
             return _users;
         }
 
-        public async Task<User> FindUserByNameAsync(string name)
+        public async Task<User> GetUserByNameAsync(string name)
         {
             return _users.FirstOrDefault(user => user.FirstName == name);
         }
@@ -34,6 +34,17 @@ namespace kata_frameworkless_basic_web_application.tests
         public async Task AddUserAsync(string name)
         {
              _users.Add(new User() {FirstName = name}); 
+        }
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return _users.FirstOrDefault(user => user.Id == userId);
+        }
+
+        public async Task UpdateUser(User userToUpdate)
+        {
+            var user = await GetUserByIdAsync(userToUpdate.Id);
+            user.FirstName = userToUpdate.FirstName;
         }
 
         public void RemoveData()
