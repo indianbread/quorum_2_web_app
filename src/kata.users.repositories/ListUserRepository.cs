@@ -25,7 +25,7 @@ namespace kata.users.repositories
             throw new System.NotImplementedException();
         }
 
-        Task<User> IUserRepository.FindUserByName(string name)
+        Task<User> IUserRepository.FindUserByNameAsync(string name)
         {
             throw new System.NotImplementedException();
         }

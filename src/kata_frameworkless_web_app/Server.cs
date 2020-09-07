@@ -5,15 +5,16 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using kata.users.domain;
 
 
 namespace kata_frameworkless_web_app
 {
     public class Server
     {
-        public Server(UserController userController)
+        public Server(List<IController> controllers, UserService userService)
         {
-            _requestRouter = new RequestRouter(userController); //TODO: how/where to pass in these dependencies?
+            _requestRouter = new RequestRouter(controllers, userService); //TODO: how/where to pass in these dependencies?
             _listener = new HttpListener();
         }
         
@@ -22,7 +23,7 @@ namespace kata_frameworkless_web_app
         private bool _isListening;
         private const int Port = 8080;
         
-        public void Start()
+        public async Task Start()
         {
             AddPrefixes();
             _isListening = true;
@@ -30,7 +31,7 @@ namespace kata_frameworkless_web_app
             Console.WriteLine($"Listening on port {Port}" );
             while (_isListening)
             {
-                ProcessRequestAsync().GetAwaiter().GetResult();
+               await ProcessRequestAsync();
             }
         }
 

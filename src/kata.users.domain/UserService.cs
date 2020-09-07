@@ -21,7 +21,7 @@ namespace kata.users.domain
                 throw new ArgumentException("Request cannot be empty");
             if (string.IsNullOrEmpty(createUserRequest.FirstName))
                 throw new ArgumentException("Name cannot be empty");
-            var user = _userRepository.FindUserByName(createUserRequest.FirstName).GetAwaiter().GetResult();
+            var user = await _userRepository.FindUserByNameAsync(createUserRequest.FirstName);
             if (user != null)
                 throw new ArgumentException("Name already exists");
             await  _userRepository.AddUserAsync(createUserRequest.FirstName);

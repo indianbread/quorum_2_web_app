@@ -12,18 +12,26 @@ namespace kata.users.repositories.DynamoDb
     {
         public DynamoDbUserRepository(IAmazonDynamoDB client)
         {
-            _userTable = Table.LoadTable(client, "NhanUser");
+            _client = client;
+        }
+        private Table UserTable
+        {
+            get
+            {
+                if (_userTable == null)
+                    _userTable = Table.LoadTable(_client, "NhanUser"); //singleton
+                return _userTable;
+            }
         }
 
-        private readonly Table _userTable;
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
             var scanFilter = new ScanFilter();
-            var results = await _userTable.Scan(scanFilter).GetRemainingAsync();
+            var results = await UserTable.Scan(scanFilter).GetRemainingAsync();
             return results.Select(ConvertDocumentToUser);
         }
         
-        public async Task<User> FindUserByName(string name)
+        public async Task<User> FindUserByNameAsync(string name)
         {
             var scanFilter = new ScanFilter();
             scanFilter.AddCondition("FirstName", ScanOperator.Equal, name);
@@ -55,5 +63,9 @@ namespace kata.users.repositories.DynamoDb
             return userDocument;
         }
         
+        private readonly IAmazonDynamoDB _client;
+        private Table _userTable;
+        
     }
+    
 }

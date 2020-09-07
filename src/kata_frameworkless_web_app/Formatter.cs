@@ -18,5 +18,11 @@ namespace kata_frameworkless_web_app
         {
             return name.Substring(0, 1).ToUpper() + name.Substring(1, name.Length - 1);
         }
+        
+        public static string FormatControllerName(string resourceGroup)
+        {
+            var resourceGroupName = resourceGroup.Substring(0, resourceGroup.Length - 1);
+            return Formatter.FormatName(resourceGroupName);
+        }
     }
 }

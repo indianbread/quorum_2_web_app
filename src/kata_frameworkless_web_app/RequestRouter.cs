@@ -1,23 +1,28 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
+using kata.users.domain;
 
 namespace kata_frameworkless_web_app
 {
     public class RequestRouter
     {
-        public RequestRouter(UserController userController)
+        public RequestRouter(List<IController> controllers, UserService userService)
         {
-            _userController = userController;
+            _controllers = controllers;
+            _userService = userService;
         }
-        private readonly UserController _userController;
-        
+        private readonly List<IController> _controllers;
+        private readonly UserService _userService;
+
         public async Task RouteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             if (request.Url.Segments.Length == 1)
             {
-               await _userController.GetGreetingAsync(response);
+               await GetGreetingAsync(response);
             }
             else
             {
@@ -25,34 +30,48 @@ namespace kata_frameworkless_web_app
             }
 
         }
-        
+
+        private async Task GetGreetingAsync(HttpListenerResponse response)
+        {
+            var users = await _userService.GetUsers();
+            var names = users.Select(user => user.FirstName).ToList();
+            var responseString = Formatter.FormatGreeting(names);
+            await Response.GenerateBodyAsync(response, responseString);
+        }
+
         private async Task HandleResourceGroupRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var segments = request.Url.Segments;
-            foreach (var segment in segments)
+            try
             {
-                Console.WriteLine(segment);
+                var controller = GetController(request);
+                await HandleRequestAsync(controller, request, response);
+
             }
-            switch (request.Url.Segments[1])
+            catch (Exception e)
             {
-                case "users":
-                    await RouteUserRequestAsync(request, response);
-                    break;
-                default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
+                response.StatusCode = (int) HttpStatusCode.NotFound;
+                await Response.GenerateBodyAsync(response, e.Message);
             }
         }
+
+        private IController GetController(HttpListenerRequest request)
+        {
+            Console.WriteLine(_controllers.First().GetType());
+            var resourceGroup = request.Url.Segments[1];
+            var controllerName = Formatter.FormatControllerName(resourceGroup) + "Controller";
+            var controllerType = Type.GetType(controllerName, true, false);
+            return _controllers.Find(controller => controller.GetType() == controllerType);
+        }
         
-        private async Task RouteUserRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        private static async Task HandleRequestAsync(IController controller, HttpListenerRequest request, HttpListenerResponse response) //TODO: merge 
         {
             switch (request.HttpMethod)
             {
                 case "GET":
-                    await _userController.HandleGetRequestAsync(request, response);
+                    await controller.HandleGetRequestAsync(response);
                     break;
                 case "POST":
-                    await _userController.HandlePostRequestAsync(request, response);
+                    await controller.HandlePostRequestAsync(request, response);
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace kata_frameworkless_web_app
 {
-    public class UserController
+    public class UserController : IController
     {
         public UserController(UserService userService)
         {
@@ -16,24 +16,16 @@ namespace kata_frameworkless_web_app
         }
 
         private readonly UserService _userService;
-
-
-        public async Task GetGreetingAsync(HttpListenerResponse response)
-        {
-            var users = await _userService.GetUsers();
-            var names = users.Select(user => user.FirstName).ToList();
-            var responseString = Formatter.FormatGreeting(names);
-            await Response.GenerateBodyAsync(response, responseString);
-        }
         
-        public async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+
+        public async Task HandleGetRequestAsync(HttpListenerResponse response)
         {
             var users = await _userService.GetUsers();
             var responseBody = JsonConvert.SerializeObject(users);
             await Response.GenerateBodyAsync(response, responseBody);
         }
         
-        public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response) //TODO: change to put
         {
             try
             {

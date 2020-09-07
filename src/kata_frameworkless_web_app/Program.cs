@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using kata.users.domain;
 using kata.users.repositories;
 using kata.users.repositories.DynamoDb;
@@ -15,11 +16,12 @@ namespace kata_frameworkless_web_app
             var dynamoDbUserRepository = new DynamoDbUserRepository(dynamoDbClient);
             var userService = new UserService(dynamoDbUserRepository);
             var secretUser = AwsSecretManager.GetSecret();
-            var addSecretUserRequest = new CreateUserRequest() {FirstName = secretUser}; //TODO: Why do I need a create user request?
-            await userService.CreateUser(addSecretUserRequest);
+            var addSecretUserRequest = new CreateUserRequest() {FirstName = secretUser};
+           // await userService.CreateUser(addSecretUserRequest);
             var userController = new UserController(userService);
-            var basicWebApp = new Server(userController);
-            basicWebApp.Start();
+            var controllers = new List<IController>() {userController};
+            var server = new Server(controllers, userService);
+            await server.Start();
         }
         
     }
