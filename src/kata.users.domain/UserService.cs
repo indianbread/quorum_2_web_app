@@ -42,7 +42,9 @@ namespace kata.users.domain
 
         public async Task UpdateUser(User newUserDetails)
         {
-            var userToUpdate = GetUserById(newUserDetails.Id);
+            var userToUpdate = await GetUserById(newUserDetails.Id);
+            if (userToUpdate == null)
+                throw new ArgumentException("User does not exist");
             var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
             if (userWithSameName != null)
                 throw new ArgumentException("A user with this name already exists");

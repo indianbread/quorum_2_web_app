@@ -21,7 +21,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         
 
         [Fact]
-        public async Task ReturnAListOfAllUsers()
+        public async Task Read_ReturnAListOfAllUsers()
         {
             var users = await _sut.GetUsers();
             var userNames = users.Select(user => user.FirstName);
@@ -31,7 +31,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         }
 
         [Fact]
-        public async Task AddNameToDatabaseIfNewName()
+        public async Task Create_AddsNameToDatabaseIfNewName()
         {
             const string nameToAdd = "Bart";
             await _sut.CreateUser(nameToAdd);
@@ -42,7 +42,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         }
 
         [Fact]
-        public void ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
+        public void Create_ReturnsErrorMessageIfTryToAddNameThatAlreadyExists()
         {
             const string nameToAdd = "Nhan";
             
@@ -50,7 +50,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         }
 
         [Fact]
-        public async Task ChangeExistingNameIfGivenId()
+        public async Task Update_ChangesExistingNameIfGivenId()
         {
             var userToUpdate = new User()
             {
@@ -63,6 +63,18 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             var user = await _sut.GetUserById("1");
             Assert.Equal(userToUpdate.FirstName, user.FirstName);
 
+        }
+
+        [Fact]
+        public async Task Update_ThrowsErrorIfUserIdDoesNotExist()
+        {
+            var userToUpdate = new User()
+            {
+                Id = "20",
+                FirstName = "Hemmingway"
+            };
+            
+            Assert.Throws<ArgumentException>(_sut.UpdateUser(userToUpdate).GetAwaiter().GetResult);
         }
         
         
