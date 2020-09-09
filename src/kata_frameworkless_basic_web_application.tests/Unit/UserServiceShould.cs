@@ -66,7 +66,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         }
 
         [Fact]
-        public async Task Update_ThrowsErrorIfUserIdDoesNotExist()
+        public void Update_ThrowsErrorIfUserIdDoesNotExist()
         {
             var userToUpdate = new User()
             {
@@ -76,12 +76,18 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             
             Assert.Throws<ArgumentException>(_sut.UpdateUser(userToUpdate).GetAwaiter().GetResult);
         }
-        
-        
-        
 
+        [Fact]
+        public void Update_ThrowsErrorIfNameAlreadyExists()
+        {
+            var userToUpdate = new User()
+            {
+                Id = "1",
+                FirstName = "Nhan"
+            };
 
-
+            Assert.Throws<ArgumentException>(_sut.UpdateUser(userToUpdate).GetAwaiter().GetResult);
+        }
 
     }
 }
