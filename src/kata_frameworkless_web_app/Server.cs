@@ -1,27 +1,23 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using kata.users.domain;
+
 
 
 namespace kata_frameworkless_web_app
 {
     public class Server
     {
-        public Server(List<IController> controllers, UserService userService)
+        public Server(UserService userService)
         {
-            _requestRouter = new RequestRouter(controllers, userService); //TODO: how/where to pass in these dependencies?
+            _requestRouter = new RequestRouter(userService);
             _listener = new HttpListener();
         }
         
         private readonly RequestRouter _requestRouter;
         private readonly HttpListener _listener;
-        private bool _isListening;
-        private const int Port = 8080;
+
         
         public async Task Start()
         {
@@ -49,6 +45,9 @@ namespace kata_frameworkless_web_app
                 await _requestRouter.RouteRequestAsync(request, response);
             }
         }
+        
+        private bool _isListening;
+        private const int Port = 8080;
         
     }
 }

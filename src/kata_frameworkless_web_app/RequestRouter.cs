@@ -11,11 +11,12 @@ namespace kata_frameworkless_web_app
 {
     public class RequestRouter
     {
-        public RequestRouter(List<IController> controllers, UserService userService)
+        public RequestRouter(UserService userService)
         {
-            _controllers = controllers;
             _userService = userService;
+            _controllers = new List<IController>() { new UserController(_userService)};
         }
+        
         private readonly List<IController> _controllers;
         private readonly UserService _userService;
 
@@ -48,10 +49,10 @@ namespace kata_frameworkless_web_app
                 await HandleRequestAsync(controller, request, response);
 
             }
-            catch (Exception e)
+            catch
             {
                 response.StatusCode = (int) HttpStatusCode.NotFound;
-                await Response.GenerateBodyAsync(response, e.Message);
+                await Response.GenerateBodyAsync(response, "Not found");
             }
         }
 
@@ -59,7 +60,7 @@ namespace kata_frameworkless_web_app
         {
             var resourceGroup = request.Url.Segments[1];
             var controllerName = Formatter.FormatControllerName(resourceGroup) + "Controller";
-            var controllerType = Type.GetType($"kata_frameworkless_web_app.{controllerName}", true, false);
+            var controllerType = Type.GetType($"kata_frameworkless_web_app.{controllerName}", true, true);
             return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
         }
         
@@ -68,7 +69,7 @@ namespace kata_frameworkless_web_app
             switch (request.HttpMethod)
             {
                 case "GET":
-                    await controller.HandleGetRequestAsync(response);
+                    await controller.HandleGetRequestAsync(request, response);
                     break;
                 case "POST":
                     await controller.HandlePostRequestAsync(request, response);

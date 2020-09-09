@@ -55,6 +55,16 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             
             response.Dispose();
         }
-        
+
+        [Fact]
+        public async Task GET_PathWithValidUserId_ReturnsUser()
+        {
+            var expectedUser = new User() {Id = "1", FirstName = "Bob"};
+            var expectedResponse = JsonConvert.SerializeObject(expectedUser);
+            
+            var response = await _httpClient.GetAsync("http://localhost:8080/users/1");
+            
+            Assert.Equal(expectedResponse, response.Content.ReadAsStringAsync().Result);
+        }
     }
 }

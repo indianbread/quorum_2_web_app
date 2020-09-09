@@ -16,9 +16,34 @@ namespace kata_frameworkless_web_app
         }
 
         private readonly UserService _userService;
-        
 
-        public async Task HandleGetRequestAsync(HttpListenerResponse response)
+        public async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            switch (request.Url.AbsolutePath)
+            {
+                case "/users":
+                    await HandleGetUsersRequestAsync(response);
+                    break;
+                case "/users/1":
+                    await HandleGetUserByIdRequestAsync(request, response);
+                    break;
+                default:
+                    response.StatusCode = (int) HttpStatusCode.NotFound;
+                    await Response.GenerateBodyAsync(response, "Not found");
+                    break;
+            }
+        }
+
+        private async Task HandleGetUserByIdRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            var userId = request.Url.Segments[2];
+            var user = await _userService.GetUserById(userId);
+            var userString = JsonConvert.SerializeObject(user);
+            await Response.GenerateBodyAsync(response, userString);
+        }
+
+
+        public async Task HandleGetUsersRequestAsync(HttpListenerResponse response)
         {
             var users = await _userService.GetUsers();
             var responseBody = JsonConvert.SerializeObject(users);

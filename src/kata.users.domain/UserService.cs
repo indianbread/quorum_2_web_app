@@ -11,9 +11,18 @@ namespace kata.users.domain
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+            //ideally the repository should be created here as only service should know about this
         }
+        // private IUserRepository UserRepository 
+        // {
+        //     get
+        //     {
+        //         if (_userRepository != null) return _userRepository;
+        //         _userRepository = new DynamoDbUserRepository();
+        //         return _userRepository;
+        //     }
+        // }
 
-        private readonly IUserRepository _userRepository;
 
         public async Task CreateUser(string firstName)
         {
@@ -47,5 +56,7 @@ namespace kata.users.domain
                 throw new ArgumentException("User does not exist");
             return user;
         }
+        
+        private readonly IUserRepository _userRepository;
     }
 }

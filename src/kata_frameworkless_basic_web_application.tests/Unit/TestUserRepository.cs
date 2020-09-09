@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using kata.users.shared;
 
-
-
-namespace kata_frameworkless_basic_web_application.tests
+namespace kata_frameworkless_basic_web_application.tests.Unit
 {
     public class TestUserRepository : IUserRepository
     {

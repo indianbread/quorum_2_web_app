@@ -20,8 +20,10 @@ namespace kata.users.shared
         
         public static string FormatControllerName(string resourceGroup)
         {
-            var resourceGroupName = resourceGroup.Substring(0, resourceGroup.Length - 1);
-            return Formatter.FormatName(resourceGroupName);
+            const string invalidCharacter = "/";
+            var numOfCharsToRemove = resourceGroup.Contains(invalidCharacter) ? 2 : 1;
+            var resourceGroupName = resourceGroup.Substring(0, resourceGroup.Length - numOfCharsToRemove);
+            return FormatName(resourceGroupName);
         }
     }
 }
