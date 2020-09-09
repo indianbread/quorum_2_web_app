@@ -19,12 +19,12 @@ namespace kata_frameworkless_web_app
 
         public async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            switch (request.Url.AbsolutePath)
+            switch (request.Url.Segments.Length)
             {
-                case "/users":
+                case 2:
                     await HandleGetUsersRequestAsync(response);
                     break;
-                case "/users/1":
+                case 3:
                     await HandleGetUserByIdRequestAsync(request, response);
                     break;
                 default:
@@ -37,9 +37,20 @@ namespace kata_frameworkless_web_app
         private async Task HandleGetUserByIdRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             var userId = request.Url.Segments[2];
-            var user = await _userService.GetUserById(userId);
-            var userString = JsonConvert.SerializeObject(user);
-            await Response.GenerateBodyAsync(response, userString);
+            string responseString;
+            try
+            {
+                var user = await _userService.GetUserById(userId);
+                responseString = JsonConvert.SerializeObject(user);
+
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int) HttpStatusCode.NotFound;
+                responseString = e.Message;
+            }
+
+            await Response.GenerateBodyAsync(response, responseString);
         }
 
 

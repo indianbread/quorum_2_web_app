@@ -63,8 +63,23 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var expectedResponse = JsonConvert.SerializeObject(expectedUser);
             
             var response = await _httpClient.GetAsync("http://localhost:8080/users/1");
+            var actualResponse = response.Content.ReadAsStringAsync().Result;
             
-            Assert.Equal(expectedResponse, response.Content.ReadAsStringAsync().Result);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(expectedResponse, actualResponse);
+            
+        }
+        
+        [Fact]
+        public async Task GET_PathWithInvalidUserId_ReturnsError()
+        {
+            const string expectedResponse = "User does not exist";
+            
+            var response = await _httpClient.GetAsync("http://localhost:8080/users/20");
+            var actualResponse = response.Content.ReadAsStringAsync().Result;
+            
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(expectedResponse, actualResponse);
         }
     }
 }
