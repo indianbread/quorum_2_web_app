@@ -74,6 +74,9 @@ namespace kata_frameworkless_web_app
                 case "POST":
                     await controller.HandlePostRequestAsync(request, response);
                     break;
+                case "PUT":
+                    await controller.HandlePutRequestAsync(request, response);
+                    break;
                 case "DELETE":
                     await controller.HandleDeleteRequestAsync(request, response);
                     break;

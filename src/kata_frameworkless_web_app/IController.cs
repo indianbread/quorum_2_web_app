@@ -10,5 +10,6 @@ namespace kata_frameworkless_web_app
         Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response);
 
         Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response);
+        Task HandlePutRequestAsync(HttpListenerRequest request, HttpListenerResponse response);
     }
 }

@@ -78,10 +78,33 @@ namespace kata_frameworkless_web_app
             }
 
         }
+        
+        public async Task HandlePutRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            var userId = request.Url.Segments[2];
+            var newName = Request.GetNameFromPayload(request);
+            var updatedUserObject = new User() {Id = userId, FirstName = newName};
+            string responseString;
+            try
+            {
+                await _userService.UpdateUser(updatedUserObject);
+                responseString = JsonConvert.SerializeObject(updatedUserObject);
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int) HttpStatusCode.NotFound;
+                responseString = e.Message;
+            }
+
+            await Response.GenerateBodyAsync(response, responseString);
+
+        }
 
         public Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             throw new NotImplementedException();
         }
+
+
     }
 }
