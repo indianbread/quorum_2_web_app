@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -10,7 +11,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
 {
     [Collection("HttpListener collection")]
     public class PutRequestTests
-    {
+    { 
         public PutRequestTests(HttpListenerFixture httpListenerFixture)
         {
             _httpListenerFixture = httpListenerFixture;
@@ -71,7 +72,6 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             response.Dispose();
 
         }
-
 
     }
 }

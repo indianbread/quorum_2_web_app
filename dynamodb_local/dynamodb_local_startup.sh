@@ -11,12 +11,9 @@ if [ "$?" != "0" ]; then
   echo "Creating User table"
   aws dynamodb create-table --table-name NhanUser --cli-input-json file://dynamodb_local/tables/user.json --endpoint-url http://localhost:8000
 fi
-echo "Adding test user to database"
-aws dynamodb put-item \
-    --table-name NhanUser \
-    --item '{
-      "Id": {"S": "1"},
-      "FirstName": {"S": "Bob"}    }' \
+echo "Adding test users to database"
+aws dynamodb batch-write-item \
+    --request-items file://dynamodb_local/testusers.json \
     --endpoint-url http://localhost:8000
 
    

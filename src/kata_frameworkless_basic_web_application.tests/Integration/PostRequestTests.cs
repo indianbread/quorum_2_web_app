@@ -24,7 +24,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         [Fact]
         public async Task POST_Name_ReturnsStatus200_IfAddedSuccessfully()
         {
-            var userToAdd = new User() {FirstName= "Jane"};
+            var userToAdd = new User() {FirstName= "Mary"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             

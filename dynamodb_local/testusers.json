@@ -1,0 +1,20 @@
+{
+  "NhanUser": [
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "1"},
+                  "FirstName": {"S": "Bob"}
+              }
+          }
+      },
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "2"},
+                  "FirstName": {"S": "Jane"}
+              }
+          }
+      }
+  ]
+}
