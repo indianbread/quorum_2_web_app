@@ -1,15 +1,15 @@
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using kata_frameworkless_web_app;
+using kata.users.shared;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace kata_frameworkless_basic_web_application.tests
+namespace kata_frameworkless_basic_web_application.tests.Integration
 {
     [Collection("HttpListener collection")]
     public class GetRequestTests
@@ -37,18 +37,15 @@ namespace kata_frameworkless_basic_web_application.tests
         }
 
         [Fact]
-        public async Task GET_Names_ReturnsListOfNames()
+        public async Task GET_Users_ReturnsListOfUsers()
         {
-            var response = await _httpClient.GetAsync("http://localhost:8080/users/names/");
+            var response = await _httpClient.GetAsync("http://localhost:8080/users");
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            
-            Assert.Contains("Name List", responseBody);
-            
+            Assert.Contains("Bob", responseBody);
             response.Dispose();
         }
         
         [Theory]
-        [InlineData("http://localhost:8080/users/names?action=put")]
         [InlineData("http://localhost:8080/notapath")]
         public async Task GET_IncorrectPath_ReturnsStatus404(string url)
         {
@@ -58,6 +55,31 @@ namespace kata_frameworkless_basic_web_application.tests
             
             response.Dispose();
         }
+
+        [Fact]
+        public async Task GET_PathWithValidUserId_ReturnsUser()
+        {
+            var expectedUser = new User() {Id = "1", FirstName = "Bob"};
+            var expectedResponse = JsonConvert.SerializeObject(expectedUser);
+            
+            var response = await _httpClient.GetAsync("http://localhost:8080/users/1");
+            var actualResponse = response.Content.ReadAsStringAsync().Result;
+            
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(expectedResponse, actualResponse);
+            
+        }
         
+        [Fact]
+        public async Task GET_PathWithInvalidUserId_ReturnsError()
+        {
+            const string expectedResponse = "User does not exist";
+            
+            var response = await _httpClient.GetAsync("http://localhost:8080/users/20");
+            var actualResponse = response.Content.ReadAsStringAsync().Result;
+            
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(expectedResponse, actualResponse);
+        }
     }
 }

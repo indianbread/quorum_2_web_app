@@ -7,6 +7,9 @@ WORKDIR /app
 # copy sln and csproj files into the image
 COPY *.sln .
 COPY src/kata_frameworkless_web_app/*.csproj ./src/kata_frameworkless_web_app/
+COPY src/kata.users.domain/*.csproj ./src/kata.users.domain/
+COPY src/kata.users.repositories/*.csproj ./src/kata.users.repositories/
+COPY src/kata.users.shared/*.csproj ./src/kata.users.shared/
 COPY src/kata_frameworkless_basic_web_application.tests/*.csproj ./src/kata_frameworkless_basic_web_application.tests/
 RUN dotnet restore
 
@@ -19,8 +22,8 @@ FROM build AS test
 WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
 COPY /ops/scripts/test_with_dynamodb.sh ./
 COPY /dynamodb_local/tables/ ./dynamodb_local/tables/
-#RUN java -Djava.library.path=/dynamolocal/DynamoDBLocal_lib -jar /dynamolocal/DynamoDBLocal.jar -sharedDb & && dotnet test
 RUN sh test_with_dynamodb.sh
+
 FROM build AS publish
 WORKDIR /app/src/kata_frameworkless_web_app
 RUN dotnet publish -c Release -o publish

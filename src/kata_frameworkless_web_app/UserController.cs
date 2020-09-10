@@ -1,14 +1,14 @@
-using System.IO;
+using System;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using kata_frameworkless_web_app.Services;
-using Newtonsoft.Json.Linq;
+using kata.users.domain;
+using kata.users.shared;
+using Newtonsoft.Json;
 
 namespace kata_frameworkless_web_app
 {
-    public class UserController
+    public class UserController : IController
     {
         public UserController(UserService userService)
         {
@@ -17,89 +17,94 @@ namespace kata_frameworkless_web_app
 
         private readonly UserService _userService;
 
-        public async Task HandleRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            switch (request.HttpMethod)
+            switch (request.Url.Segments.Length)
             {
-                case "GET":
-                    await HandleGetRequestAsync(request, response);
+                case 2:
+                    await HandleGetUsersRequestAsync(response);
                     break;
-                case "POST":
-                    await HandlePostRequestAsync(request, response);
+                case 3:
+                    await HandleGetUserByIdRequestAsync(request, response);
                     break;
                 default:
-                    response.StatusCode = 404;
+                    response.StatusCode = (int) HttpStatusCode.NotFound;
+                    await Response.GenerateBodyAsync(response, "Not found");
                     break;
             }
         }
 
-        public async Task HandleGetIndexRequestAsync(HttpListenerResponse response)
+        private async Task HandleGetUserByIdRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var names = _userService.GetNameList();
-            var responseString = ResponseFormatter.GetGreeting(names.ToList());
-            await GenerateResponseBodyAsync(response, responseString);
+            var userId = request.Url.Segments[2];
+            string responseString;
+            try
+            {
+                var user = await _userService.GetUserById(userId);
+                responseString = JsonConvert.SerializeObject(user);
+
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int) HttpStatusCode.NotFound;
+                responseString = e.Message;
+            }
+
+            await Response.GenerateBodyAsync(response, responseString);
+        }
+
+
+        public async Task HandleGetUsersRequestAsync(HttpListenerResponse response)
+        {
+            var users = await _userService.GetUsers();
+            var responseBody = JsonConvert.SerializeObject(users);
+            await Response.GenerateBodyAsync(response, responseBody);
         }
         
-        private async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            switch (request.Url.Segments[2])
+            var newUserFirstName = Request.GetNameFromPayload(request);
+            try
             {
-                case "names/":
-                   await HandleGetNameListRequestAsync(response);
-                   break;
-                default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
+                await _userService.CreateUser(newUserFirstName);
+                response.AppendHeader("Location", $"/users/{newUserFirstName}");
+                await Response.GenerateBodyAsync(response, "User added successfully");
             }
-        }
-
-        private async Task HandleGetNameListRequestAsync(HttpListenerResponse response)
-        {
-            var names = _userService.GetNameList();
-            var nameListFormatted = ResponseFormatter.GenerateNamesListBody(names);
-            await GenerateResponseBodyAsync(response, nameListFormatted);
-        }
-
-        private async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
-        {
-            switch (request.Url.Segments[2])
+            catch (Exception e)
             {
-                case "add/":
-                    await HandlePostNameRequestAsync(request, response);
-                    break;
-                default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
+                response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                await Response.GenerateBodyAsync(response, e.Message);
+                
             }
-        }
 
-        private async Task HandlePostNameRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
-        {
-            var newUserName = GetNameFromRequestBody(request);
-            var result = _userService.AddUser(newUserName);
-            response.StatusCode = (int) result.StatusCode;
-            var responseMessage = result.IsSuccess ? result.SuccessMessage : result.ErrorMessage;
-            response.AppendHeader("Location", $"/users/{newUserName}/");
-            await GenerateResponseBodyAsync(response, responseMessage);
         }
-
-        private static string GetNameFromRequestBody(HttpListenerRequest request)
+        
+        public async Task HandlePutRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var body = request.InputStream;
-            using (var reader = new StreamReader(body, Encoding.UTF8))
+            var userId = request.Url.Segments[2];
+            var newName = Request.GetNameFromPayload(request);
+            var updatedUserObject = new User() {Id = userId, FirstName = newName};
+            string responseString;
+            try
             {
-                var data = reader.ReadToEnd();
-                var user = JObject.Parse(data);
-                return (user["FirstName"] ?? "").Value<string>();
+                await _userService.UpdateUser(updatedUserObject);
+                responseString = JsonConvert.SerializeObject(updatedUserObject);
             }
+            catch (Exception e)
+            {
+                response.StatusCode = (int) HttpStatusCode.NotFound;
+                responseString = e.Message;
+            }
+
+            await Response.GenerateBodyAsync(response, responseString);
+
         }
 
-        private static async Task GenerateResponseBodyAsync(HttpListenerResponse response, string responseString)
+        public Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            await response.OutputStream.DisposeAsync();
+            throw new NotImplementedException();
         }
+
+
     }
 }

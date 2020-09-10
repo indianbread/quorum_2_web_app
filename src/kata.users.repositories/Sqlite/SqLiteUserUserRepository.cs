@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using kata.users.repositories.Sqlite;
+using kata.users.shared;
 
-namespace kata_frameworkless_web_app.Repositories
+namespace kata.users.repositories
 {
-    public class SqliteUserUserRepository : IUserRepository
+    public class SqLiteUserUserRepository : IUserRepository
     {
-        public SqliteUserUserRepository()
+        public SqLiteUserUserRepository()
         {
             _context = InitializeDatabase();
         }
@@ -46,10 +48,31 @@ namespace kata_frameworkless_web_app.Repositories
             return _context.Users.FirstOrDefault(users => users.FirstName == name);
         }
 
+        public Task<IEnumerable<User>> GetUsersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> GetUserByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task AddUserAsync(string name)
         {
             await _context.Users.AddAsync(new User() {FirstName = name});
             await _context.SaveChangesAsync();
         }
+
+        public Task<User> GetUserByIdAsync(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateUser(User userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
+

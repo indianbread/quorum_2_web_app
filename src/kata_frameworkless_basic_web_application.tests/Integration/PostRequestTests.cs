@@ -1,14 +1,13 @@
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using kata_frameworkless_web_app;
+using kata.users.shared;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace kata_frameworkless_basic_web_application.tests
+namespace kata_frameworkless_basic_web_application.tests.Integration
 {
     [Collection("HttpListener collection")]
     public class PostRequestTests
@@ -23,17 +22,16 @@ namespace kata_frameworkless_basic_web_application.tests
         private readonly HttpClient _httpClient;
         
         [Fact]
-        public async Task POST_Name_ReturnsStatus201_IfAddedSuccessfully()
+        public async Task POST_Name_ReturnsStatus200_IfAddedSuccessfully()
         {
             var userToAdd = new User() {FirstName= "Jane"};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
             
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("User added successfully", response.Content.ReadAsStringAsync().Result);
-            Assert.Equal("/users/Jane/", response.Headers.Location.ToString());
             
             response.Dispose();
         }
@@ -45,26 +43,24 @@ namespace kata_frameworkless_basic_web_application.tests
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            
-            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+
             Assert.Contains("Name already exists", responseBody);
 
             response.Dispose();
         }
 
         [Fact]
-        public async Task POST_Name_ReturnsStatus400_IfPostRequestIsEmpty()
+        public async Task POST_Name_ReturnsError_IfPostRequestIsEmpty()
         {
             var userToAdd = new User() {FirstName = ""};
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             
-            var response = await _httpClient.PostAsync("http://localhost:8080/users/add/", content);
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
             var responseBody = response.Content.ReadAsStringAsync().Result;
             
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("Name cannot be empty", responseBody);
             
             response.Dispose();

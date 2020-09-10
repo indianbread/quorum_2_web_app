@@ -1,44 +1,40 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
+using kata.users.domain;
+
 
 
 namespace kata_frameworkless_web_app
 {
-    public class BasicWebApp
+    public class Server
     {
-        public BasicWebApp(UserController userController)
+        public Server(UserService userService)
         {
-            _requestRouter = new RequestRouter(userController);
+            _requestRouter = new RequestRouter(userService);
             _listener = new HttpListener();
         }
         
         private readonly RequestRouter _requestRouter;
         private readonly HttpListener _listener;
-        private bool IsListening;
-        private const int Port = 8080;
+
+        
+        public async Task Start()
+        {
+            AddPrefixes();
+            _isListening = true;
+            _listener.Start();
+            Console.WriteLine($"Listening on port {Port}" );
+            while (_isListening)
+            {
+               await ProcessRequestAsync();
+            }
+        }
 
         private void AddPrefixes()
         {
             _listener.Prefixes.Add($"http://*:{Port}/");
         }
-        
-        public void Start()
-        {
-            AddPrefixes();
-            IsListening = true;
-            _listener.Start();
-            Console.WriteLine($"Listening on port {Port}" );
-            while (IsListening)
-            {
-                ProcessRequestAsync().GetAwaiter().GetResult();
-            }
-        }
-
         private async Task ProcessRequestAsync()
         {
             var context = await _listener.GetContextAsync();
@@ -46,15 +42,12 @@ namespace kata_frameworkless_web_app
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             using (var response = context.Response)
             {
-                await _requestRouter.HandleRequestAsync(request, response);
+                await _requestRouter.RouteRequestAsync(request, response);
             }
         }
         
-        public void Stop()
-        {
-            IsListening = false;
-            _listener.Stop();
-        }
-
+        private bool _isListening;
+        private const int Port = 8080;
+        
     }
 }
