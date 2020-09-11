@@ -64,19 +64,18 @@ namespace kata_frameworkless_web_app
         public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             var newUserFirstName = Request.GetNameFromPayload(request);
+            User newUser;
             try
             {
-                await _userService.CreateUserAsync(newUserFirstName);
-                response.AppendHeader("Location", value: $"/users/{newUserFirstName}"); //TODO: change location to ID
+                newUser = await _userService.CreateUserAsync(newUserFirstName);
+                response.RedirectLocation = $"/users/{newUser.Id}";
                 await Response.GenerateBodyAsync(response, "User added successfully");
             }
             catch (Exception e)
             {
                 response.StatusCode = (int) HttpStatusCode.InternalServerError;
                 await Response.GenerateBodyAsync(response, e.Message);
-                
             }
-
         }
         
         public async Task HandlePutRequestAsync(HttpListenerRequest request, HttpListenerResponse response)

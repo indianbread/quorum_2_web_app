@@ -14,7 +14,7 @@ namespace kata.users.domain
             
         }
 
-        public async Task CreateUserAsync(string firstName)
+        public async Task<User> CreateUserAsync(string firstName)
         {
             if (string.IsNullOrEmpty(firstName))
                 throw new ArgumentException("Name cannot be empty");
@@ -25,8 +25,9 @@ namespace kata.users.domain
             var userId = Guid.NewGuid().ToString();
             var newUser = new User() { Id = userId, FirstName = firstName };
             await  _userRepository.CreateUserAsync(newUser);
-            
+            return newUser;
         }
+
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _userRepository.GetUsersAsync();
@@ -52,6 +53,8 @@ namespace kata.users.domain
         public async Task DeleteUserAsync(string userId)
         {
             var userToDelete = await GetUserById(userId);
+            if (userToDelete == null)
+                throw new ArgumentException("User does not exist");
             await _userRepository.DeleteUserAsync(userToDelete);
         }
 

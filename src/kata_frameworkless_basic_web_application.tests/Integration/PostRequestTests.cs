@@ -70,8 +70,16 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
 
         public void Dispose()
         {
-            var userToDelete = _httpListenerFixture.UserRepository.GetUserByNameAsync("Mary").GetAwaiter().GetResult();
-            _httpListenerFixture.UserRepository.DeleteUserAsync(userToDelete).GetAwaiter().GetResult();
+            try
+            {
+                var userToDelete = _httpListenerFixture.UserRepository.GetUserByNameAsync("Mary").GetAwaiter().GetResult();
+                _httpListenerFixture.UserRepository.DeleteUserAsync(userToDelete).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
 
         }
     }
