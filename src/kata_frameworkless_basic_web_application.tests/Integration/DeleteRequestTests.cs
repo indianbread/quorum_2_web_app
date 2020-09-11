@@ -39,12 +39,12 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         }
 
         [Fact]
-        public async Task Delete_ReturnsUnauthorizedIfDeleteSecretUser()
+        public async Task Delete_ReturnsForbiddenIfDeleteSecretUser()
         {
             var secretUser = await _httpListenerFixture.UserRepository.GetUserByNameAsync("Nhan");
             using (var response = await _httpClient.DeleteAsync($"http://localhost:8080/users/{secretUser.Id}"))
             {
-                Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
             }
         }
 

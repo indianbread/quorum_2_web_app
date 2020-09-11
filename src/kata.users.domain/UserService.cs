@@ -56,7 +56,7 @@ namespace kata.users.domain
             if (userToDelete == null)
                 throw new ArgumentException("User does not exist");
             if (userToDelete.FirstName == _secretUser)
-                throw new ArgumentException("Not Authorized");
+                throw new ArgumentException("Forbidden");
             await _userRepository.DeleteUserAsync(userToDelete);
         }
 

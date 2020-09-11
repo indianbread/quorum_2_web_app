@@ -111,7 +111,7 @@ namespace kata_frameworkless_web_app
             }
             catch (Exception e)
             {
-                response.StatusCode = e.Message.Contains("Not Authorized") ? (int) HttpStatusCode.Unauthorized : (int) HttpStatusCode.NotFound;
+                response.StatusCode = e.Message.Contains("Forbidden") ? (int) HttpStatusCode.Forbidden : (int) HttpStatusCode.NotFound;
                 responseString = e.Message;
             }
 
