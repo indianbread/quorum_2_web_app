@@ -27,10 +27,6 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             }
 
-            using (var response2 = await _httpClient.GetAsync("http://localhost:8080/users/3"))
-            {
-                Assert.Equal(HttpStatusCode.NotFound, response2.StatusCode);
-            }
         }
 
         [Fact]
