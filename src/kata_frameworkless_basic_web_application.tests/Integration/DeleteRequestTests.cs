@@ -33,6 +33,25 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             }
         }
 
+        [Fact]
+        public async Task Delete_ReturnsErrorIfInvalidId()
+        {
+            using (var response = await _httpClient.DeleteAsync("http://localhost:8080/users/20"))
+            {
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task Delete_ReturnsUnauthorizedIfDeleteSecretUser()
+        {
+            var secretUser = await _httpListenerFixture.UserRepository.GetUserByNameAsync("Nhan");
+            using (var response = await _httpClient.DeleteAsync($"http://localhost:8080/users/{secretUser.Id}"))
+            {
+                Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            }
+        }
+
         public void Dispose()
         {
             var userToRestore = new User()

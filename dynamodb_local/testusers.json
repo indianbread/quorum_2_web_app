@@ -23,6 +23,22 @@
                   "FirstName": {"S": "John"}
               }
           }
+      },
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "4"},
+                  "FirstName": {"S": "Nhan"}
+              }
+          }
+      },
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "5"},
+                  "FirstName": {"S": "Anna"}
+              }
+          }
       }
   ]
 }

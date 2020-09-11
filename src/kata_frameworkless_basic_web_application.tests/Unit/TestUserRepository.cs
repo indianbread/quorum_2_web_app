@@ -16,7 +16,8 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             {
                 new User() {Id = "1", FirstName = "Nhan"},
                 new User() {Id = "2", FirstName = "Bob"},
-                new User() {Id = "3", FirstName = "John"}
+                new User() {Id = "3", FirstName = "John"},
+                new User() {Id = "4", FirstName = "Bruce"}
             };
             
         }

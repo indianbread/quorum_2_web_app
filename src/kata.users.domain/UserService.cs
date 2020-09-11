@@ -55,11 +55,18 @@ namespace kata.users.domain
             var userToDelete = await GetUserById(userId);
             if (userToDelete == null)
                 throw new ArgumentException("User does not exist");
+            if (userToDelete.FirstName == _secretUser)
+                throw new ArgumentException("Not Authorized");
             await _userRepository.DeleteUserAsync(userToDelete);
         }
 
+        public void SetSecretUser(string name)
+        {
+            _secretUser = name;
+        }
+
         private readonly IUserRepository _userRepository;
-
-
+        private string _secretUser;
+        
     }
 }

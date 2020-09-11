@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using kata.users.domain;
 using kata.users.shared;
+using kata_frameworkless_web_app;
 using Xunit;
 using IUserRepository = kata.users.shared.IUserRepository;
 
@@ -13,6 +14,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         public UserServiceShould()
         {
             _sut = new UserService(_testUserRepository);
+            _sut.SetSecretUser("Nhan");
 
         }
         
@@ -39,7 +41,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         }
 
         [Fact]
-        public async Task GetUserById_ThrowsErrorIfInvalidId()
+        public void GetUserById_ThrowsErrorIfInvalidId()
         {
             Assert.Throws<ArgumentException>(_sut.GetUserById("20").GetAwaiter().GetResult);
         }
@@ -69,13 +71,13 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         {
             var userToUpdate = new User()
             {
-                Id = "1",
+                Id = "4",
                 FirstName = "Monty"
             };
 
             await _sut.UpdateUserAsync(userToUpdate);
 
-            var user = await _sut.GetUserById("1");
+            var user = await _sut.GetUserById("4");
             Assert.Equal(userToUpdate.FirstName, user.FirstName);
 
         }
@@ -98,7 +100,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             var userToUpdate = new User()
             {
                 Id = "1",
-                FirstName = "Nhan"
+                FirstName = "Bob"
             };
 
             Assert.Throws<ArgumentException>(_sut.UpdateUserAsync(userToUpdate).GetAwaiter().GetResult);
@@ -109,7 +111,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         {
             var userToUpdate = new User()
             {
-                Id = "1",
+                Id = "2",
                 FirstName = "MontyHall"
             };
 
@@ -118,7 +120,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             var allUsers = await _testUserRepository.GetUsersAsync();
 
 
-            Assert.True(allUsers.Where(user => user.Id == "1").Count() == 1);
+            Assert.True(allUsers.Where(user => user.Id == "2").Count() == 1);
 
         }
 
@@ -134,11 +136,19 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         }
 
         [Fact]
-        public async Task Delete_ThrowsErrorIfInvalidId()
+        public void Delete_ThrowsErrorIfInvalidId()
         {
             var userIdToDelete = "10";
 
             Assert.Throws<ArgumentException>(_sut.DeleteUserAsync(userIdToDelete).GetAwaiter().GetResult);
+        }
+
+        [Fact]
+        public void Delete_ThrowsErrorIfSecretUser()
+        {
+            var secretUser = _testUserRepository.GetUserByNameAsync("Nhan").GetAwaiter().GetResult();
+
+            Assert.Throws<ArgumentException>(_sut.DeleteUserAsync(secretUser.Id).GetAwaiter().GetResult);
         }
 
     }

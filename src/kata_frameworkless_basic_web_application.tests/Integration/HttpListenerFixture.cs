@@ -12,14 +12,30 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
     {
         public HttpListenerFixture()
         {
-            UserRepository = new DynamoDbUserRepository();
-            var userService = new UserService(UserRepository);
-            var server = new Server(userService);
+            UserRepository = new DynamoDbUserRepository(true);
+            _userService = new UserService(UserRepository);
+            SetUpSecretUser().GetAwaiter().GetResult();
+            var server = new Server(_userService);
             var webAppThread = new Thread(async () => await server.Start());
             webAppThread.Start();
         }
 
-        public readonly IUserRepository UserRepository;
+        private async Task SetUpSecretUser()
+        {
+            _userService.SetSecretUser("Nhan");
+            try
+            {
+                await _userService.CreateUserAsync("Nhan");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
 
+            }
+
+        }
+
+        public readonly IUserRepository UserRepository;
+        private readonly UserService _userService;
     }
 }

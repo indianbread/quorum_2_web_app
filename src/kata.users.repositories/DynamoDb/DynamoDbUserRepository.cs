@@ -10,12 +10,17 @@ namespace kata.users.repositories.DynamoDb
 {
     public class DynamoDbUserRepository : IUserRepository
     {
+        public DynamoDbUserRepository(bool useDynamoDbLocal)
+        {
+            _useDynamoDbLocal = useDynamoDbLocal;
+        }
+
         private Table UserTable
         {
             get
             {
                 if (_userTable != null) return _userTable;
-                _client = DynamoDb.CreatClient(false);
+                _client = DynamoDb.CreatClient(_useDynamoDbLocal);
                 _userTable = Table.LoadTable(_client, TableName); //singleton
                 return _userTable;
             }
@@ -38,10 +43,15 @@ namespace kata.users.repositories.DynamoDb
 
         public async Task<User> GetUserByIdAsync(string userId)
         {
-            var scanFilter = new ScanFilter();
-            scanFilter.AddCondition("Id", ScanOperator.Equal, userId);
-            var searchResults = await UserTable.Scan(scanFilter).GetRemainingAsync();
-            return searchResults.Count == 0 ? null : ConvertDocumentToUser(searchResults.FirstOrDefault());
+            Primitive partitionKey = new Primitive(userId);
+            GetItemOperationConfig config = new GetItemOperationConfig()
+            {
+                AttributesToGet = new List<string>() { "Id", "FirstName" },
+            };
+
+            var userDocument = await UserTable.GetItemAsync(partitionKey, config);
+            return userDocument == null ? null : ConvertDocumentToUser(userDocument);
+
         }
 
         public async Task CreateUserAsync(User newUser)
@@ -63,7 +73,7 @@ namespace kata.users.repositories.DynamoDb
 
             var result = await UserTable.UpdateItemAsync(user, config);
 
-            return new User() { Id = result["Id"], FirstName = result["FirstName"] } ;
+            return ConvertDocumentToUser(result);
             
         }
 
@@ -91,7 +101,7 @@ namespace kata.users.repositories.DynamoDb
         private IAmazonDynamoDB _client;
         private Table _userTable;
         const string TableName = "NhanUser";
-        
+        private readonly bool _useDynamoDbLocal;
     }
     
 }

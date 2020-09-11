@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using kata.users.domain;
@@ -42,11 +41,11 @@ namespace kata_frameworkless_web_app
             {
                 var user = await _userService.GetUserById(userId);
                 responseString = JsonConvert.SerializeObject(user);
-
             }
+
             catch (Exception e)
             {
-                response.StatusCode = (int) HttpStatusCode.NotFound;
+                response.StatusCode = (int)HttpStatusCode.NotFound;
                 responseString = e.Message;
             }
 
@@ -112,7 +111,7 @@ namespace kata_frameworkless_web_app
             }
             catch (Exception e)
             {
-                response.StatusCode = (int)HttpStatusCode.NotFound;
+                response.StatusCode = e.Message.Contains("Not Authorized") ? (int) HttpStatusCode.Unauthorized : (int) HttpStatusCode.NotFound;
                 responseString = e.Message;
             }
 

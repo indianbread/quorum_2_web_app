@@ -29,10 +29,10 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var newNameObject = new User() { FirstName = "Totoro" };
             var jsonContent = JsonConvert.SerializeObject(newNameObject);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var updatedUser = new User() { Id = "1", FirstName = "Totoro" };
+            var updatedUser = new User() { Id = "5", FirstName = "Totoro" };
             var updatedUserString = JsonConvert.SerializeObject(updatedUser);
 
-            using (HttpResponseMessage response = await _httpClient.PutAsync("http://localhost:8080/users/1", content))
+            using (HttpResponseMessage response = await _httpClient.PutAsync("http://localhost:8080/users/5", content))
             {
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 Assert.Equal(updatedUserString, response.Content.ReadAsStringAsync().Result);
@@ -45,7 +45,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
                 var responseBody = response2.Content.ReadAsStringAsync().Result;
                 var allUsers = JsonConvert.DeserializeObject<List<User>>(responseBody);
 
-                Assert.Single(allUsers.Where(user => user.Id == "1"));
+                Assert.Single(allUsers.Where(user => user.Id == "5"));
             }
 
         }
@@ -84,10 +84,10 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
 
         public void Dispose()
         {
-            var userToRestore = new User() { Id = "1", FirstName = "Bob" };
+            var userToRestore = new User() { Id = "5", FirstName = "Anna" };
             var jsonContent = JsonConvert.SerializeObject(userToRestore);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = _httpClient.PutAsync("http://localhost:8080/users/1", content).GetAwaiter().GetResult();
+            var response = _httpClient.PutAsync("http://localhost:8080/users/5", content).GetAwaiter().GetResult();
             response.Dispose();
 
         }
