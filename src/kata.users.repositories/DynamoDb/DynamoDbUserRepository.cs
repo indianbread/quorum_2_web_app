@@ -15,7 +15,7 @@ namespace kata.users.repositories.DynamoDb
             get
             {
                 if (_userTable != null) return _userTable;
-                _client = DynamoDb.CreatClient(true);
+                _client = DynamoDb.CreatClient(false);
                 _userTable = Table.LoadTable(_client, TableName); //singleton
                 return _userTable;
             }
