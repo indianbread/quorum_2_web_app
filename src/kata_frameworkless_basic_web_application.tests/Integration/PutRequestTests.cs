@@ -38,14 +38,10 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             Assert.Equal(updatedUserString, response.Content.ReadAsStringAsync().Result);
             
             response.Dispose();
-            
-        }
 
-        [Fact]
-        public async Task PUT_DoesNotCreateANewResourceWithSameId()
-        {
-            var response = await _httpClient.GetAsync("http://localhost:8080/users/");
-            var responseBody = response.Content.ReadAsStringAsync().Result;
+            //checking that PUT does not create a new resource with the same ID
+            var response2 = await _httpClient.GetAsync("http://localhost:8080/users/");
+            var responseBody = response2.Content.ReadAsStringAsync().Result;
             var allUsers = JsonConvert.DeserializeObject<List<User>>(responseBody);
 
             Assert.Single(allUsers.Where(user => user.Id == "1"));
@@ -53,7 +49,6 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             response.Dispose();
 
         }
-
 
         [Fact]
         public async Task PUT_ThrowsError_IfInvalidId()
