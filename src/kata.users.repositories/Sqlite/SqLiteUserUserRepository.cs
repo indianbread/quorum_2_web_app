@@ -69,12 +69,17 @@ namespace kata.users.repositories
             throw new NotImplementedException();
         }
 
-        public Task<User> UpdateUser(User userId)
+        public Task<User> UpdateUserAsync(User userId)
         {
             throw new NotImplementedException();
         }
 
         public Task CreateUserAsync(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteUserAsync(User userToDelete)
         {
             throw new NotImplementedException();
         }

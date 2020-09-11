@@ -50,7 +50,7 @@ namespace kata.users.repositories.DynamoDb
             await UserTable.PutItemAsync(newUserDocument);
         }
 
-        public async Task<User> UpdateUser(User userToUpdate)
+        public async Task<User> UpdateUserAsync(User userToUpdate)
         {
             var user = new Document();
             user["Id"] = userToUpdate.Id;
@@ -65,6 +65,11 @@ namespace kata.users.repositories.DynamoDb
 
             return new User() { Id = result["Id"], FirstName = result["FirstName"] } ;
             
+        }
+
+        public async Task DeleteUserAsync(User userToDelete)
+        {
+            await UserTable.DeleteItemAsync(userToDelete.Id);
         }
 
         private static User ConvertDocumentToUser(Document document)
@@ -82,7 +87,7 @@ namespace kata.users.repositories.DynamoDb
             userDocument["FirstName"] = user.FirstName;
             return userDocument;
         }
-        
+
         private IAmazonDynamoDB _client;
         private Table _userTable;
         const string TableName = "NhanUser";

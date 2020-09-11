@@ -15,6 +15,14 @@
                   "FirstName": {"S": "Jane"}
               }
           }
+      },
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "3"},
+                  "FirstName": {"S": "John"}
+              }
+          }
       }
   ]
 }

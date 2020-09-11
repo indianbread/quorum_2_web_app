@@ -58,7 +58,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
                 FirstName = "Monty"
             };
 
-            await _sut.UpdateUser(userToUpdate);
+            await _sut.UpdateUserAsync(userToUpdate);
 
             var user = await _sut.GetUserById("1");
             Assert.Equal(userToUpdate.FirstName, user.FirstName);
@@ -74,7 +74,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
                 FirstName = "Hemmingway"
             };
             
-            Assert.Throws<ArgumentException>(_sut.UpdateUser(userToUpdate).GetAwaiter().GetResult);
+            Assert.Throws<ArgumentException>(_sut.UpdateUserAsync(userToUpdate).GetAwaiter().GetResult);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
                 FirstName = "Nhan"
             };
 
-            Assert.Throws<ArgumentException>(_sut.UpdateUser(userToUpdate).GetAwaiter().GetResult);
+            Assert.Throws<ArgumentException>(_sut.UpdateUserAsync(userToUpdate).GetAwaiter().GetResult);
         }
 
         [Fact]
@@ -98,13 +98,40 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
                 FirstName = "MontyHall"
             };
 
-            await _sut.UpdateUser(userToUpdate);
+            await _sut.UpdateUserAsync(userToUpdate);
 
             var allUsers = await _testUserRepository.GetUsersAsync();
 
 
             Assert.True(allUsers.Where(user => user.Id == "1").Count() == 1);
 
+        }
+
+        [Fact]
+        public async Task Delete_RemovesUserWithValidId()
+        {
+            var userToDelete = new User()
+            {
+                Id = "3",
+                FirstName = "John"
+            };
+
+            await _sut.DeleteUserAsync(userToDelete);
+
+            Assert.Throws<ArgumentException>(_sut.GetUserById("3").GetAwaiter().GetResult);
+
+        }
+
+        [Fact]
+        public async Task Delete_ThrowsErrorIfInvalidId()
+        {
+            var userToDelete = new User()
+            {
+                Id = "10",
+                FirstName = "Hamburger"
+            };
+
+            Assert.Throws<ArgumentException>(_sut.DeleteUserAsync(userToDelete).GetAwaiter().GetResult);
         }
 
     }

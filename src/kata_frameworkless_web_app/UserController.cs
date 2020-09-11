@@ -87,7 +87,7 @@ namespace kata_frameworkless_web_app
             string responseString;
             try
             {
-                var updatedUser = await _userService.UpdateUser(updatedUserObject);
+                var updatedUser = await _userService.UpdateUserAsync(updatedUserObject);
                 responseString = JsonConvert.SerializeObject(updatedUser);
             }
             catch (Exception e)

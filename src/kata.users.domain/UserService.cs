@@ -11,18 +11,8 @@ namespace kata.users.domain
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            //ideally the repository should be created here as only service should know about this
+            
         }
-        // private IUserRepository UserRepository 
-        // {
-        //     get
-        //     {
-        //         if (_userRepository != null) return _userRepository;
-        //         _userRepository = new DynamoDbUserRepository();
-        //         return _userRepository;
-        //     }
-        // }
-
 
         public async Task CreateUserAsync(string firstName)
         {
@@ -42,18 +32,6 @@ namespace kata.users.domain
             return await _userRepository.GetUsersAsync();
         }
 
-        public async Task<User> UpdateUser(User newUserDetails)
-        {
-            var userToUpdate = await GetUserById(newUserDetails.Id);
-            if (userToUpdate == null)
-                throw new ArgumentException("User does not exist");
-            var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
-            if (userWithSameName != null)
-                throw new ArgumentException("A user with this name already exists");
-            return await _userRepository.UpdateUser( newUserDetails);
-        }
-
-
         public async Task<User> GetUserById(string Id)
         {
             var user = await _userRepository.GetUserByIdAsync(Id);
@@ -61,7 +39,28 @@ namespace kata.users.domain
                 throw new ArgumentException("User does not exist");
             return user;
         }
-        
+
+        public async Task<User> UpdateUserAsync(User newUserDetails)
+        {
+            var userToUpdate = await GetUserById(newUserDetails.Id);
+            if (userToUpdate == null)
+                throw new ArgumentException("User does not exist");
+            var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
+            if (userWithSameName != null)
+                throw new ArgumentException("A user with this name already exists");
+            return await _userRepository.UpdateUserAsync( newUserDetails);
+        }
+
+        public async Task DeleteUserAsync(User userToDelete)
+        {
+            var user = await GetUserById(userToDelete.Id);
+            if (user == null)
+                throw new ArgumentException("User does not exist");
+            await _userRepository.DeleteUserAsync(userToDelete);
+        }
+
         private readonly IUserRepository _userRepository;
+
+
     }
 }
