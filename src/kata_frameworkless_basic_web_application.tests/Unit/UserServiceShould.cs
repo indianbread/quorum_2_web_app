@@ -110,13 +110,9 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         [Fact]
         public async Task Delete_RemovesUserWithValidId()
         {
-            var userToDelete = new User()
-            {
-                Id = "3",
-                FirstName = "John"
-            };
+            var userIdToDelete = "3";
 
-            await _sut.DeleteUserAsync(userToDelete);
+            await _sut.DeleteUserAsync(userIdToDelete);
 
             Assert.Throws<ArgumentException>(_sut.GetUserById("3").GetAwaiter().GetResult);
 
@@ -125,13 +121,9 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         [Fact]
         public async Task Delete_ThrowsErrorIfInvalidId()
         {
-            var userToDelete = new User()
-            {
-                Id = "10",
-                FirstName = "Hamburger"
-            };
+            var userIdToDelete = "10";
 
-            Assert.Throws<ArgumentException>(_sut.DeleteUserAsync(userToDelete).GetAwaiter().GetResult);
+            Assert.Throws<ArgumentException>(_sut.DeleteUserAsync(userIdToDelete).GetAwaiter().GetResult);
         }
 
     }

@@ -67,7 +67,7 @@ namespace kata_frameworkless_web_app
             try
             {
                 await _userService.CreateUserAsync(newUserFirstName);
-                response.AppendHeader("Location", $"/users/{newUserFirstName}");
+                response.AppendHeader("Location", value: $"/users/{newUserFirstName}"); //TODO: change location to ID
                 await Response.GenerateBodyAsync(response, "User added successfully");
             }
             catch (Exception e)
@@ -101,11 +101,24 @@ namespace kata_frameworkless_web_app
 
         }
 
-        public Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            throw new NotImplementedException();
-        }
+            var userId = request.Url.Segments[2];
+            string responseString;
+            try
+            {
+                await _userService.DeleteUserAsync(userId);
+                responseString = "User successfully deleted";
 
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int)HttpStatusCode.NotFound;
+                responseString = e.Message;
+            }
+
+            await Response.GenerateBodyAsync(response, responseString);
+        }
 
     }
 }

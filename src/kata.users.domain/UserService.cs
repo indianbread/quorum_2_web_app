@@ -43,19 +43,15 @@ namespace kata.users.domain
         public async Task<User> UpdateUserAsync(User newUserDetails)
         {
             var userToUpdate = await GetUserById(newUserDetails.Id);
-            if (userToUpdate == null)
-                throw new ArgumentException("User does not exist");
             var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
             if (userWithSameName != null)
                 throw new ArgumentException("A user with this name already exists");
             return await _userRepository.UpdateUserAsync( newUserDetails);
         }
 
-        public async Task DeleteUserAsync(User userToDelete)
+        public async Task DeleteUserAsync(string userId)
         {
-            var user = await GetUserById(userToDelete.Id);
-            if (user == null)
-                throw new ArgumentException("User does not exist");
+            var userToDelete = await GetUserById(userId);
             await _userRepository.DeleteUserAsync(userToDelete);
         }
 

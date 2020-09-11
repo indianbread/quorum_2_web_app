@@ -12,15 +12,14 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
     {
         public HttpListenerFixture()
         {
-            _userRepository = new DynamoDbUserRepository();
-            var userService = new UserService(_userRepository);
+            UserRepository = new DynamoDbUserRepository();
+            var userService = new UserService(UserRepository);
             var server = new Server(userService);
             var webAppThread = new Thread(async () => await server.Start());
             webAppThread.Start();
         }
 
-        private readonly IUserRepository _userRepository;
-
+        public readonly IUserRepository UserRepository;
 
     }
 }
