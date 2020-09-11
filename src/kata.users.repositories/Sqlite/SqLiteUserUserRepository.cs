@@ -58,7 +58,7 @@ namespace kata.users.repositories
             throw new NotImplementedException();
         }
 
-        public async Task AddUserAsync(string name)
+        public async Task CreateUserAsync(string name)
         {
             await _context.Users.AddAsync(new User() {FirstName = name});
             await _context.SaveChangesAsync();
@@ -69,7 +69,12 @@ namespace kata.users.repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateUser(User userId)
+        public Task<User> UpdateUser(User userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreateUserAsync(User user)
         {
             throw new NotImplementedException();
         }

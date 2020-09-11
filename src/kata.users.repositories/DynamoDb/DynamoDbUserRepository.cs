@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
 using kata.users.shared;
 
 namespace kata.users.repositories.DynamoDb
@@ -16,7 +17,7 @@ namespace kata.users.repositories.DynamoDb
             {
                 if (_userTable != null) return _userTable;
                 _client = DynamoDb.CreatClient(true);
-                _userTable = Table.LoadTable(_client, "NhanUser"); //singleton
+                _userTable = Table.LoadTable(_client, TableName); //singleton
                 return _userTable;
             }
         }
@@ -36,10 +37,8 @@ namespace kata.users.repositories.DynamoDb
             return searchResults.Count == 0 ? null : ConvertDocumentToUser(searchResults.FirstOrDefault());
         }
 
-        public async Task AddUserAsync(string name)
+        public async Task CreateUserAsync(User newUser)
         {
-            var userId = Guid.NewGuid().ToString();
-            var newUser = new User() { Id = userId, FirstName = name };
             var newUserDocument = ConvertUserToDocument(newUser);
             await UserTable.PutItemAsync(newUserDocument);
         }
@@ -52,13 +51,49 @@ namespace kata.users.repositories.DynamoDb
             return searchResults.Count == 0 ? null : ConvertDocumentToUser(searchResults.FirstOrDefault());
         }
 
-        public async Task UpdateUser(User userToUpdate)
+        public async Task<User> UpdateUser(User userToUpdate)
         {
             var user = new Document();
             user["Id"] = userToUpdate.Id;
             user["FirstName"] = userToUpdate.FirstName;
 
-            await UserTable.UpdateItemAsync(user);
+            var hashKey = new Primitive(userToUpdate.Id);
+
+            var expression = new Expression();
+            expression.ExpressionStatement = "SET Id = :Id";
+            expression.ExpressionAttributeValues[":Id"] = userToUpdate.Id;
+
+
+            var config = new UpdateItemOperationConfig
+            {
+               // ConditionalExpression = expression,
+                ReturnValues = ReturnValues.AllNewAttributes
+            };
+
+            var result = await UserTable.UpdateItemAsync(user, config);
+
+            //var attributes = result.GetAttributeNames();
+            //foreach (var attribute in attributes)
+            //{
+            //    Console.WriteLine(attribute);
+
+            //}
+
+            return new User() { Id = result["Id"], FirstName = result["FirstName"] } ;
+            
+            //var key = new Dictionary<string, AttributeValue>
+            //{
+            //    { "Id", new AttributeValue(userToUpdate.Id) }
+            //};
+            //var attributeToUpdate = new Dictionary<string, AttributeValueUpdate>
+            //{
+            //    { "FirstName", new AttributeValueUpdate(new AttributeValue(userToUpdate.FirstName),AttributeAction.PUT) }
+            //};
+
+            //var response = await _client.UpdateItemAsync(TableName, key, attributeToUpdate);
+            //var id = response.Attributes["Id"].S;
+            //var updatedFirstName = response.Attributes["FirstName"].S;
+            //return new User() { Id = id, FirstName = updatedFirstName };
         }
 
         private static User ConvertDocumentToUser(Document document)
@@ -79,6 +114,7 @@ namespace kata.users.repositories.DynamoDb
         
         private IAmazonDynamoDB _client;
         private Table _userTable;
+        const string TableName = "NhanUser";
         
     }
     

@@ -9,9 +9,9 @@ namespace kata.users.shared
 
         Task<User> GetUserByNameAsync(string name);
 
-        Task AddUserAsync(string name);
+        Task CreateUserAsync(User user);
 
         Task<User> GetUserByIdAsync(string userId);
-        Task UpdateUser(User userId);
+        Task<User> UpdateUser(User userId);
     }
 }

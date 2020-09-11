@@ -29,9 +29,9 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             return _users.FirstOrDefault(user => user.FirstName == name);
         }
 
-        public async Task AddUserAsync(string name)
+        public async Task CreateUserAsync(User user)
         {
-             _users.Add(new User() {FirstName = name}); 
+             _users.Add(user); 
         }
 
         public async Task<User> GetUserByIdAsync(string userId)
@@ -39,15 +39,17 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             return _users.FirstOrDefault(user => user.Id == userId);
         }
 
-        public async Task UpdateUser(User userToUpdate)
+        public async Task<User> UpdateUser(User userToUpdate)
         {
             var user = await GetUserByIdAsync(userToUpdate.Id);
             user.FirstName = userToUpdate.FirstName;
+            return user;
         }
 
         public void RemoveData()
         {
             throw new System.NotImplementedException();
         }
+
     }
 }

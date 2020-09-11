@@ -34,7 +34,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         public async Task Create_AddsNameToDatabaseIfNewName()
         {
             const string nameToAdd = "Bart";
-            await _sut.CreateUser(nameToAdd);
+            await _sut.CreateUserAsync(nameToAdd);
             var users = await _sut.GetUsers();
             var names = users.Select(user => user.FirstName);
 
@@ -46,7 +46,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         {
             const string nameToAdd = "Nhan";
             
-            Assert.Throws<ArgumentException>(_sut.CreateUser(nameToAdd).GetAwaiter().GetResult);
+            Assert.Throws<ArgumentException>(_sut.CreateUserAsync(nameToAdd).GetAwaiter().GetResult);
         }
 
         [Fact]
@@ -87,6 +87,24 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             };
 
             Assert.Throws<ArgumentException>(_sut.UpdateUser(userToUpdate).GetAwaiter().GetResult);
+        }
+
+        [Fact]
+        public async Task Update_DoesNotCreateANewResourceWithSameId()
+        {
+            var userToUpdate = new User()
+            {
+                Id = "1",
+                FirstName = "MontyHall"
+            };
+
+            await _sut.UpdateUser(userToUpdate);
+
+            var allUsers = await _testUserRepository.GetUsersAsync();
+
+
+            Assert.True(allUsers.Where(user => user.Id == "1").Count() == 1);
+
         }
 
     }

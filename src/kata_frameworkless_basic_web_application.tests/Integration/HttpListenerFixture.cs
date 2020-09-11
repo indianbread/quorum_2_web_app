@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace kata_frameworkless_basic_web_application.tests.Integration
 {
-    public class HttpListenerFixture : IDisposable
+    public class HttpListenerFixture
     {
         public HttpListenerFixture()
         {
@@ -21,16 +21,6 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
 
         private readonly IUserRepository _userRepository;
 
-        public void Dispose()
-        {
-            var userToRestore = new User() { Id = "1", FirstName = "Bob" };
-            _userRepository.UpdateUser(userToRestore).GetAwaiter().GetResult();
 
-
-            //var userToDelete = _userRepository.GetUserByNameAsync("Jane");
-
-            //_userRepository.DeleteUser(userToDelete.Id);
-
-        }
     }
 }

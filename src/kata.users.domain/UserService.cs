@@ -24,7 +24,7 @@ namespace kata.users.domain
         // }
 
 
-        public async Task CreateUser(string firstName)
+        public async Task CreateUserAsync(string firstName)
         {
             if (string.IsNullOrEmpty(firstName))
                 throw new ArgumentException("Name cannot be empty");
@@ -32,7 +32,9 @@ namespace kata.users.domain
             var user = await _userRepository.GetUserByNameAsync(firstName);
             if (user != null)
                 throw new ArgumentException("Name already exists");
-            await  _userRepository.AddUserAsync(firstName);
+            var userId = Guid.NewGuid().ToString();
+            var newUser = new User() { Id = userId, FirstName = firstName };
+            await  _userRepository.CreateUserAsync(newUser);
             
         }
         public async Task<IEnumerable<User>> GetUsers()
@@ -40,7 +42,7 @@ namespace kata.users.domain
             return await _userRepository.GetUsersAsync();
         }
 
-        public async Task UpdateUser(User newUserDetails)
+        public async Task<User> UpdateUser(User newUserDetails)
         {
             var userToUpdate = await GetUserById(newUserDetails.Id);
             if (userToUpdate == null)
@@ -48,8 +50,9 @@ namespace kata.users.domain
             var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
             if (userWithSameName != null)
                 throw new ArgumentException("A user with this name already exists");
-            await _userRepository.UpdateUser( newUserDetails);
+            return await _userRepository.UpdateUser( newUserDetails);
         }
+
 
         public async Task<User> GetUserById(string Id)
         {

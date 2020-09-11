@@ -66,7 +66,7 @@ namespace kata_frameworkless_web_app
             var newUserFirstName = Request.GetNameFromPayload(request);
             try
             {
-                await _userService.CreateUser(newUserFirstName);
+                await _userService.CreateUserAsync(newUserFirstName);
                 response.AppendHeader("Location", $"/users/{newUserFirstName}");
                 await Response.GenerateBodyAsync(response, "User added successfully");
             }
@@ -87,13 +87,14 @@ namespace kata_frameworkless_web_app
             string responseString;
             try
             {
-                await _userService.UpdateUser(updatedUserObject);
-                responseString = JsonConvert.SerializeObject(updatedUserObject);
+                var updatedUser = await _userService.UpdateUser(updatedUserObject);
+                responseString = JsonConvert.SerializeObject(updatedUser);
             }
             catch (Exception e)
             {
-                response.StatusCode = (int) HttpStatusCode.NotFound;
+
                 responseString = e.Message;
+                response.StatusCode = responseString.Contains("User does not exist") ? (int)HttpStatusCode.NotFound : (int) HttpStatusCode.InternalServerError;
             }
 
             await Response.GenerateBodyAsync(response, responseString);
