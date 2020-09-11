@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
-using Amazon.DynamoDBv2.Model;
 using kata.users.shared;
 
 namespace kata.users.repositories.DynamoDb
@@ -37,12 +36,6 @@ namespace kata.users.repositories.DynamoDb
             return searchResults.Count == 0 ? null : ConvertDocumentToUser(searchResults.FirstOrDefault());
         }
 
-        public async Task CreateUserAsync(User newUser)
-        {
-            var newUserDocument = ConvertUserToDocument(newUser);
-            await UserTable.PutItemAsync(newUserDocument);
-        }
-
         public async Task<User> GetUserByIdAsync(string userId)
         {
             var scanFilter = new ScanFilter();
@@ -51,49 +44,27 @@ namespace kata.users.repositories.DynamoDb
             return searchResults.Count == 0 ? null : ConvertDocumentToUser(searchResults.FirstOrDefault());
         }
 
+        public async Task CreateUserAsync(User newUser)
+        {
+            var newUserDocument = ConvertUserToDocument(newUser);
+            await UserTable.PutItemAsync(newUserDocument);
+        }
+
         public async Task<User> UpdateUser(User userToUpdate)
         {
             var user = new Document();
             user["Id"] = userToUpdate.Id;
             user["FirstName"] = userToUpdate.FirstName;
 
-            var hashKey = new Primitive(userToUpdate.Id);
-
-            var expression = new Expression();
-            expression.ExpressionStatement = "SET Id = :Id";
-            expression.ExpressionAttributeValues[":Id"] = userToUpdate.Id;
-
-
             var config = new UpdateItemOperationConfig
             {
-               // ConditionalExpression = expression,
                 ReturnValues = ReturnValues.AllNewAttributes
             };
 
             var result = await UserTable.UpdateItemAsync(user, config);
 
-            //var attributes = result.GetAttributeNames();
-            //foreach (var attribute in attributes)
-            //{
-            //    Console.WriteLine(attribute);
-
-            //}
-
             return new User() { Id = result["Id"], FirstName = result["FirstName"] } ;
             
-            //var key = new Dictionary<string, AttributeValue>
-            //{
-            //    { "Id", new AttributeValue(userToUpdate.Id) }
-            //};
-            //var attributeToUpdate = new Dictionary<string, AttributeValueUpdate>
-            //{
-            //    { "FirstName", new AttributeValueUpdate(new AttributeValue(userToUpdate.FirstName),AttributeAction.PUT) }
-            //};
-
-            //var response = await _client.UpdateItemAsync(TableName, key, attributeToUpdate);
-            //var id = response.Attributes["Id"].S;
-            //var updatedFirstName = response.Attributes["FirstName"].S;
-            //return new User() { Id = id, FirstName = updatedFirstName };
         }
 
         private static User ConvertDocumentToUser(Document document)

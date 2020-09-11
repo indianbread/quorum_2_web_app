@@ -12,7 +12,7 @@ using Xunit;
 namespace kata_frameworkless_basic_web_application.tests.Integration
 {
     [Collection("HttpListener collection")]
-    public class PutRequestTests
+    public class PutRequestTests : IDisposable
     { 
         public PutRequestTests(HttpListenerFixture httpListenerFixture)
         {
@@ -26,27 +26,27 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         [Fact]
         public async Task PUT_ChangesNameForAValidUserId_IfNameDoesNotExist()
         {
-            var newNameObject = new User() {FirstName= "Totoro"};
+            var newNameObject = new User() { FirstName = "Totoro" };
             var jsonContent = JsonConvert.SerializeObject(newNameObject);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var updatedUser = new User() {Id = "1", FirstName = "Totoro"};
+            var updatedUser = new User() { Id = "1", FirstName = "Totoro" };
             var updatedUserString = JsonConvert.SerializeObject(updatedUser);
-            
-            var response = await _httpClient.PutAsync("http://localhost:8080/users/1", content);
-            
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(updatedUserString, response.Content.ReadAsStringAsync().Result);
-            
-            response.Dispose();
+
+            using (HttpResponseMessage response = await _httpClient.PutAsync("http://localhost:8080/users/1", content))
+            {
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal(updatedUserString, response.Content.ReadAsStringAsync().Result);
+
+            }
 
             //checking that PUT does not create a new resource with the same ID
-            var response2 = await _httpClient.GetAsync("http://localhost:8080/users/");
-            var responseBody = response2.Content.ReadAsStringAsync().Result;
-            var allUsers = JsonConvert.DeserializeObject<List<User>>(responseBody);
+            using (var response2 = await _httpClient.GetAsync("http://localhost:8080/users/"))
+            {
+                var responseBody = response2.Content.ReadAsStringAsync().Result;
+                var allUsers = JsonConvert.DeserializeObject<List<User>>(responseBody);
 
-            Assert.Single(allUsers.Where(user => user.Id == "1"));
-
-            response.Dispose();
+                Assert.Single(allUsers.Where(user => user.Id == "1"));
+            }
 
         }
 
@@ -58,12 +58,11 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
 
-            var response = await _httpClient.PutAsync("http://localhost:8080/users/15", content);
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            Assert.Equal("User does not exist", response.Content.ReadAsStringAsync().Result);
-
-            response.Dispose();
+            using (var response = await _httpClient.PutAsync("http://localhost:8080/users/15", content))
+            {
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+                Assert.Equal("User does not exist", response.Content.ReadAsStringAsync().Result);
+            }
 
         }
 
@@ -75,23 +74,22 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
 
-            var response = await _httpClient.PutAsync("http://localhost:8080/users/1", content);
-
-            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            Assert.Equal("A user with this name already exists", response.Content.ReadAsStringAsync().Result);
-
-            response.Dispose();
+            using (var response = await _httpClient.PutAsync("http://localhost:8080/users/1", content))
+            {
+                Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+                Assert.Equal("A user with this name already exists", response.Content.ReadAsStringAsync().Result);
+            }
 
         }
 
-        //public void Dispose()
-        //{
-        //    var userToRestore = new User() { Id = "1", FirstName = "Bob" };
-        //    var jsonContent = JsonConvert.SerializeObject(userToRestore);
-        //    HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-        //    var response = _httpClient.PutAsync("http://localhost:8080/users/1", content).GetAwaiter().GetResult();
-        //    response.Dispose();
+        public void Dispose()
+        {
+            var userToRestore = new User() { Id = "1", FirstName = "Bob" };
+            var jsonContent = JsonConvert.SerializeObject(userToRestore);
+            HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = _httpClient.PutAsync("http://localhost:8080/users/1", content).GetAwaiter().GetResult();
+            response.Dispose();
 
-        //}
+        }
     }
 }
