@@ -21,7 +21,7 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         
 
         [Fact]
-        public async Task Read_ReturnAListOfAllUsers()
+        public async Task GetUsers_ReturnAListOfAllUsers()
         {
             var users = await _sut.GetUsers();
             var userNames = users.Select(user => user.FirstName);
@@ -29,6 +29,21 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
             Assert.Contains("Nhan", userNames);
             Assert.Contains("Bob", userNames);
         }
+
+        [Fact]
+        public async Task GetUserById_ReturnsASingleUser()
+        {
+            var user = await _sut.GetUserById("1");
+
+            Assert.Equal("Nhan", user.FirstName);
+        }
+
+        [Fact]
+        public async Task GetUserById_ThrowsErrorIfInvalidId()
+        {
+            Assert.Throws<ArgumentException>(_sut.GetUserById("20").GetAwaiter().GetResult);
+        }
+
 
         [Fact]
         public async Task Create_AddsNameToDatabaseIfNewName()
