@@ -45,7 +45,7 @@ namespace kata_frameworkless_web_app
             catch
             {
                 response.StatusCode = (int) HttpStatusCode.NotFound;
-                await StreamOutput.GenerateBodyAsync(response, "Not found");
+                await StreamOutput.GenerateResponseBodyAsync(response, "Not found");
             }
         }
 

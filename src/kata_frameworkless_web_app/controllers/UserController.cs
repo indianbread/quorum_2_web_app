@@ -28,7 +28,7 @@ namespace kata_frameworkless_web_app.controllers
                     break;
                 default:
                     response.StatusCode = (int) HttpStatusCode.NotFound;
-                    await StreamOutput.GenerateBodyAsync(response, "Not found");
+                    await StreamOutput.GenerateResponseBodyAsync(response, "Not found");
                     break;
             }
         }
@@ -49,7 +49,7 @@ namespace kata_frameworkless_web_app.controllers
                 responseString = e.Message;
             }
 
-            await StreamOutput.GenerateBodyAsync(response, responseString);
+            await StreamOutput.GenerateResponseBodyAsync(response, responseString);
         }
 
 
@@ -57,7 +57,7 @@ namespace kata_frameworkless_web_app.controllers
         {
             var users = await _userService.GetUsers();
             var responseBody = JsonConvert.SerializeObject(users);
-            await StreamOutput.GenerateBodyAsync(response, responseBody);
+            await StreamOutput.GenerateResponseBodyAsync(response, responseBody);
         }
         
         public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
@@ -68,12 +68,12 @@ namespace kata_frameworkless_web_app.controllers
             {
                 newUser = await _userService.CreateUserAsync(newUserFirstName);
                 response.RedirectLocation = $"/users/{newUser.Id}";
-                await StreamOutput.GenerateBodyAsync(response, "User added successfully");
+                await StreamOutput.GenerateResponseBodyAsync(response, "User added successfully");
             }
             catch (Exception e)
             {
                 response.StatusCode = (int) HttpStatusCode.InternalServerError;
-                await StreamOutput.GenerateBodyAsync(response, e.Message);
+                await StreamOutput.GenerateResponseBodyAsync(response, e.Message);
             }
         }
         
@@ -95,7 +95,7 @@ namespace kata_frameworkless_web_app.controllers
                 response.StatusCode = responseString.Contains("User does not exist") ? (int)HttpStatusCode.NotFound : (int) HttpStatusCode.InternalServerError;
             }
 
-            await StreamOutput.GenerateBodyAsync(response, responseString);
+            await StreamOutput.GenerateResponseBodyAsync(response, responseString);
 
         }
 
@@ -115,7 +115,7 @@ namespace kata_frameworkless_web_app.controllers
                 responseString = e.Message;
             }
 
-            await StreamOutput.GenerateBodyAsync(response, responseString);
+            await StreamOutput.GenerateResponseBodyAsync(response, responseString);
         }
 
     }

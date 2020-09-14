@@ -20,7 +20,7 @@ namespace kata_frameworkless_web_app.controllers
             var users = await _userService.GetUsers();
             var names = users.Select(user => user.FirstName).ToList();
             var responseString = Formatter.FormatGreeting(names);
-            await StreamOutput.GenerateBodyAsync(response, responseString);
+            await StreamOutput.GenerateResponseBodyAsync(response, responseString);
         }
 
         public Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
