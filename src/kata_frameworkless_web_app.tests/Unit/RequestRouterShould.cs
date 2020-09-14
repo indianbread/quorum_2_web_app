@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app;
+using kata_frameworkless_web_app.controllers;
 using kata.users.domain;
 using Moq;
 using Moq.Protected;

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace kata_frameworkless_web_app
 {
-    public class Response
+    public class StreamOutput
     {
         public static async Task GenerateBodyAsync(HttpListenerResponse response, string responseString)
         {

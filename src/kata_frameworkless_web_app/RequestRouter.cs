@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using kata_frameworkless_web_app.controllers;
 using kata.users.domain;
 using kata.users.shared;
 
@@ -44,7 +45,7 @@ namespace kata_frameworkless_web_app
             catch
             {
                 response.StatusCode = (int) HttpStatusCode.NotFound;
-                await Response.GenerateBodyAsync(response, "Not found");
+                await StreamOutput.GenerateBodyAsync(response, "Not found");
             }
         }
 

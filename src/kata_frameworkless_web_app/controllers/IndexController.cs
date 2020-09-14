@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using kata.users.domain;
 using kata.users.shared;
 
-namespace kata_frameworkless_web_app
+namespace kata_frameworkless_web_app.controllers
 {
     public class IndexController : IController
     {
@@ -20,7 +20,7 @@ namespace kata_frameworkless_web_app
             var users = await _userService.GetUsers();
             var names = users.Select(user => user.FirstName).ToList();
             var responseString = Formatter.FormatGreeting(names);
-            await Response.GenerateBodyAsync(response, responseString);
+            await StreamOutput.GenerateBodyAsync(response, responseString);
         }
 
         public Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)

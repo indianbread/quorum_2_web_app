@@ -1,7 +1,7 @@
 using System.Net;
 using System.Threading.Tasks;
 
-namespace kata_frameworkless_web_app
+namespace kata_frameworkless_web_app.controllers
 {
     public interface IController
     {

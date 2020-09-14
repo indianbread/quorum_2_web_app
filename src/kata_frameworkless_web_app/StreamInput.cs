@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace kata_frameworkless_web_app
 {
-    public class Request
+    public class StreamInput
     {
         public static string GetNameFromPayload(HttpListenerRequest request)
         {

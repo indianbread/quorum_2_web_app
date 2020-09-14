@@ -6,6 +6,7 @@ using kata.users.domain;
 using kata.users.repositories.DynamoDb;
 using kata.users.shared;
 using System.Threading.Tasks;
+using kata_frameworkless_web_app.controllers;
 
 namespace kata_frameworkless_basic_web_application.tests.Integration
 {
