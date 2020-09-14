@@ -15,23 +15,24 @@ namespace kata_frameworkless_web_app
         {
             var dynamoDbUserRepository = new DynamoDbUserRepository(false);
             var userService = new UserService(dynamoDbUserRepository);
+            await AddSecretUser(userService);
+            
+            var server = new Server(userService);
+            await server.Start();
+        }
+
+        private static async Task AddSecretUser(UserService userService)
+        {
             try
             {
                 var secretUserName = AwsSecretManager.GetSecret();
                 userService.SetSecretUser(secretUserName);
                 await userService.CreateUserAsync(secretUserName);
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
- 
             }
-
-            
-            var server = new Server(userService);
-            await server.Start();
         }
-        
     }
 }

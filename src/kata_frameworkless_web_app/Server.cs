@@ -35,6 +35,7 @@ namespace kata_frameworkless_web_app
         {
             _listener.Prefixes.Add($"http://*:{Port}/");
         }
+        
         private async Task ProcessRequestAsync()
         {
             var context = await _listener.GetContextAsync();
