@@ -16,7 +16,7 @@ namespace kata_frameworkless_web_app.controllers
 
         private readonly UserService _userService;
 
-        public async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandleGetRequestAsync(IRequest request, IResponse response)
         {
             switch (request.Url.Segments.Length)
             {
@@ -33,7 +33,7 @@ namespace kata_frameworkless_web_app.controllers
             }
         }
 
-        private async Task HandleGetUserByIdRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandleGetUserByIdRequestAsync(IRequest request, IResponse response)
         {
             var userId = request.Url.Segments[2];
             string responseString;
@@ -53,14 +53,14 @@ namespace kata_frameworkless_web_app.controllers
         }
 
 
-        public async Task HandleGetUsersRequestAsync(HttpListenerResponse response)
+        public async Task HandleGetUsersRequestAsync(IResponse response)
         {
             var users = await _userService.GetUsers();
             var responseBody = JsonConvert.SerializeObject(users);
             await StreamOutput.GenerateResponseBodyAsync(response, responseBody);
         }
         
-        public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandlePostRequestAsync(IRequest request, IResponse response)
         {
             var newUserFirstName = StreamInput.GetNameFromPayload(request);
             User newUser;
@@ -77,7 +77,7 @@ namespace kata_frameworkless_web_app.controllers
             }
         }
         
-        public async Task HandlePutRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandlePutRequestAsync(IRequest request, IResponse response)
         {
             var userId = request.Url.Segments[2];
             var newName = StreamInput.GetNameFromPayload(request);
@@ -99,7 +99,7 @@ namespace kata_frameworkless_web_app.controllers
 
         }
 
-        public async Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandleDeleteRequestAsync(IRequest request, IResponse response)
         {
             var userId = request.Url.Segments[2];
             string responseString;

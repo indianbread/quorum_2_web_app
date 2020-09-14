@@ -16,13 +16,11 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
     {
         public RequestRouterShould()
         {
-            _userService = Mock.Of<UserService>();
             _controllers = new List<IController>() {Mock.Of<IController>()};
-            _sut = new RequestRouter(_userService, _controllers);
+            _sut = new RequestRouter(_controllers);
         }
         
         private RequestRouter _sut;
-        private readonly UserService _userService;
         private readonly List<IController> _controllers;
 
         // [Fact]

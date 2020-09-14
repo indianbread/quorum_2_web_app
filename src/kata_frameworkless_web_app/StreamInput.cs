@@ -7,7 +7,7 @@ namespace kata_frameworkless_web_app
 {
     public class StreamInput
     {
-        public static string GetNameFromPayload(HttpListenerRequest request)
+        public static string GetNameFromPayload(IRequest request)
         {
             var body = request.InputStream;
             using (var reader = new StreamReader(body, Encoding.UTF8))

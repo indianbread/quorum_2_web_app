@@ -13,7 +13,7 @@ namespace kata_frameworkless_web_app
     {
         public Server(UserService userService, IEnumerable<IController> controllers)
         {
-            _requestRouter = new RequestRouter(userService, controllers);
+            _requestRouter = new RequestRouter(controllers);
             _listener = new HttpListener();
         }
         
@@ -41,9 +41,9 @@ namespace kata_frameworkless_web_app
         private async Task ProcessRequestAsync()
         {
             var context = await _listener.GetContextAsync();
-            var request = context.Request;
+            IRequest request = new Request(context.Request);
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
-            using (var response = context.Response)
+            using (IResponse response = new Response(context.Response))
             {
                 await _requestRouter.RouteRequestAsync(request, response);
             }

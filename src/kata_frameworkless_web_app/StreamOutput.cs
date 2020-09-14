@@ -6,7 +6,7 @@ namespace kata_frameworkless_web_app
 {
     public class StreamOutput
     {
-        public static async Task GenerateResponseBodyAsync(HttpListenerResponse response, string responseString)
+        public static async Task GenerateResponseBodyAsync(IResponse response, string responseString)
         {
             var buffer = Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;

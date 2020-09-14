@@ -11,16 +11,15 @@ namespace kata_frameworkless_web_app
 {
     public class RequestRouter
     {
-        public RequestRouter(UserService userService, IEnumerable<IController> controllers)
+        public RequestRouter(IEnumerable<IController> controllers)
         {
-            _userService = userService;
             _controllers.AddRange(controllers);
         }
         
         private readonly List<IController> _controllers = new List<IController>();
-        private readonly UserService _userService;
 
-        public async Task RouteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+
+        public async Task RouteRequestAsync(IRequest request, IResponse response)
         {
             if (request.Url.Segments.Length == 1)
             {
@@ -34,7 +33,7 @@ namespace kata_frameworkless_web_app
 
         }
         
-        private async Task HandleResourceGroupRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        private async Task HandleResourceGroupRequestAsync(IRequest request, IResponse response)
         {
             try
             {
@@ -49,15 +48,15 @@ namespace kata_frameworkless_web_app
             }
         }
 
-        private IController GetController(HttpListenerRequest request)
+        private IController GetController(IRequest request)
         {
             var resourceGroup = request.Url.Segments[1];
             var controllerName = Formatter.FormatControllerName(resourceGroup) + "Controller";
-            var controllerType = Type.GetType($"kata_frameworkless_web_app.{controllerName}", true, true);
+            var controllerType = Type.GetType($"kata_frameworkless_web_app.controllers.{controllerName}", true, true);
             return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
         }
         
-        private static async Task HandleRequestAsync(IController controller, HttpListenerRequest request, HttpListenerResponse response)
+        private static async Task HandleRequestAsync(IController controller, IRequest request, IResponse response)
         {
             switch (request.HttpMethod)
             {

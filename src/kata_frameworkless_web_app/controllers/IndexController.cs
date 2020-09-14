@@ -15,7 +15,7 @@ namespace kata_frameworkless_web_app.controllers
         
         private readonly UserService _userService;
         
-        public async Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandleGetRequestAsync(IRequest request, IResponse response)
         {
             var users = await _userService.GetUsers();
             var names = users.Select(user => user.FirstName).ToList();
@@ -23,17 +23,17 @@ namespace kata_frameworkless_web_app.controllers
             await StreamOutput.GenerateResponseBodyAsync(response, responseString);
         }
 
-        public Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public Task HandlePostRequestAsync(IRequest request, IResponse response)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public Task HandleDeleteRequestAsync(IRequest request, IResponse response)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task HandlePutRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public Task HandlePutRequestAsync(IRequest request, IResponse response)
         {
             throw new System.NotImplementedException();
         }

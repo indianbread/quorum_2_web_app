@@ -5,11 +5,11 @@ namespace kata_frameworkless_web_app.controllers
 {
     public interface IController
     {
-        Task HandleGetRequestAsync(HttpListenerRequest request, HttpListenerResponse response);
+        Task HandleGetRequestAsync(IRequest request, IResponse response);
 
-        Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response);
+        Task HandlePostRequestAsync(IRequest request, IResponse response);
 
-        Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response);
-        Task HandlePutRequestAsync(HttpListenerRequest request, HttpListenerResponse response);
+        Task HandleDeleteRequestAsync(IRequest request, IResponse response);
+        Task HandlePutRequestAsync(IRequest request, IResponse response);
     }
 }
