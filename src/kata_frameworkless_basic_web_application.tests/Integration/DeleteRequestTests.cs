@@ -20,11 +20,16 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         private HttpClient _httpClient;
 
         [Fact]
-        public async Task Delete_DeletesUserWithValidId()
+        public void Delete_DeletesUserWithValidId()
         {
-            using (var response = await _httpClient.DeleteAsync("http://localhost:8080/users/3"))
+            using (var response = _httpClient.DeleteAsync("http://localhost:8080/users/3").GetAwaiter().GetResult())
             {
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
+
+            using (var response = _httpClient.GetAsync("http://localhost:8080/users/3").GetAwaiter().GetResult())
+            {
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
 
         }
