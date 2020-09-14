@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using kata.users.domain;
@@ -42,11 +41,11 @@ namespace kata_frameworkless_web_app
             {
                 var user = await _userService.GetUserById(userId);
                 responseString = JsonConvert.SerializeObject(user);
-
             }
+
             catch (Exception e)
             {
-                response.StatusCode = (int) HttpStatusCode.NotFound;
+                response.StatusCode = (int)HttpStatusCode.NotFound;
                 responseString = e.Message;
             }
 
@@ -64,19 +63,18 @@ namespace kata_frameworkless_web_app
         public async Task HandlePostRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             var newUserFirstName = Request.GetNameFromPayload(request);
+            User newUser;
             try
             {
-                await _userService.CreateUser(newUserFirstName);
-                response.AppendHeader("Location", $"/users/{newUserFirstName}");
+                newUser = await _userService.CreateUserAsync(newUserFirstName);
+                response.RedirectLocation = $"/users/{newUser.Id}";
                 await Response.GenerateBodyAsync(response, "User added successfully");
             }
             catch (Exception e)
             {
                 response.StatusCode = (int) HttpStatusCode.InternalServerError;
                 await Response.GenerateBodyAsync(response, e.Message);
-                
             }
-
         }
         
         public async Task HandlePutRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
@@ -87,24 +85,38 @@ namespace kata_frameworkless_web_app
             string responseString;
             try
             {
-                await _userService.UpdateUser(updatedUserObject);
-                responseString = JsonConvert.SerializeObject(updatedUserObject);
+                var updatedUser = await _userService.UpdateUserAsync(updatedUserObject);
+                responseString = JsonConvert.SerializeObject(updatedUser);
             }
             catch (Exception e)
             {
-                response.StatusCode = (int) HttpStatusCode.NotFound;
+
                 responseString = e.Message;
+                response.StatusCode = responseString.Contains("User does not exist") ? (int)HttpStatusCode.NotFound : (int) HttpStatusCode.InternalServerError;
             }
 
             await Response.GenerateBodyAsync(response, responseString);
 
         }
 
-        public Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        public async Task HandleDeleteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
-            throw new NotImplementedException();
-        }
+            var userId = request.Url.Segments[2];
+            string responseString;
+            try
+            {
+                await _userService.DeleteUserAsync(userId);
+                responseString = "User successfully deleted";
 
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = e.Message.Contains("Forbidden") ? (int) HttpStatusCode.Forbidden : (int) HttpStatusCode.NotFound;
+                responseString = e.Message;
+            }
+
+            await Response.GenerateBodyAsync(response, responseString);
+        }
 
     }
 }

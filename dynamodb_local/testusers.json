@@ -1,0 +1,44 @@
+{
+  "NhanUser": [
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "1"},
+                  "FirstName": {"S": "Bob"}
+              }
+          }
+      },
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "2"},
+                  "FirstName": {"S": "Jane"}
+              }
+          }
+      },
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "3"},
+                  "FirstName": {"S": "John"}
+              }
+          }
+      },
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "4"},
+                  "FirstName": {"S": "Nhan"}
+              }
+          }
+      },
+      {
+          "PutRequest": {
+              "Item": {
+                  "Id": {"S": "5"},
+                  "FirstName": {"S": "Anna"}
+              }
+          }
+      }
+  ]
+}

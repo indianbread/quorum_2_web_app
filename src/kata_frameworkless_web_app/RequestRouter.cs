@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 using kata.users.domain;
 using kata.users.shared;
@@ -64,7 +63,7 @@ namespace kata_frameworkless_web_app
             return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
         }
         
-        private static async Task HandleRequestAsync(IController controller, HttpListenerRequest request, HttpListenerResponse response) //TODO: merge 
+        private static async Task HandleRequestAsync(IController controller, HttpListenerRequest request, HttpListenerResponse response)
         {
             switch (request.HttpMethod)
             {

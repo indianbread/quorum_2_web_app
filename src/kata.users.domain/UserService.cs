@@ -11,20 +11,10 @@ namespace kata.users.domain
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            //ideally the repository should be created here as only service should know about this
+            
         }
-        // private IUserRepository UserRepository 
-        // {
-        //     get
-        //     {
-        //         if (_userRepository != null) return _userRepository;
-        //         _userRepository = new DynamoDbUserRepository();
-        //         return _userRepository;
-        //     }
-        // }
 
-
-        public async Task CreateUser(string firstName)
+        public async Task<User> CreateUserAsync(string firstName)
         {
             if (string.IsNullOrEmpty(firstName))
                 throw new ArgumentException("Name cannot be empty");
@@ -32,23 +22,15 @@ namespace kata.users.domain
             var user = await _userRepository.GetUserByNameAsync(firstName);
             if (user != null)
                 throw new ArgumentException("Name already exists");
-            await  _userRepository.AddUserAsync(firstName);
-            
+            var userId = Guid.NewGuid().ToString();
+            var newUser = new User() { Id = userId, FirstName = firstName };
+            await  _userRepository.CreateUserAsync(newUser);
+            return newUser;
         }
+
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _userRepository.GetUsersAsync();
-        }
-
-        public async Task UpdateUser(User newUserDetails)
-        {
-            var userToUpdate = await GetUserById(newUserDetails.Id);
-            if (userToUpdate == null)
-                throw new ArgumentException("User does not exist");
-            var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
-            if (userWithSameName != null)
-                throw new ArgumentException("A user with this name already exists");
-            await _userRepository.UpdateUser( newUserDetails);
         }
 
         public async Task<User> GetUserById(string Id)
@@ -58,7 +40,33 @@ namespace kata.users.domain
                 throw new ArgumentException("User does not exist");
             return user;
         }
-        
+
+        public async Task<User> UpdateUserAsync(User newUserDetails)
+        {
+            var userToUpdate = await GetUserById(newUserDetails.Id);
+            var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
+            if (userWithSameName != null)
+                throw new ArgumentException("A user with this name already exists");
+            return await _userRepository.UpdateUserAsync( newUserDetails);
+        }
+
+        public async Task DeleteUserAsync(string userId)
+        {
+            var userToDelete = await GetUserById(userId);
+            if (userToDelete == null)
+                throw new ArgumentException("User does not exist");
+            if (userToDelete.FirstName == _secretUser)
+                throw new ArgumentException("Forbidden");
+            await _userRepository.DeleteUserAsync(userToDelete);
+        }
+
+        public void SetSecretUser(string name)
+        {
+            _secretUser = name;
+        }
+
         private readonly IUserRepository _userRepository;
+        private string _secretUser;
+        
     }
 }

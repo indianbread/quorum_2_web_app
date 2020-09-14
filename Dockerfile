@@ -22,6 +22,7 @@ FROM build AS test
 WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
 COPY /ops/scripts/test_with_dynamodb.sh ./
 COPY /dynamodb_local/tables/ ./dynamodb_local/tables/
+COPY /dynamodb_local/testusers.json ./dynamodb_local/
 RUN sh test_with_dynamodb.sh
 
 FROM build AS publish

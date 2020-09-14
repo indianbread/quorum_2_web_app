@@ -8,11 +8,8 @@ if [ "$?" != "0" ]; then
   AWS_ACCESS_KEY_ID=X AWS_SECRET_ACCESS_KEY=X aws dynamodb create-table --table-name NhanUser --cli-input-json file://dynamodb_local/tables/user.json --endpoint-url http://localhost:8000 --region ap-southeast-2
 fi
 echo "Adding test user to database"
-AWS_ACCESS_KEY_ID=X AWS_SECRET_ACCESS_KEY=X aws dynamodb put-item \
-    --table-name NhanUser \
-    --item '{
-      "Id": {"S": "1"},
-      "FirstName": {"S": "Bob"}    }' \
+AWS_ACCESS_KEY_ID=X AWS_SECRET_ACCESS_KEY=X aws dynamodb batch-write-item \
+    --request-items file://dynamodb_local/testusers.json \
     --endpoint-url http://localhost:8000 --region ap-southeast-2
 echo "Running tests"
 dotnet test
