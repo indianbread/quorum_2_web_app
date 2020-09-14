@@ -10,20 +10,21 @@ namespace kata_frameworkless_web_app
 {
     public class RequestRouter
     {
-        public RequestRouter(UserService userService)
+        public RequestRouter(UserService userService, IEnumerable<IController> controllers)
         {
             _userService = userService;
-            _controllers = new List<IController>() { new UserController(_userService)};
+            _controllers.AddRange(controllers);
         }
         
-        private readonly List<IController> _controllers;
+        private readonly List<IController> _controllers = new List<IController>();
         private readonly UserService _userService;
 
         public async Task RouteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             if (request.Url.Segments.Length == 1)
             {
-               await GetGreetingAsync(response);
+                var indexController = _controllers.Find(controller => controller.GetType() == typeof(IndexController));
+                await indexController.HandleGetRequestAsync(request, response);
             }
             else
             {
@@ -31,15 +32,7 @@ namespace kata_frameworkless_web_app
             }
 
         }
-
-        private async Task GetGreetingAsync(HttpListenerResponse response)
-        {
-            var users = await _userService.GetUsers();
-            var names = users.Select(user => user.FirstName).ToList();
-            var responseString = Formatter.FormatGreeting(names);
-            await Response.GenerateBodyAsync(response, responseString);
-        }
-
+        
         private async Task HandleResourceGroupRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
         {
             try

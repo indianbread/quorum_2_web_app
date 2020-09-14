@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using kata.users.domain;
@@ -9,9 +10,9 @@ namespace kata_frameworkless_web_app
 {
     public class Server
     {
-        public Server(UserService userService)
+        public Server(UserService userService, IEnumerable<IController> controllers)
         {
-            _requestRouter = new RequestRouter(userService);
+            _requestRouter = new RequestRouter(userService, controllers);
             _listener = new HttpListener();
         }
         
