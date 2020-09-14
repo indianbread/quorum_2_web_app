@@ -4,6 +4,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
 
         <IsPackable>false</IsPackable>
+
+        <RootNamespace>kata_frameworkless_basic_web_application.tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

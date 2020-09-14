@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata_frameworkless_web_app", "src\kata_frameworkless_web_app\kata_frameworkless_web_app.csproj", "{77E28D26-68B8-414D-B679-745CB62F7367}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata_frameworkless_basic_web_application.tests", "src\kata_frameworkless_basic_web_application.tests\kata_frameworkless_basic_web_application.tests.csproj", "{8FC81E96-7485-4444-924D-87284719BCE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata_frameworkless_web_app.tests", "src\kata_frameworkless_web_app.tests\kata_frameworkless_web_app.tests.csproj", "{8FC81E96-7485-4444-924D-87284719BCE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kata.users.domain", "src\kata.users.domain\kata.users.domain.csproj", "{6952C8C6-2762-4D27-8469-846C2275805E}"
 EndProject
