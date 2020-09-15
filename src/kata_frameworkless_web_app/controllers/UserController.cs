@@ -61,7 +61,7 @@ namespace kata_frameworkless_web_app.controllers
         
         public async Task<IResponse> HandlePostRequestAsync(IRequest request)
         {
-            var newUserFirstName = StreamInput.GetNameFromPayload(request);
+            var newUserFirstName = request.GetNameFromPayload();
             User newUser;
             try
             {
@@ -79,7 +79,7 @@ namespace kata_frameworkless_web_app.controllers
         public async Task<IResponse> HandlePutRequestAsync(IRequest request)
         {
             var userId = request.Url.Segments[2];
-            var newName = StreamInput.GetNameFromPayload(request);
+            var newName = request.GetNameFromPayload();
             var updatedUserObject = new User() {Id = userId, FirstName = newName};
             string responseString;
             int statusCode;

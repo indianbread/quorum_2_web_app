@@ -14,6 +14,7 @@ namespace kata_frameworkless_web_app
         NameValueCollection Headers { get; }
         bool KeepAlive { get; }
         NameValueCollection QueryString { get; }
+        string GetNameFromPayload();
 
     }
 }

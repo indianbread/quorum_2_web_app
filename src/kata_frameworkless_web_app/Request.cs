@@ -2,6 +2,8 @@ using System;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace kata_frameworkless_web_app
 {
@@ -27,5 +29,16 @@ namespace kata_frameworkless_web_app
         public NameValueCollection Headers { get; }
         public bool KeepAlive { get; }
         public NameValueCollection QueryString { get; }
+
+        public string GetNameFromPayload()
+        {
+            var body = InputStream;
+            using (var reader = new StreamReader(body, Encoding.UTF8))
+            {
+                var data = reader.ReadToEnd();
+                var user = JObject.Parse(data);
+                return (user["FirstName"] ?? "").Value<string>();
+            }
+        }
     }
 }
