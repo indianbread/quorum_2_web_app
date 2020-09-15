@@ -16,106 +16,109 @@ namespace kata_frameworkless_web_app.controllers
 
         private readonly UserService _userService;
 
-        public async Task HandleGetRequestAsync(IRequest request, IResponse response)
+        public async Task<IResponse> HandleGetRequestAsync(IRequest request)
         {
             switch (request.Url.Segments.Length)
             {
                 case 2:
-                    await HandleGetUsersRequestAsync(response);
-                    break;
+                    return await HandleGetUsersRequestAsync();
                 case 3:
-                    await HandleGetUserByIdRequestAsync(request, response);
-                    break;
+                   return await HandleGetUserByIdRequestAsync(request);
                 default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    await StreamOutput.GenerateResponseBodyAsync(response, "Not found");
-                    break;
+                    int statusCode = (int) HttpStatusCode.NotFound;
+                    return new Response { StatusCode = statusCode };
             }
         }
 
-        private async Task HandleGetUserByIdRequestAsync(IRequest request, IResponse response)
+        private async Task<IResponse> HandleGetUserByIdRequestAsync(IRequest request)
         {
             var userId = request.Url.Segments[2];
             string responseString;
+            int statusCode;
             try
             {
                 var user = await _userService.GetUserById(userId);
                 responseString = JsonConvert.SerializeObject(user);
+                statusCode = (int)HttpStatusCode.OK;
             }
 
             catch (Exception e)
             {
-                response.StatusCode = (int)HttpStatusCode.NotFound;
+                statusCode = (int)HttpStatusCode.NotFound;
                 responseString = e.Message;
             }
 
-            await StreamOutput.GenerateResponseBodyAsync(response, responseString);
+            return new Response { Body = responseString, StatusCode = statusCode };
         }
 
 
-        public async Task HandleGetUsersRequestAsync(IResponse response)
+        public async Task<IResponse> HandleGetUsersRequestAsync()
         {
             var users = await _userService.GetUsers();
             var responseBody = JsonConvert.SerializeObject(users);
-            await StreamOutput.GenerateResponseBodyAsync(response, responseBody);
+            return new Response { Body = responseBody };
         }
         
-        public async Task HandlePostRequestAsync(IRequest request, IResponse response)
+        public async Task<IResponse> HandlePostRequestAsync(IRequest request)
         {
             var newUserFirstName = StreamInput.GetNameFromPayload(request);
             User newUser;
             try
             {
                 newUser = await _userService.CreateUserAsync(newUserFirstName);
-                response.RedirectLocation = $"/users/{newUser.Id}";
-                await StreamOutput.GenerateResponseBodyAsync(response, "User added successfully");
+                var redirectLocation = $"/users/{newUser.Id}";
+                return new Response { Body = "User added successfully", RedirectLocation = redirectLocation };
             }
             catch (Exception e)
             {
-                response.StatusCode = (int) HttpStatusCode.InternalServerError;
-                await StreamOutput.GenerateResponseBodyAsync(response, e.Message);
+                var statusCode = (int) HttpStatusCode.InternalServerError;
+                return new Response { Body = e.Message, StatusCode = statusCode };
             }
         }
         
-        public async Task HandlePutRequestAsync(IRequest request, IResponse response)
+        public async Task<IResponse> HandlePutRequestAsync(IRequest request)
         {
             var userId = request.Url.Segments[2];
             var newName = StreamInput.GetNameFromPayload(request);
             var updatedUserObject = new User() {Id = userId, FirstName = newName};
             string responseString;
+            int statusCode;
             try
             {
                 var updatedUser = await _userService.UpdateUserAsync(updatedUserObject);
                 responseString = JsonConvert.SerializeObject(updatedUser);
+                statusCode = (int)HttpStatusCode.OK;
+
             }
             catch (Exception e)
             {
-
                 responseString = e.Message;
-                response.StatusCode = responseString.Contains("User does not exist") ? (int)HttpStatusCode.NotFound : (int) HttpStatusCode.InternalServerError;
+                statusCode = responseString.Contains("User does not exist") ? (int)HttpStatusCode.NotFound : (int) HttpStatusCode.InternalServerError;
             }
 
-            await StreamOutput.GenerateResponseBodyAsync(response, responseString);
+            return new Response { Body = responseString, StatusCode = statusCode };
 
         }
 
-        public async Task HandleDeleteRequestAsync(IRequest request, IResponse response)
+        public async Task<IResponse> HandleDeleteRequestAsync(IRequest request)
         {
             var userId = request.Url.Segments[2];
             string responseString;
+            int statusCode;
             try
             {
                 await _userService.DeleteUserAsync(userId);
                 responseString = "User successfully deleted";
-
+                statusCode = (int)HttpStatusCode.OK;
+                
             }
             catch (Exception e)
             {
-                response.StatusCode = e.Message.Contains("Forbidden") ? (int) HttpStatusCode.Forbidden : (int) HttpStatusCode.NotFound;
+                statusCode = e.Message.Contains("Forbidden") ? (int) HttpStatusCode.Forbidden : (int) HttpStatusCode.NotFound;
                 responseString = e.Message;
             }
 
-            await StreamOutput.GenerateResponseBodyAsync(response, responseString);
+            return new Response { Body = responseString, StatusCode = statusCode };
         }
 
     }

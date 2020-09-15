@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app.controllers;
-using kata.users.domain;
 using kata.users.shared;
 
 namespace kata_frameworkless_web_app
@@ -19,32 +18,32 @@ namespace kata_frameworkless_web_app
         private readonly List<IController> _controllers = new List<IController>();
 
 
-        public async Task RouteRequestAsync(IRequest request, IResponse response)
+        public async Task<IResponse> RouteRequestAsync(IRequest request)
         {
             if (request.Url.Segments.Length == 1)
             {
                 var indexController = _controllers.Find(controller => controller.GetType() == typeof(IndexController));
-                await indexController.HandleGetRequestAsync(request, response);
+                return await indexController.HandleGetRequestAsync(request);
             }
             else
             {
-                await HandleResourceGroupRequestAsync(request, response);
+                return await HandleResourceGroupRequestAsync(request);
             }
 
         }
         
-        private async Task HandleResourceGroupRequestAsync(IRequest request, IResponse response)
+        private async Task<IResponse> HandleResourceGroupRequestAsync(IRequest request)
         {
             try
             {
                 var controller = GetController(request);
-                await HandleRequestAsync(controller, request, response);
+                return await HandleRequestAsync(controller, request);
 
             }
             catch
             {
-                response.StatusCode = (int) HttpStatusCode.NotFound;
-                await StreamOutput.GenerateResponseBodyAsync(response, "Not found");
+                var statusCode = (int) HttpStatusCode.NotFound;
+                return new Response { StatusCode = statusCode, Body = "Not Found" };
             }
         }
 
@@ -56,26 +55,16 @@ namespace kata_frameworkless_web_app
             return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
         }
         
-        private static async Task HandleRequestAsync(IController controller, IRequest request, IResponse response)
+        private static async Task<IResponse> HandleRequestAsync(IController controller, IRequest request)
         {
-            switch (request.HttpMethod)
+            return request.HttpMethod switch
             {
-                case "GET":
-                    await controller.HandleGetRequestAsync(request, response);
-                    break;
-                case "POST":
-                    await controller.HandlePostRequestAsync(request, response);
-                    break;
-                case "PUT":
-                    await controller.HandlePutRequestAsync(request, response);
-                    break;
-                case "DELETE":
-                    await controller.HandleDeleteRequestAsync(request, response);
-                    break;
-                default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
-            }
+                "GET" => await controller.HandleGetRequestAsync(request),
+                "POST" => await controller.HandlePostRequestAsync(request),
+                "PUT" => await controller.HandlePutRequestAsync(request),
+                "DELETE" => await controller.HandleDeleteRequestAsync(request),
+                _ => new Response { StatusCode = (int)HttpStatusCode.NotFound },
+            };
         }
     }
 }

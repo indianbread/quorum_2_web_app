@@ -52,7 +52,7 @@ namespace kata.users.domain
 
         public async Task DeleteUserAsync(string userId)
         {
-            var userToDelete = await GetUserById(userId);
+            var userToDelete = await _userRepository.GetUserByIdAsync(userId);
             if (userToDelete == null)
                 throw new ArgumentException("User does not exist");
             if (userToDelete.FirstName == _secretUser)
