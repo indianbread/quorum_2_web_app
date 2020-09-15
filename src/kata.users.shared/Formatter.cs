@@ -23,7 +23,7 @@ namespace kata.users.shared
             const string invalidCharacter = "/";
             var numOfCharsToRemove = resourceGroup.Contains(invalidCharacter) ? 2 : 1;
             var resourceGroupName = resourceGroup.Substring(0, resourceGroup.Length - numOfCharsToRemove);
-            return FormatName(resourceGroupName);
+            return FormatName(resourceGroupName) + "Controller";
         }
     }
 }

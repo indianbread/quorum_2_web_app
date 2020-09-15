@@ -19,14 +19,18 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
     {
         public RequestRouterShould()
         {
-            testUser = new User { FirstName = "Nhan", Id = "1" };
+            testUser1 = new User { FirstName = "Nhan", Id = "1" };
+            testUser2 = new User { FirstName = "Bob", Id = "2" };
+            testUsers = new List<User> { testUser1, testUser2 };
             var mockUserService = new Mock<IService>();
-            mockUserService.Setup(service => service.GetUsers()).ReturnsAsync(new List<User> { testUser });
+            mockUserService.Setup(service => service.GetUsers()).ReturnsAsync(testUsers);
             _sut = new RequestRouter(mockUserService.Object);
         }
         
         private RequestRouter _sut;
-        private User testUser;
+        private User testUser1;
+        private User testUser2;
+        private List<User> testUsers;
 
         [Fact]
         public async Task RouteGetIndex_ToGreetingHomePageAsync()
@@ -37,22 +41,35 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
 
             var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
 
-            Assert.Contains("Hello Nhan - the time on the server is", actualResponse.Body);
+            Assert.Contains("Hello Nhan and Bob - the time on the server is", actualResponse.Body);
 
          }
 
         [Fact]
-        public async Task RouteGetUsers_UsersPageAsync()
+        public async Task RouteGetUsers_ToUsersPageAsync()
         {
             var mockRequest = new Mock<IRequest>();
             mockRequest.Setup(request => request.HttpMethod).Returns("GET");
             mockRequest.Setup(Request => Request.Url).Returns(new Uri("http://localhost:8080/users/"));
-            var expectedResponseBody = JsonConvert.SerializeObject(testUser);
+            var expectedResponseBody = JsonConvert.SerializeObject(testUsers);
 
             var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
 
             Assert.Contains(expectedResponseBody, actualResponse.Body);
 
+        }
+
+        [Fact]
+        public async Task RouteGetUser_ToUserPageAsync()
+        {
+            var mockRequest = new Mock<IRequest>();
+            mockRequest.Setup(request => request.HttpMethod).Returns("GET");
+            mockRequest.Setup(Request => Request.Url).Returns(new Uri("http://localhost:8080/users/1"));
+            var expectedResponseBody = JsonConvert.SerializeObject(testUser1);
+
+            var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
+
+            Assert.Contains(expectedResponseBody, actualResponse.Body);
         }
     }
 }

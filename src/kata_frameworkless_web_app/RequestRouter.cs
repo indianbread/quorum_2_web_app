@@ -13,7 +13,8 @@ namespace kata_frameworkless_web_app
     {
         public RequestRouter(IService userService)
         {
-            _controllers = new List<IController> {
+            _controllers = new List<IController>
+            {
                 new IndexController(userService),
                 new UserController(userService)
             };
@@ -54,7 +55,7 @@ namespace kata_frameworkless_web_app
         private IController GetController(IRequest request)
         {
             var resourceGroup = request.Url.Segments[1];
-            var controllerName = Formatter.FormatControllerName(resourceGroup) + "Controller";
+            var controllerName = Formatter.FormatControllerName(resourceGroup);
             return _controllers.FirstOrDefault(controller => controller.GetType().Name.Contains(controllerName));
         }
         
