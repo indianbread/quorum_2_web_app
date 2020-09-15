@@ -11,14 +11,13 @@ namespace kata_frameworkless_web_app
 {
     public class Server
     {
-        public Server(IService userService)
+        public Server(IService userService, List<IController> controllers)
         {
-            _requestRouter = new RequestRouter(userService);
+            _requestRouter = new RequestRouter(userService, controllers);
             _listener = new HttpListener();
         }
 
         public bool IsListening { get; private set; }
-
         private readonly RequestRouter _requestRouter;
         private readonly HttpListener _listener;
 

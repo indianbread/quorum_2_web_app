@@ -11,23 +11,19 @@ namespace kata_frameworkless_web_app
 {
     public class RequestRouter
     {
-        public RequestRouter(IService userService)
+        public RequestRouter(IService userService, IList<IController> controllers)
         {
-            _controllers = new List<IController>
-            {
-                new IndexController(userService),
-                new UserController(userService)
-            };
+            _controllers = controllers;
         }
         
-        private readonly List<IController> _controllers;
+        private IList<IController> _controllers;
 
 
         public async Task<IResponse> RouteRequestAsync(IRequest request)
         {
             if (request.Url.Segments.Length == 1)
             {
-                var indexController = _controllers.Find(controller => controller.GetType() == typeof(IndexController));
+                var indexController = _controllers.FirstOrDefault(controller => controller.GetType().Name.Contains("IndexController"));
                 return await indexController.HandleGetRequestAsync(request);
             }
             else

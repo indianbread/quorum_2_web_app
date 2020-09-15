@@ -1,17 +1,12 @@
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app;
 using kata_frameworkless_web_app.controllers;
-using kata.users.domain;
 using Moq;
-using Moq.Protected;
 using Xunit;
 using System;
 using kata.users.shared;
-using Newtonsoft.Json;
+
 
 namespace kata_frameworkless_basic_web_application.tests.Unit
 {
@@ -19,21 +14,20 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
     {
         public RequestRouterShould()
         {
-            testUser1 = new User { FirstName = "Nhan", Id = "1" };
-            testUser2 = new User { FirstName = "Bob", Id = "2" };
-            testUsers = new List<User> { testUser1, testUser2 };
             var mockUserService = new Mock<IService>();
-            mockUserService.Setup(service => service.GetUsers()).ReturnsAsync(testUsers);
-            _sut = new RequestRouter(mockUserService.Object);
+            mockIndexController = new MockIndexController();
+            mockUserController = new MockUserController();
+            controllers = new List<IController> { mockIndexController, mockUserController };
+            _sut = new RequestRouter(mockUserService.Object, controllers);
         }
         
         private RequestRouter _sut;
-        private User testUser1;
-        private User testUser2;
-        private List<User> testUsers;
+        private IController mockIndexController;
+        private IController mockUserController;
+        private IList<IController> controllers;
 
         [Fact]
-        public async Task RouteGetIndex_ToGreetingHomePageAsync()
+        public async Task RouteGetIndex_ToIndexControllerGetAsync()
         {
             var mockRequest = new Mock<IRequest>();
             mockRequest.Setup(request => request.HttpMethod).Returns("GET");
@@ -41,35 +35,68 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
 
             var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
 
-            Assert.Contains("Hello Nhan and Bob - the time on the server is", actualResponse.Body);
+            Assert.Contains("MockIndexController HandleGetRequestAsync called", actualResponse.Body);
 
          }
 
         [Fact]
-        public async Task RouteGetUsers_ToUsersPageAsync()
+        public async Task RouteGetUsers_ToUserControllerGetAsync()
         {
             var mockRequest = new Mock<IRequest>();
             mockRequest.Setup(request => request.HttpMethod).Returns("GET");
             mockRequest.Setup(Request => Request.Url).Returns(new Uri("http://localhost:8080/users/"));
-            var expectedResponseBody = JsonConvert.SerializeObject(testUsers);
 
             var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
 
-            Assert.Contains(expectedResponseBody, actualResponse.Body);
-
+            Assert.Contains("MockUserController HandleGetRequestAsync called", actualResponse.Body);
         }
 
         [Fact]
-        public async Task RouteGetUser_ToUserPageAsync()
+        public async Task RouteGetUser_ToUserControllerGetAsync()
         {
             var mockRequest = new Mock<IRequest>();
             mockRequest.Setup(request => request.HttpMethod).Returns("GET");
             mockRequest.Setup(Request => Request.Url).Returns(new Uri("http://localhost:8080/users/1"));
-            var expectedResponseBody = JsonConvert.SerializeObject(testUser1);
 
             var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
 
-            Assert.Contains(expectedResponseBody, actualResponse.Body);
+            Assert.Contains("MockUserController HandleGetRequestAsync called", actualResponse.Body);
+        }
+
+        [Fact]
+        public async Task RouteDeleteUser_ToUserControllerDeleteAsync()
+        {
+            var mockRequest = new Mock<IRequest>();
+            mockRequest.Setup(request => request.HttpMethod).Returns("DELETE");
+            mockRequest.Setup(Request => Request.Url).Returns(new Uri("http://localhost:8080/users/1"));
+
+            var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
+
+            Assert.Contains("MockUserController HandleDeleteRequestAsync called", actualResponse.Body);
+        }
+
+        [Fact]
+        public async Task RoutePutUser_ToUserControllerPutAsync()
+        {
+            var mockRequest = new Mock<IRequest>();
+            mockRequest.Setup(request => request.HttpMethod).Returns("PUT");
+            mockRequest.Setup(Request => Request.Url).Returns(new Uri("http://localhost:8080/users/1"));
+
+            var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
+
+            Assert.Contains("MockUserController HandlePutRequestAsync called", actualResponse.Body);
+        }
+
+        [Fact]
+        public async Task RoutePostUser_ToUserControllerPostAsync()
+        {
+            var mockRequest = new Mock<IRequest>();
+            mockRequest.Setup(request => request.HttpMethod).Returns("POST");
+            mockRequest.Setup(Request => Request.Url).Returns(new Uri("http://localhost:8080/users/"));
+
+            var actualResponse = await _sut.RouteRequestAsync(mockRequest.Object);
+
+            Assert.Contains("MockUserController HandlePostRequestAsync called", actualResponse.Body);
         }
     }
 }
