@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using kata.users.shared;
 using Xunit;
@@ -14,6 +15,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         {
             _httpListenerFixture = httpListenerFixture;
             _httpClient = new HttpClient();
+            Thread.Sleep(1000);
         }
 
         private HttpListenerFixture _httpListenerFixture;
@@ -22,29 +24,34 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         [Fact]
         public async Task Delete_DeletesUserWithValidId()
         {
-            using (var response = await _httpClient.DeleteAsync("http://localhost:8080/users/3"))
-            {
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            }
+            Thread.Sleep(2000);
+
+            var response = await _httpClient.DeleteAsync("http://localhost:8080/users/3");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            
         }
 
         [Fact]
         public async Task Delete_ReturnsErrorIfInvalidId()
         {
-            using (var response = await _httpClient.DeleteAsync("http://localhost:8080/users/20"))
-            {
-                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            }
+            Thread.Sleep(3000);
+
+            var response = await _httpClient.DeleteAsync("http://localhost:8080/users/20");
+            
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            
         }
 
         [Fact]
         public async Task Delete_ReturnsForbiddenIfDeleteSecretUser()
         {
             var secretUser = await _httpListenerFixture.UserRepository.GetUserByNameAsync("Nhan");
-            using (var response = await _httpClient.DeleteAsync($"http://localhost:8080/users/{secretUser.Id}"))
-            {
-                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-            }
+
+            var response = await _httpClient.DeleteAsync($"http://localhost:8080/users/{secretUser.Id}");
+
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
         }
 
         public void Dispose()
@@ -56,6 +63,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             };
 
             _httpListenerFixture.UserRepository.CreateUserAsync(userToRestore).GetAwaiter().GetResult();
+            _httpClient.Dispose();
         }
     }
 }

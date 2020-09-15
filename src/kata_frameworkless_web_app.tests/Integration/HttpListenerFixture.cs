@@ -18,7 +18,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             _userService = new UserService(UserRepository);
             SetUpSecretUser().GetAwaiter().GetResult();
             var controllers = SetUpControllers();
-            var server = new Server(_userService, controllers);
+            var server = new Server(_userService);
             var webAppThread = new Thread(async () => await server.Start());
             webAppThread.Start();
         }
@@ -48,6 +48,6 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         }
 
         public readonly IUserRepository UserRepository;
-        private readonly UserService _userService;
+        private readonly IService _userService;
     }
 }

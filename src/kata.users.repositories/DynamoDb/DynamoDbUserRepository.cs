@@ -15,17 +15,6 @@ namespace kata.users.repositories.DynamoDb
             _useDynamoDbLocal = useDynamoDbLocal;
         }
 
-        private Table UserTable
-        {
-            get
-            {
-                if (_userTable != null) return _userTable;
-                _client = DynamoDb.CreatClient(_useDynamoDbLocal);
-                _userTable = Table.LoadTable(_client, TableName); //singleton
-                return _userTable;
-            }
-        }
-
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
             var scanFilter = new ScanFilter();
@@ -96,6 +85,27 @@ namespace kata.users.repositories.DynamoDb
             userDocument["Id"] = user.Id;
             userDocument["FirstName"] = user.FirstName;
             return userDocument;
+        }
+
+        private IAmazonDynamoDB Client
+        {
+            get
+            {
+                if (_client != null) return _client;
+                _client = DynamoDb.CreatClient(_useDynamoDbLocal);
+                return _client;
+
+            }
+        }
+
+        private Table UserTable
+        {
+            get
+            {
+                if (_userTable != null) return _userTable;
+                _userTable = Table.LoadTable(Client, TableName); //singleton
+                return _userTable;
+            }
         }
 
         private IAmazonDynamoDB _client;

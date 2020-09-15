@@ -18,13 +18,13 @@ namespace kata_frameworkless_web_app
             var userService = new UserService(dynamoDbUserRepository);
             await AddSecretUser(userService);
             
-            var controllers = new List<IController>()
-            {
-                new IndexController(userService),
-                new UserController(userService)
-            };
+            //var controllers = new List<IController>()
+            //{
+            //    new IndexController(userService),
+            //    new UserController(userService)
+            //};
 
-            var server = new Server(userService, controllers);
+            var server = new Server(userService);
             await server.Start();
         }
 

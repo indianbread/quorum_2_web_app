@@ -6,7 +6,7 @@ using kata.users.shared;
 
 namespace kata.users.domain
 {
-    public class UserService
+    public class UserService : IService
     {
         public UserService(IUserRepository userRepository)
         {

@@ -19,8 +19,8 @@ namespace kata_frameworkless_web_app
             QueryString = httpListenerRequest.QueryString;
         }
         
-        public Uri Url { get; }
-        public string HttpMethod { get; }
+        public Uri Url { get; set; }
+        public string HttpMethod { get; set; }
         public Stream InputStream { get; }
         public string ContentType { get; }
         public long ContentLength64 { get; }

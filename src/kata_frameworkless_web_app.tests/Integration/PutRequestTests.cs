@@ -32,12 +32,9 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var updatedUser = new User() { Id = "5", FirstName = "Totoro" };
             var updatedUserString = JsonConvert.SerializeObject(updatedUser);
 
-            using (HttpResponseMessage response = await _httpClient.PutAsync("http://localhost:8080/users/5", content))
-            {
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-                Assert.Equal(updatedUserString, response.Content.ReadAsStringAsync().Result);
-
-            }
+            HttpResponseMessage response = await _httpClient.PutAsync("http://localhost:8080/users/5", content);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(updatedUserString, response.Content.ReadAsStringAsync().Result);
         }
 
         [Fact]
@@ -48,11 +45,9 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
 
-            using (var response = await _httpClient.PutAsync("http://localhost:8080/users/15", content))
-            {
-                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-                Assert.Equal("User does not exist", response.Content.ReadAsStringAsync().Result);
-            }
+            var response = await _httpClient.PutAsync("http://localhost:8080/users/15", content);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal("User does not exist", response.Content.ReadAsStringAsync().Result);
 
         }
 
@@ -64,11 +59,9 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
 
-            using (var response = await _httpClient.PutAsync("http://localhost:8080/users/1", content))
-            {
-                Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-                Assert.Equal("A user with this name already exists", response.Content.ReadAsStringAsync().Result);
-            }
+            var response = await _httpClient.PutAsync("http://localhost:8080/users/1", content);
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+            Assert.Equal("A user with this name already exists", response.Content.ReadAsStringAsync().Result);
 
         }
 
@@ -78,7 +71,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var jsonContent = JsonConvert.SerializeObject(userToRestore);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             var response = _httpClient.PutAsync("http://localhost:8080/users/5", content).GetAwaiter().GetResult();
-            response.Dispose();
+            _httpClient.Dispose();
 
         }
     }

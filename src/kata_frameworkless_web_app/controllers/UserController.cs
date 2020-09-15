@@ -9,12 +9,12 @@ namespace kata_frameworkless_web_app.controllers
 {
     public class UserController : IController
     {
-        public UserController(UserService userService)
+        public UserController(IService userService)
         {
             _userService = userService;
         }
 
-        private readonly UserService _userService;
+        private readonly IService _userService;
 
         public async Task<IResponse> HandleGetRequestAsync(IRequest request)
         {

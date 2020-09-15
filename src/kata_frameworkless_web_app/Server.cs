@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using kata_frameworkless_web_app.controllers;
 using kata.users.domain;
 using System.Text;
+using kata.users.shared;
 
 namespace kata_frameworkless_web_app
 {
     public class Server
     {
-        public Server(UserService userService, IEnumerable<IController> controllers)
+        public Server(IService userService)
         {
-            _requestRouter = new RequestRouter(controllers);
+            _requestRouter = new RequestRouter(userService);
             _listener = new HttpListener();
         }
 

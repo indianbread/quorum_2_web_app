@@ -28,12 +28,9 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            using (var response = await _httpClient.PostAsync("http://localhost:8080/users", content))
-            {
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-                Assert.Equal("User added successfully", response.Content.ReadAsStringAsync().Result);
-
-            }
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("User added successfully", response.Content.ReadAsStringAsync().Result);
         }
 
         [Fact]
@@ -43,14 +40,11 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            using (var response = await _httpClient.PostAsync("http://localhost:8080/users", content))
-            {
-                var responseBody = response.Content.ReadAsStringAsync().Result;
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
 
-                Assert.Contains("Name already exists", responseBody);
-                Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-
-            }
+            Assert.Contains("Name already exists", responseBody);
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
         }
 
         [Fact]
@@ -60,17 +54,15 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
             HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            using (var response = await _httpClient.PostAsync("http://localhost:8080/users", content))
-            {
-                var responseBody = response.Content.ReadAsStringAsync().Result;
+            var response = await _httpClient.PostAsync("http://localhost:8080/users", content);
+            var responseBody = response.Content.ReadAsStringAsync().Result;
 
-                Assert.Contains("Name cannot be empty", responseBody);
-
-            }
+            Assert.Contains("Name cannot be empty", responseBody);
         }
 
         public void Dispose()
         {
+            _httpClient.Dispose();
             try
             {
                 var userToDelete = _httpListenerFixture.UserRepository.GetUserByNameAsync("Mary").GetAwaiter().GetResult();

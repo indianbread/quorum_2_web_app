@@ -8,12 +8,12 @@ namespace kata_frameworkless_web_app.controllers
 {
     public class IndexController : IController
     {
-        public IndexController(UserService userService)
+        public IndexController(IService userService)
         {
             _userService = userService;
         }
         
-        private readonly UserService _userService;
+        private readonly IService _userService;
         
         public async Task<IResponse> HandleGetRequestAsync(IRequest request)
         {

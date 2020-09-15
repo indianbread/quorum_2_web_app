@@ -5,17 +5,21 @@ using System.Net;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app.controllers;
 using kata.users.shared;
+using kata.users.domain;
 
 namespace kata_frameworkless_web_app
 {
     public class RequestRouter
     {
-        public RequestRouter(IEnumerable<IController> controllers)
+        public RequestRouter(IService userService)
         {
-            _controllers.AddRange(controllers);
+            _controllers = new List<IController> {
+                new IndexController(userService),
+                new UserController(userService)
+            };
         }
         
-        private readonly List<IController> _controllers = new List<IController>();
+        private readonly List<IController> _controllers;
 
 
         public async Task<IResponse> RouteRequestAsync(IRequest request)
@@ -51,8 +55,7 @@ namespace kata_frameworkless_web_app
         {
             var resourceGroup = request.Url.Segments[1];
             var controllerName = Formatter.FormatControllerName(resourceGroup) + "Controller";
-            var controllerType = Type.GetType($"kata_frameworkless_web_app.controllers.{controllerName}", true, true);
-            return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
+            return _controllers.FirstOrDefault(controller => controller.GetType().Name.Contains(controllerName));
         }
         
         private static async Task<IResponse> HandleRequestAsync(IController controller, IRequest request)

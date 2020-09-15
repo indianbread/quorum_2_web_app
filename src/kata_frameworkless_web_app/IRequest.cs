@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Specialized;
 using System.IO;
-using System.Net;
-using System.Net.Http;
 
 namespace kata_frameworkless_web_app
 {
     public interface IRequest
     {
-        Uri Url { get; }
-        string HttpMethod { get; }
+        Uri Url { get; set; }
+        string HttpMethod { get; set; }
         Stream InputStream { get; }
         string ContentType { get; }
         long ContentLength64 { get; }
