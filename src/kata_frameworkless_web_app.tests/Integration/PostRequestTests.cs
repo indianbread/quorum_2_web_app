@@ -37,7 +37,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         }
 
         [Fact]
-        public async Task POST_Name_ReturnsStatus409_IfNameAlreadyExists()
+        public async Task POST_Name_ReturnsError_IfNameAlreadyExists()
         {
             var userToAdd = new User() { FirstName = "Bob" };
             var jsonContent = JsonConvert.SerializeObject(userToAdd);
@@ -48,6 +48,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
                 var responseBody = response.Content.ReadAsStringAsync().Result;
 
                 Assert.Contains("Name already exists", responseBody);
+                Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
 
             }
         }
