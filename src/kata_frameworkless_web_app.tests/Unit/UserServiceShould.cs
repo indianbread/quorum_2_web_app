@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using kata_frameworkless_basic_web_application.tests.Unit.TestDoubles;
 using kata.users.domain;
 using kata.users.shared;
-using kata_frameworkless_web_app;
 using Xunit;
-using IUserRepository = kata.users.shared.IUserRepository;
+
 
 namespace kata_frameworkless_basic_web_application.tests.Unit
 {

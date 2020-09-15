@@ -24,4 +24,7 @@
       <ProjectReference Include="..\kata_frameworkless_web_app\kata_frameworkless_web_app.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Unit\TestDoubles\" />
+    </ItemGroup>
 </Project>

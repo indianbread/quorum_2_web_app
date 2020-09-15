@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using kata_frameworkless_web_app;
 using kata_frameworkless_web_app.controllers;
 
-namespace kata_frameworkless_basic_web_application.tests.Unit
+namespace kata_frameworkless_basic_web_application.tests.Unit.TestDoubles
 {
     public class MockUserController : IController
     {

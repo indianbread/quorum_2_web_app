@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using kata.users.shared;
 
-namespace kata_frameworkless_basic_web_application.tests.Unit
+namespace kata_frameworkless_basic_web_application.tests.Unit.TestDoubles
 {
     public class TestUserRepository : IUserRepository
     {
