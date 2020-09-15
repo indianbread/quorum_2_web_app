@@ -32,8 +32,7 @@ namespace kata_frameworkless_web_app
 
         public string GetNameFromPayload()
         {
-            var body = InputStream;
-            using (var reader = new StreamReader(body, Encoding.UTF8))
+            using (var reader = new StreamReader(InputStream, Encoding.UTF8))
             {
                 var data = reader.ReadToEnd();
                 var user = JObject.Parse(data);
