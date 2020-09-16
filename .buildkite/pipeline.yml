@@ -1,16 +1,11 @@
 steps:
- - label: ":test_tube: Running Tests"
-   command: 
-     - ls
-     - ./ops/scripts/test.sh ${BUILDKITE_BUILD_NUMBER}
-  #  artifact_paths:
-  #    - "src/kata_frameworkless_web_app/**/*"
-  #    - "src/kata.users.domain/**/*"
-  #    - "src/kata.users.shared/**/*"
-  #    - "src/kata.users.repositories/**/*"
-   agents:
+  - label: ":test_tube: Running Tests"
+    command: 
+      - ls
+      - "./ops/scripts/test.sh ${BUILDKITE_BUILD_NUMBER}"
+    agents:
      queue: "katherine-lab"
-
+ 
   - wait
       
   - label: ":docker: Publish and push image to ECR"
