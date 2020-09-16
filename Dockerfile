@@ -2,14 +2,10 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /app
 
 COPY *.sln .
-COPY src/kata_frameworkless_web_app/*.csproj ./src/kata_frameworkless_web_app/
-COPY src/kata.users.domain/*.csproj ./src/kata.users.domain/
-COPY src/kata.users.repositories/*.csproj ./src/kata.users.repositories/
-COPY src/kata.users.shared/*.csproj ./src/kata.users.shared/
-RUN dotnet restore
-
-COPY . ./
-RUN dotnet build
+COPY src/kata_frameworkless_web_app/ ./src/kata_frameworkless_web_app/
+COPY src/kata.users.domain/ ./src/kata.users.domain/
+COPY src/kata.users.repositories/ ./src/kata.users.repositories/
+COPY src/kata.users.shared/ ./src/kata.users.shared/
 
 FROM build AS publish
 WORKDIR /app/src/kata_frameworkless_web_app
