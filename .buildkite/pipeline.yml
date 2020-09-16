@@ -3,8 +3,8 @@ steps:
    command: 
      - ./ops/scripts/test.sh ${BUILDKITE_BUILD_NUMBER}
    artifact_paths:
-     - "src/kata_frameworkless_web_app/"
-     - "src/kata.users.domain/"
+     - "/src/kata_frameworkless_web_app/**/*"
+     - "/src/kata.users.domain/**/*"
    agents:
      queue: "katherine-lab"
 
