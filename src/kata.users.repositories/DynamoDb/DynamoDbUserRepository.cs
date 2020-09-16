@@ -15,17 +15,6 @@ namespace kata.users.repositories.DynamoDb
             _useDynamoDbLocal = useDynamoDbLocal;
         }
 
-        private Table UserTable
-        {
-            get
-            {
-                if (_userTable != null) return _userTable;
-                _client = DynamoDb.CreatClient(_useDynamoDbLocal);
-                _userTable = Table.LoadTable(_client, TableName); //singleton
-                return _userTable;
-            }
-        }
-
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
             var scanFilter = new ScanFilter();
@@ -43,8 +32,8 @@ namespace kata.users.repositories.DynamoDb
 
         public async Task<User> GetUserByIdAsync(string userId)
         {
-            Primitive partitionKey = new Primitive(userId);
-            GetItemOperationConfig config = new GetItemOperationConfig()
+            var partitionKey = new Primitive(userId);
+            var config = new GetItemOperationConfig()
             {
                 AttributesToGet = new List<string>() { "Id", "FirstName" },
             };
@@ -62,16 +51,13 @@ namespace kata.users.repositories.DynamoDb
 
         public async Task<User> UpdateUserAsync(User userToUpdate)
         {
-            var user = new Document();
-            user["Id"] = userToUpdate.Id;
-            user["FirstName"] = userToUpdate.FirstName;
-
+            var userDocument = ConvertUserToDocument(userToUpdate);
             var config = new UpdateItemOperationConfig
             {
                 ReturnValues = ReturnValues.AllNewAttributes
             };
 
-            var result = await UserTable.UpdateItemAsync(user, config);
+            var result = await UserTable.UpdateItemAsync(userDocument, config);
 
             return ConvertDocumentToUser(result);
             
@@ -98,9 +84,30 @@ namespace kata.users.repositories.DynamoDb
             return userDocument;
         }
 
+        private IAmazonDynamoDB Client
+        {
+            get
+            {
+                if (_client != null) return _client;
+                _client = DynamoDb.CreatClient(_useDynamoDbLocal);
+                return _client;
+
+            }
+        }
+
+        private Table UserTable
+        {
+            get
+            {
+                if (_userTable != null) return _userTable;
+                _userTable = Table.LoadTable(Client, TableName);
+                return _userTable;
+            }
+        }
+
         private IAmazonDynamoDB _client;
         private Table _userTable;
-        const string TableName = "NhanUser";
+        private const string TableName = "NhanUser";
         private readonly bool _useDynamoDbLocal;
     }
     

@@ -10,7 +10,7 @@ COPY src/kata_frameworkless_web_app/*.csproj ./src/kata_frameworkless_web_app/
 COPY src/kata.users.domain/*.csproj ./src/kata.users.domain/
 COPY src/kata.users.repositories/*.csproj ./src/kata.users.repositories/
 COPY src/kata.users.shared/*.csproj ./src/kata.users.shared/
-COPY src/kata_frameworkless_basic_web_application.tests/*.csproj ./src/kata_frameworkless_basic_web_application.tests/
+COPY src/kata_frameworkless_web_app.tests/*.csproj ./src/kata_frameworkless_web_app.tests/
 RUN dotnet restore
 
 # Copy everything else and build
@@ -19,7 +19,7 @@ RUN dotnet build
 
 #run the unit tests
 FROM build AS test
-WORKDIR /app/src/kata_frameworkless_basic_web_application.tests
+WORKDIR /app/src/kata_frameworkless_web_app.tests
 COPY /ops/scripts/test_with_dynamodb.sh ./
 COPY /dynamodb_local/tables/ ./dynamodb_local/tables/
 COPY /dynamodb_local/testusers.json ./dynamodb_local/

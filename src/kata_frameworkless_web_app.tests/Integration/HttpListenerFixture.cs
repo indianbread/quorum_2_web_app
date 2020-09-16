@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using kata_frameworkless_web_app;
 using kata.users.domain;
 using kata.users.repositories.DynamoDb;
 using kata.users.shared;
 using System.Threading.Tasks;
+using kata_frameworkless_web_app.controllers;
 
 namespace kata_frameworkless_basic_web_application.tests.Integration
 {
@@ -15,8 +17,9 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             UserRepository = new DynamoDbUserRepository(true);
             _userService = new UserService(UserRepository);
             SetUpSecretUser().GetAwaiter().GetResult();
-            var server = new Server(_userService);
-            var webAppThread = new Thread(async () => await server.Start());
+            var controllers = SetUpControllers();
+            var server = new Server(_userService,controllers);
+            var webAppThread = new Thread(async () => await server.StartAsync());
             webAppThread.Start();
         }
 
@@ -35,7 +38,16 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
 
         }
 
+        private List<IController> SetUpControllers()
+        {
+            return new List<IController>()
+            {
+                new IndexController(_userService),
+                new UserController(_userService),
+            };
+        }
+
         public readonly IUserRepository UserRepository;
-        private readonly UserService _userService;
+        private readonly IService _userService;
     }
 }

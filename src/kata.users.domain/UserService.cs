@@ -6,7 +6,7 @@ using kata.users.shared;
 
 namespace kata.users.domain
 {
-    public class UserService
+    public class UserService : IService
     {
         public UserService(IUserRepository userRepository)
         {
@@ -43,7 +43,7 @@ namespace kata.users.domain
 
         public async Task<User> UpdateUserAsync(User newUserDetails)
         {
-            var userToUpdate = await GetUserById(newUserDetails.Id);
+            await GetUserById(newUserDetails.Id);
             var userWithSameName = await _userRepository.GetUserByNameAsync(newUserDetails.FirstName);
             if (userWithSameName != null)
                 throw new ArgumentException("A user with this name already exists");
@@ -52,7 +52,7 @@ namespace kata.users.domain
 
         public async Task DeleteUserAsync(string userId)
         {
-            var userToDelete = await GetUserById(userId);
+            var userToDelete = await _userRepository.GetUserByIdAsync(userId);
             if (userToDelete == null)
                 throw new ArgumentException("User does not exist");
             if (userToDelete.FirstName == _secretUser)

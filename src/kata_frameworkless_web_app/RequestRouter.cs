@@ -3,86 +3,68 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using kata.users.domain;
+using kata_frameworkless_web_app.controllers;
 using kata.users.shared;
+
 
 namespace kata_frameworkless_web_app
 {
     public class RequestRouter
     {
-        public RequestRouter(UserService userService)
+        public RequestRouter(IService userService, IList<IController> controllers)
         {
-            _userService = userService;
-            _controllers = new List<IController>() { new UserController(_userService)};
+            _controllers = controllers;
         }
         
-        private readonly List<IController> _controllers;
-        private readonly UserService _userService;
+        private IList<IController> _controllers;
 
-        public async Task RouteRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+
+        public async Task<IResponse> RouteRequestAsync(IRequest request)
         {
             if (request.Url.Segments.Length == 1)
             {
-               await GetGreetingAsync(response);
+                var indexController = _controllers.FirstOrDefault(controller => controller.GetType().Name.Contains("IndexController"));
+                return await indexController.HandleGetRequestAsync(request);
             }
             else
             {
-                await HandleResourceGroupRequestAsync(request, response);
+                return await HandleResourceGroupRequestAsync(request);
             }
 
         }
-
-        private async Task GetGreetingAsync(HttpListenerResponse response)
-        {
-            var users = await _userService.GetUsers();
-            var names = users.Select(user => user.FirstName).ToList();
-            var responseString = Formatter.FormatGreeting(names);
-            await Response.GenerateBodyAsync(response, responseString);
-        }
-
-        private async Task HandleResourceGroupRequestAsync(HttpListenerRequest request, HttpListenerResponse response)
+        
+        private async Task<IResponse> HandleResourceGroupRequestAsync(IRequest request)
         {
             try
             {
                 var controller = GetController(request);
-                await HandleRequestAsync(controller, request, response);
+                return await HandleRequestAsync(controller, request);
 
             }
             catch
             {
-                response.StatusCode = (int) HttpStatusCode.NotFound;
-                await Response.GenerateBodyAsync(response, "Not found");
+                var statusCode = (int) HttpStatusCode.NotFound;
+                return new Response { StatusCode = statusCode, Body = "Not Found" };
             }
         }
 
-        private IController GetController(HttpListenerRequest request)
+        private IController GetController(IRequest request)
         {
             var resourceGroup = request.Url.Segments[1];
-            var controllerName = Formatter.FormatControllerName(resourceGroup) + "Controller";
-            var controllerType = Type.GetType($"kata_frameworkless_web_app.{controllerName}", true, true);
-            return _controllers.FirstOrDefault(controller => controller.GetType() == controllerType);
+            var controllerName = Formatter.FormatControllerName(resourceGroup);
+            return _controllers.FirstOrDefault(controller => controller.GetType().Name.Contains(controllerName));
         }
         
-        private static async Task HandleRequestAsync(IController controller, HttpListenerRequest request, HttpListenerResponse response)
+        private static async Task<IResponse> HandleRequestAsync(IController controller, IRequest request)
         {
-            switch (request.HttpMethod)
+            return request.HttpMethod switch
             {
-                case "GET":
-                    await controller.HandleGetRequestAsync(request, response);
-                    break;
-                case "POST":
-                    await controller.HandlePostRequestAsync(request, response);
-                    break;
-                case "PUT":
-                    await controller.HandlePutRequestAsync(request, response);
-                    break;
-                case "DELETE":
-                    await controller.HandleDeleteRequestAsync(request, response);
-                    break;
-                default:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
-            }
+                "GET" => await controller.HandleGetRequestAsync(request),
+                "POST" => await controller.HandleCreateRequestAsync(request),
+                "PUT" => await controller.HandleUpdateRequestAsync(request),
+                "DELETE" => await controller.HandleDeleteRequestAsync(request),
+                _ => new Response { StatusCode = (int)HttpStatusCode.NotFound },
+            };
         }
     }
 }

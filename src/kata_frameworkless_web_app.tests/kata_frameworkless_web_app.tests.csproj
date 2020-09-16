@@ -4,6 +4,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
 
         <IsPackable>false</IsPackable>
+
+        <RootNamespace>kata_frameworkless_basic_web_application.tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,4 +24,7 @@
       <ProjectReference Include="..\kata_frameworkless_web_app\kata_frameworkless_web_app.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Unit\TestDoubles\" />
+    </ItemGroup>
 </Project>

@@ -1,33 +1,35 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using kata.users.domain;
-
-
+using kata_frameworkless_web_app.controllers;
+using System.Text;
+using kata.users.shared;
 
 namespace kata_frameworkless_web_app
 {
     public class Server
     {
-        public Server(UserService userService)
+        public Server(IService userService, List<IController> controllers)
         {
-            _requestRouter = new RequestRouter(userService);
+            _requestRouter = new RequestRouter(userService, controllers);
             _listener = new HttpListener();
         }
-        
+
+        public bool IsListening { get; private set; }
         private readonly RequestRouter _requestRouter;
         private readonly HttpListener _listener;
 
         
-        public async Task Start()
+        public async Task StartAsync()
         {
             AddPrefixes();
-            _isListening = true;
+            IsListening = true;
             _listener.Start();
             Console.WriteLine($"Listening on port {Port}" );
-            while (_isListening)
+            while (IsListening)
             {
-               await ProcessRequestAsync();
+                await ProcessRequestAsync();
             }
         }
 
@@ -35,18 +37,31 @@ namespace kata_frameworkless_web_app
         {
             _listener.Prefixes.Add($"http://*:{Port}/");
         }
-        private async Task ProcessRequestAsync()
+        
+        public async Task ProcessRequestAsync()
         {
             var context = await _listener.GetContextAsync();
-            var request = context.Request;
+            IRequest request = new Request(context.Request);
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
-            using (var response = context.Response)
+            var response = await _requestRouter.RouteRequestAsync(request);
+
+            using (var httpListenerResponse = context.Response)
             {
-                await _requestRouter.RouteRequestAsync(request, response);
+                await SendResponseAsync(httpListenerResponse, response);
             }
         }
-        
-        private bool _isListening;
+
+        private async Task SendResponseAsync(HttpListenerResponse httpListenerResponse, IResponse response)
+        {
+
+            httpListenerResponse.StatusCode = response.StatusCode;
+            httpListenerResponse.RedirectLocation = response.RedirectLocation;
+            var buffer = Encoding.UTF8.GetBytes(response.Body);
+            httpListenerResponse.ContentLength64 = buffer.Length;
+            await httpListenerResponse.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+            await httpListenerResponse.OutputStream.DisposeAsync();
+        }
+
         private const int Port = 8080;
         
     }
