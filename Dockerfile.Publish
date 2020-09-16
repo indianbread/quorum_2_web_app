@@ -1,0 +1,3 @@
+FROM build AS publish
+WORKDIR /app/src/kata_frameworkless_web_app
+RUN dotnet publish -c Release -o publish
