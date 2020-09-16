@@ -1,26 +1,16 @@
 steps:
-#  - label: "Unit Tests"
-#    command: 
-#      - ./ops/scripts/test.sh
-#    agents:
-#      queue: "katherine-lab"
-#      
-#  - wait
-#  - label: "Setting up DynamoDb Local"
-#    command:
-#      - "./dynamodb_local/dynamodb_local_startup.sh"
-#    agents:
-#      queue: "katherine-lab"
-#      plugins:
-#        - docker-compose#v3.5.0:
-#            run: app
-#            config:
-#              - docker-compose-dynamodb-local.yml
-  #- wait
+  - label: ":test_tube: Running Tests"
+    command: 
+      - ls
+      - "./ops/scripts/test.sh ${BUILDKITE_BUILD_NUMBER}"
+    agents:
+     queue: "katherine-lab"
+ 
+  - wait
       
-  - label: ":hammer: Test, Build and push to ECR"
+  - label: ":docker: Publish and push image to ECR"
     command:
-      - "./ops/scripts/build_push_image.sh ${BUILDKITE_BUILD_NUMBER}"
+      - "./ops/scripts/publish.sh ${BUILDKITE_BUILD_NUMBER}"
     #branches: master
     agents:
       queue: "katherine-lab"

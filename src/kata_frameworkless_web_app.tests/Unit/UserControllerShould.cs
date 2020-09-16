@@ -168,7 +168,6 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         }
 
 
-
         private void SetUpMockUserService()
         {
             testUser1 = new User() { Id = "1", FirstName = "Nhan" };
