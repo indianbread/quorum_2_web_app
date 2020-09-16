@@ -3,8 +3,7 @@ steps:
    command: 
      - ./ops/scripts/test.sh
    artifact_paths:
-     - "nhan-app/"
-     - ls nhan-app/
+     - "nhan-app/**/*"
    agents:
      queue: "katherine-lab"
 
