@@ -19,13 +19,13 @@ namespace kata_frameworkless_basic_web_application.tests.Unit.TestDoubles
 
         }
 
-        public async Task<IResponse> HandlePostRequestAsync(IRequest request)
+        public async Task<IResponse> HandleCreateRequestAsync(IRequest request)
         {
             return new Response { Body = "MockIndexController HandlePostRequestAsync called" };
 
         }
 
-        public async Task<IResponse> HandlePutRequestAsync(IRequest request)
+        public async Task<IResponse> HandleUpdateRequestAsync(IRequest request)
         {
             return new Response { Body = "MockIndexController HandlePutRequestAsync called" };
         }

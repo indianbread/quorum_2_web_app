@@ -100,7 +100,7 @@ namespace kata.users.repositories.DynamoDb
             get
             {
                 if (_userTable != null) return _userTable;
-                _userTable = Table.LoadTable(Client, TableName); //singleton
+                _userTable = Table.LoadTable(Client, TableName);
                 return _userTable;
             }
         }

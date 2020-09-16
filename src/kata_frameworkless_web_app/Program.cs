@@ -25,7 +25,8 @@ namespace kata_frameworkless_web_app
             };
 
             var server = new Server(userService, controllers);
-            await server.Start();
+            await server.StartAsync();
+
         }
 
         private static async Task AddSecretUser(UserService userService)

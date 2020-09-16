@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app.controllers;
-using kata.users.domain;
 using System.Text;
 using kata.users.shared;
 
@@ -22,7 +21,7 @@ namespace kata_frameworkless_web_app
         private readonly HttpListener _listener;
 
         
-        public async Task Start()
+        public async Task StartAsync()
         {
             AddPrefixes();
             IsListening = true;
@@ -44,15 +43,15 @@ namespace kata_frameworkless_web_app
             var context = await _listener.GetContextAsync();
             IRequest request = new Request(context.Request);
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
+            var response = await _requestRouter.RouteRequestAsync(request);
 
             using (var httpListenerResponse = context.Response)
             {
-                var response = await _requestRouter.RouteRequestAsync(request);
-                await SendResponse(httpListenerResponse, response);
+                await SendResponseAsync(httpListenerResponse, response);
             }
         }
 
-        private async Task SendResponse(HttpListenerResponse httpListenerResponse, IResponse response)
+        private async Task SendResponseAsync(HttpListenerResponse httpListenerResponse, IResponse response)
         {
 
             httpListenerResponse.StatusCode = response.StatusCode;

@@ -14,7 +14,6 @@ namespace kata_frameworkless_web_app.controllers
             _userService = userService;
         }
 
-        private readonly IService _userService;
 
         public async Task<IResponse> HandleGetRequestAsync(IRequest request)
         {
@@ -30,36 +29,7 @@ namespace kata_frameworkless_web_app.controllers
             }
         }
 
-        private async Task<IResponse> HandleGetUserByIdRequestAsync(IRequest request)
-        {
-            var userId = request.Url.Segments[2];
-            string responseString;
-            int statusCode;
-            try
-            {
-                var user = await _userService.GetUserById(userId);
-                responseString = JsonConvert.SerializeObject(user);
-                statusCode = (int)HttpStatusCode.OK;
-            }
-
-            catch (Exception e)
-            {
-                statusCode = (int)HttpStatusCode.NotFound;
-                responseString = e.Message;
-            }
-
-            return new Response { Body = responseString, StatusCode = statusCode };
-        }
-
-
-        public async Task<IResponse> HandleGetUsersRequestAsync()
-        {
-            var users = await _userService.GetUsers();
-            var responseBody = JsonConvert.SerializeObject(users);
-            return new Response { Body = responseBody };
-        }
-        
-        public async Task<IResponse> HandlePostRequestAsync(IRequest request)
+        public async Task<IResponse> HandleCreateRequestAsync(IRequest request)
         {
             var newUserFirstName = request.GetNameFromPayload();
             User newUser;
@@ -76,7 +46,7 @@ namespace kata_frameworkless_web_app.controllers
             }
         }
         
-        public async Task<IResponse> HandlePutRequestAsync(IRequest request)
+        public async Task<IResponse> HandleUpdateRequestAsync(IRequest request)
         {
             var userId = request.Url.Segments[2];
             var newName = request.GetNameFromPayload();
@@ -121,5 +91,35 @@ namespace kata_frameworkless_web_app.controllers
             return new Response { Body = responseString, StatusCode = statusCode };
         }
 
+        private async Task<IResponse> HandleGetUserByIdRequestAsync(IRequest request)
+        {
+            var userId = request.Url.Segments[2];
+            string responseString;
+            int statusCode;
+            try
+            {
+                var user = await _userService.GetUserById(userId);
+                responseString = JsonConvert.SerializeObject(user);
+                statusCode = (int)HttpStatusCode.OK;
+            }
+
+            catch (Exception e)
+            {
+                statusCode = (int)HttpStatusCode.NotFound;
+                responseString = e.Message;
+            }
+
+            return new Response { Body = responseString, StatusCode = statusCode };
+        }
+
+
+        private async Task<IResponse> HandleGetUsersRequestAsync()
+        {
+            var users = await _userService.GetUsers();
+            var responseBody = JsonConvert.SerializeObject(users);
+            return new Response { Body = responseBody };
+        }
+
+        private readonly IService _userService;
     }
 }

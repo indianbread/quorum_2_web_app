@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using kata_frameworkless_web_app.controllers;
 using kata.users.shared;
-using kata.users.domain;
+
 
 namespace kata_frameworkless_web_app
 {
@@ -60,8 +60,8 @@ namespace kata_frameworkless_web_app
             return request.HttpMethod switch
             {
                 "GET" => await controller.HandleGetRequestAsync(request),
-                "POST" => await controller.HandlePostRequestAsync(request),
-                "PUT" => await controller.HandlePutRequestAsync(request),
+                "POST" => await controller.HandleCreateRequestAsync(request),
+                "PUT" => await controller.HandleUpdateRequestAsync(request),
                 "DELETE" => await controller.HandleDeleteRequestAsync(request),
                 _ => new Response { StatusCode = (int)HttpStatusCode.NotFound },
             };

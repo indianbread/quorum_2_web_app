@@ -19,7 +19,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             SetUpSecretUser().GetAwaiter().GetResult();
             var controllers = SetUpControllers();
             var server = new Server(_userService,controllers);
-            var webAppThread = new Thread(async () => await server.Start());
+            var webAppThread = new Thread(async () => await server.StartAsync());
             webAppThread.Start();
         }
 

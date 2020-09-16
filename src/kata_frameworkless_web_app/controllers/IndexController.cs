@@ -23,7 +23,7 @@ namespace kata_frameworkless_web_app.controllers
             return new Response { Body = responseString };
         }
 
-        Task<IResponse> IController.HandlePostRequestAsync(IRequest request)
+        Task<IResponse> IController.HandleCreateRequestAsync(IRequest request)
         {
             throw new System.NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace kata_frameworkless_web_app.controllers
             throw new System.NotImplementedException();
         }
 
-        Task<IResponse> IController.HandlePutRequestAsync(IRequest request)
+        Task<IResponse> IController.HandleUpdateRequestAsync(IRequest request)
         {
             throw new System.NotImplementedException();
         }
