@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "--- :docker: Docker build"
+echo "--- :docker: Build image for testing"
 docker build -f Dockerfile.Test -t nhan-frameworkless-app:$1 .
-echo "--- :docker: Docker run"
+echo "--- :docker: Running tests"
 docker run nhan-frameworkless-app:$1

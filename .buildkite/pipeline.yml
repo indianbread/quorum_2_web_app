@@ -1,7 +1,7 @@
 steps:
  - label: ":test_tube: Running Tests"
    command: 
-     - ./ops/scripts/test.sh
+     - ./ops/scripts/test.sh ${BUILDKITE_BUILD_NUMBER}
    artifact_paths:
      - "nhan-app/**/*"
    agents:
