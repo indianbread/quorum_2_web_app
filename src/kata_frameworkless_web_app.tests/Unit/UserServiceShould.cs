@@ -37,9 +37,9 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         {
             var user = await _sut.GetUserById("1");
 
-            //Assert.Equal("Nhan", user.FirstName);
+            Assert.Equal("Nhan", user.FirstName);
             //breaks pipeline
-            Assert.Equal("NotNhan", user.FirstName);
+            //Assert.Equal("NotNhan", user.FirstName);
 
         }
 
