@@ -24,4 +24,4 @@ COPY /ops/scripts/test_with_dynamodb.sh ./
 COPY /dynamodb_local/tables/ ./dynamodb_local/tables/
 COPY /dynamodb_local/testusers.json ./dynamodb_local/
 #RUN sh test_with_dynamodb.sh
-ENTRYPOINT ["/startup.sh"]
+ENTRYPOINT ["/test_with_dynamodb.sh"]
