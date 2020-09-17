@@ -3,7 +3,7 @@
 [![build status](https://badge.buildkite.com/215ec3dec3e4f9032f29960909974004c6a6345ee9b97e3df2.svg?branch=master&theme=00aa65,ce2554,2b74df,8241aa,fff,fff)](https://buildkite.com/myob/nhan-frameworkless-web-app)
 
 ## Overview 
-This application is a basic REST API which fulfils the requirements of the [Frameworkless Basic Web Application kata](https://github.com/MYOB-Technology/General_Developer/tree/main/katas/kata-frameworkless-basic-web-application). It is containerized using Docker and the image is hosted using Amazon Web Services' Elastic Container Service. The application was deployed using Jupiter.  
+This application is a basic REST API which fulfils the requirements of the [Frameworkless Basic Web Application kata](https://github.com/MYOB-Technology/General_Developer/tree/main/katas/kata-frameworkless-basic-web-application). It is containerized using Docker and the image is hosted using Amazon Web Services' Elastic Container Registry. The application was deployed using Jupiter.  
 
 ## Usage
 
@@ -97,6 +97,12 @@ The business rules require that each user's name must be unique.
 This error message will display if you attempt to create a new user without specifying a first name.  
 
 ![empty name error](images/empty_name.png)  
+
+### Forbidden  
+The owner of the application is `Nhan`, therefore this user cannot be deleted. You will receive a `Forbidden` response from the server if you attempt to delete this user.  
+
+![forbidden delete](images/forbidden_delete.png)  
+
 
 ## Running the tests on your local machine  
 
