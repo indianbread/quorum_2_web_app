@@ -1,8 +1,7 @@
 steps:
   - label: ":test_tube: Running Tests"
     command: 
-      - ls
-      - "./ops/scripts/test.sh ${BUILDKITE_BUILD_NUMBER}"
+      - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
     agents:
      queue: "katherine-lab"
  
@@ -10,8 +9,8 @@ steps:
       
   - label: ":docker: Publish and push image to ECR"
     command:
-      - "./ops/scripts/publish.sh ${BUILDKITE_BUILD_NUMBER}"
-    #branches: master
+      - "./ops/scripts/publish.sh $(git rev-parse --short HEAD)"
+    branches: master
     agents:
       queue: "katherine-lab"
     plugins:
@@ -22,8 +21,8 @@ steps:
     
   - label: ":rocket: Deploy to Jupiter"
     command:
-      - "./ops/scripts/deploy.sh ${BUILDKITE_BUILD_NUMBER}"
-    # branches: master
+      - "./ops/scripts/deploy.sh $(git rev-parse --short HEAD)"
+    branches: master
     agents:
       queue: "europa-preprod-fma"
       

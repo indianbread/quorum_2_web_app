@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using kata.users.domain;
 using kata.users.shared;
 using Newtonsoft.Json;
 
