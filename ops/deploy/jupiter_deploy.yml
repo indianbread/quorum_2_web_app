@@ -81,4 +81,4 @@ parameters:
   - name: "imageTag"
     description: "Docker image tag"
     required: true
-    parameterType: int
+    parameterType: string
