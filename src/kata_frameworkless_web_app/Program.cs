@@ -14,7 +14,7 @@ namespace kata_frameworkless_web_app
     {
         static async Task Main(string[] args)
         {
-            var dynamoDbUserRepository = new DynamoDbUserRepository(true);
+            var dynamoDbUserRepository = new DynamoDbUserRepository(false);
             var userService = new UserService(dynamoDbUserRepository);
             await AddSecretUser(userService);
 
