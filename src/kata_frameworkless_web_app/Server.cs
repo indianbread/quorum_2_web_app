@@ -20,27 +20,32 @@ namespace kata_frameworkless_web_app
         private readonly RequestRouter _requestRouter;
         private readonly HttpListener _listener;
 
-        
-        public async Task StartAsync()
+        public void Start()
         {
             AddPrefixes();
             IsListening = true;
             _listener.Start();
-            Console.WriteLine($"Listening on port {Port}" );
+            Console.WriteLine($"Listening on port {Port}");
+        }
+
+        public async Task ProcessRequestAsync()
+        {
+
             while (IsListening)
             {
-                await ProcessRequestAsync();
+                var context = await _listener.GetContextAsync();
+                _ = Task.Run(() => ProcessResponseAsync(context));
             }
         }
+
 
         private void AddPrefixes()
         {
             _listener.Prefixes.Add($"http://*:{Port}/");
         }
-        
-        public async Task ProcessRequestAsync()
+
+        private async Task ProcessResponseAsync(HttpListenerContext context)
         {
-            var context = await _listener.GetContextAsync();
             IRequest request = new Request(context.Request);
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = await _requestRouter.RouteRequestAsync(request);

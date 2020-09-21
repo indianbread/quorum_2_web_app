@@ -27,7 +27,8 @@ namespace kata_frameworkless_web_app
             };
 
             var server = new Server(userService, controllers);
-            await server.StartAsync();
+            server.Start();
+            await server.ProcessRequestAsync();
 
         }
 
