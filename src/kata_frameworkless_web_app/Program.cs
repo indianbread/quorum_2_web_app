@@ -14,7 +14,7 @@ namespace kata_frameworkless_web_app
     {
         static async Task Main(string[] args)
         {
-            var useDynamoDbLocal = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB_ENV"));
+            var useDynamoDbLocal = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB_ENV"));
             var dynamoDbUserRepository = new DynamoDbUserRepository(useDynamoDbLocal);
             var userService = new UserService(dynamoDbUserRepository);
             
