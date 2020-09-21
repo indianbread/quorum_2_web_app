@@ -12,15 +12,16 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
 {
     public class HttpListenerFixture
     {
-        public HttpListenerFixture()
+        public HttpListenerFixture() 
         {
             UserRepository = new DynamoDbUserRepository(true);
             _userService = new UserService(UserRepository);
             SetUpSecretUser().GetAwaiter().GetResult();
             var controllers = SetUpControllers();
             var server = new Server(_userService,controllers);
-            var webAppThread = new Thread(async () => await server.StartAsync());
-            webAppThread.Start();
+            server.Start();
+            WebAppThread = new Thread(async () => await server.ProcessRequestAsync());
+            WebAppThread.Start();
         }
 
         private async Task SetUpSecretUser()
@@ -47,7 +48,9 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             };
         }
 
+
         public readonly IUserRepository UserRepository;
         private readonly IService _userService;
+        private Thread WebAppThread;
     }
 }

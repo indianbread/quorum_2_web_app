@@ -15,7 +15,6 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         {
             _httpListenerFixture = httpListenerFixture;
             _httpClient = new HttpClient();
-            Thread.Sleep(1000);
         }
 
         private HttpListenerFixture _httpListenerFixture;
@@ -24,7 +23,6 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         [Fact]
         public async Task Delete_DeletesUserWithValidId()
         {
-            Thread.Sleep(2000);
 
             var response = await _httpClient.DeleteAsync("http://localhost:8080/users/3");
 
@@ -35,7 +33,6 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
         [Fact]
         public async Task Delete_ReturnsErrorIfInvalidId()
         {
-            Thread.Sleep(3000);
 
             var response = await _httpClient.DeleteAsync("http://localhost:8080/users/20");
             

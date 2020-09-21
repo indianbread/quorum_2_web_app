@@ -12,5 +12,6 @@ namespace kata_frameworkless_web_app.controllers
         Task<IResponse> HandleDeleteRequestAsync(IRequest request);
 
         Task<IResponse> HandleUpdateRequestAsync(IRequest request);
+
     }
 }
