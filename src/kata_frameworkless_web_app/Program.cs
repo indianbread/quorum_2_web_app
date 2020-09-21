@@ -14,8 +14,10 @@ namespace kata_frameworkless_web_app
     {
         static async Task Main(string[] args)
         {
-            var dynamoDbUserRepository = new DynamoDbUserRepository(false);
+            var useDynamoDbLocal = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB_ENV"));
+            var dynamoDbUserRepository = new DynamoDbUserRepository(useDynamoDbLocal);
             var userService = new UserService(dynamoDbUserRepository);
+            
             await AddSecretUser(userService);
 
             var controllers = new List<IController>()
@@ -33,7 +35,8 @@ namespace kata_frameworkless_web_app
         {
             try
             {
-                var secretUserName = AwsSecretManager.GetSecret();
+                var secretUserName = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SECRET_NAME")) ? 
+                    Environment.GetEnvironmentVariable("SECRET_USER") : AwsSecretManager.GetSecret();
                 userService.SetSecretUser(secretUserName);
                 await userService.CreateUserAsync(secretUserName);
             }

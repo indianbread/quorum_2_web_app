@@ -11,6 +11,6 @@ fi
 echo "Adding test users to database"
 aws dynamodb batch-write-item \
     --request-items file://dynamodb_local/testusers.json \
-    --endpoint-url http://localhost:8000
+    --endpoint-url http://localhost:8000 
 
    
