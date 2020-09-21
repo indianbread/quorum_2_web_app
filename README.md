@@ -120,10 +120,26 @@ Note: the `test` argument is used as the image tag and can be substituted with a
 The shell script will build the image and run the tests in a container on your local machine.
 
 ## Running the application on your local machine
+
+### System Requirements
+* A command line interface (CLI) such as ```Command Prompt``` for Windows or ```Terminal``` for macOS
+* [.Net Core 3.1 SDK](https://dotnet.microsoft.com/download) or later.
+If you have ```homebrew``` you can install the latest version of the .NET Core SDK by running the command ```brew cask install dotnet-sdk``` in the CLI
+* [AWS CLI 2](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) 
+
+### Steps
 1. Download or clone the repository to your computer using the `git clone` command.  
 2. `cd` into the root directory of the project.
 3. Run this command to set up the environment variables and start up the local database: `. ./ops/scripts/local_startup.sh`
 4. When the table has been created, type `:q` to escape the `describe-table` output.  
-5. When the data has been written to the table, type `:q` again to escape the output and return to the command line.  
-6. In the same terminal session, run the command `dotnet run --project src/kata_frameworkless_web_app` to start the application.
+5. When the data has been written to the table, type `:q` again to escape the output and return to the command line.
+6. In the same terminal session, run the command `dotnet restore` to restore the packages.  
+6. In the same terminal session, run the command `dotnet run --project src/kata_frameworkless_web_app` to start the application.  
+
+## Dependecies
+* [Docker](https://www.docker.com/)
+* [AWS CLI 2](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) 
+* [XUnit](https://xunit.net/)
+* [Moq](https://github.com/Moq/moq4/wiki/Quickstart)
+
 
