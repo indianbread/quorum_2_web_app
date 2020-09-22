@@ -1,9 +1,10 @@
 steps:
-  - - label: ":test_tube: Building image for testing"
+  
+  - label: ":test_tube: Building image for testing"
       command:
         - docker build -f Dockerfile.Build -t nhan-frameworkless-app:$(git rev-parse --short HEAD) .
       artifact_paths:
-        "/"
+        - "/"
       agents:
         queue: "katherine-lab"
         
