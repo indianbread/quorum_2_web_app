@@ -1,4 +1,14 @@
 steps:
+  - - label: ":test_tube: Building image for testing"
+      command:
+        - docker build -f Dockerfile.Build -t nhan-frameworkless-app:$(git rev-parse --short HEAD) .
+      artifact_paths:
+        "/"
+      agents:
+        queue: "katherine-lab"
+        
+  - wait
+    
   - label: ":test_tube: Running Tests"
     command: 
       - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
@@ -32,7 +42,7 @@ steps:
   - label: ":rocket: Deploy to Jupiter"
     command:
       - "./ops/scripts/deploy.sh $(git rev-parse --short HEAD)"
-    #branches: master
+    branches: master
     agents:
       queue: "europa-preprod-fma"
       

@@ -7,9 +7,9 @@
 #COPY src/kata.users.repositories/ ./src/kata.users.repositories/
 #COPY src/kata.users.shared/ ./src/kata.users.shared/
 
-#FROM build AS publish
-#WORKDIR /app/src/kata_frameworkless_web_app
-#RUN dotnet publish -c Release -o publish
+FROM nhan-frameworkless-app AS publish
+WORKDIR /app/src/kata_frameworkless_web_app
+RUN dotnet publish -c Release -o publish
 
 FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS base
 WORKDIR /app
