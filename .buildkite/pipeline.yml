@@ -4,7 +4,7 @@ steps:
     command:
       - docker build -f Dockerfile.Build -t nhan-frameworkless-app:$(git rev-parse --short HEAD) .
     artifact_paths:
-      - "nhan-frameworkless-web-app"
+      - "nhan-frameworkless-web-app/"
     agents:
       queue: "katherine-lab"
         
