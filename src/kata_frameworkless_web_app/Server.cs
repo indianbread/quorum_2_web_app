@@ -34,10 +34,24 @@ namespace kata_frameworkless_web_app
             while (IsListening)
             {
                 var context = await _listener.GetContextAsync();
-                _ = Task.Run(() => ProcessResponseAsync(context));
+                var requests = new List<Task>();
+                requests.Add(Task.Run(() => ProcessResponseAsync(context)));
+                if (requests.Count % 5 == 0)
+                {
+                    RemoveCompletedTasks(requests);
+                }
             }
         }
 
+        private static void RemoveCompletedTasks(List<Task> requests)
+        {
+            var completedTasks = requests.FindAll(task => task.IsCompleted);
+            foreach (var task in completedTasks)
+            {
+                requests.Remove(task);
+                task.Dispose();
+            }
+        }
 
         private void AddPrefixes()
         {
