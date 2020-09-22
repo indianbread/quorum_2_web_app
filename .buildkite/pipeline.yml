@@ -2,6 +2,8 @@ steps:
   - label: ":test_tube: Running Tests"
     command: 
       - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
+    artifact_paths:
+      - "/app/src/kata_frameworkless_web_app/publish"
     agents:
      queue: "katherine-lab"
  
