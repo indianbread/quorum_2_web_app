@@ -2,11 +2,19 @@ steps:
   - label: ":test_tube: Running Tests"
     command: 
       - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
-    artifact_paths:
-      - "/app/src/kata_frameworkless_web_app/publish"
     agents:
      queue: "katherine-lab"
  
+  - wait
+  
+  - label: ":pick: Publishing artifact"
+    command:
+      - dotnet publish src/kata_Frameworkless_web_app -c Release -o src/publish
+    artifact_paths:
+      - src/publish
+    agents:
+      queue: "katherine-lab"
+      
   - wait
       
   - label: ":docker: Publish and push image to ECR"
