@@ -4,7 +4,7 @@ steps:
     command:
       - docker build -f Dockerfile.Build -t nhan-frameworkless-app:$(git rev-parse --short HEAD) .
     artifact_paths:
-      - "/"
+      - "nhan-frameworkless-web-app"
     agents:
       queue: "katherine-lab"
         
@@ -17,17 +17,7 @@ steps:
      queue: "katherine-lab"
  
   - wait
-  
-  - label: ":pick: Publishing artifact"
-    command:
-      - dotnet publish src/kata_Frameworkless_web_app -c Release -o src/publish
-    artifact_paths:
-      - src/publish
-    agents:
-      queue: "katherine-lab"
-      
-  - wait
-      
+
   - label: ":docker: Publish and push image to ECR"
     command:
       - "./ops/scripts/publish.sh $(git rev-parse --short HEAD)"
