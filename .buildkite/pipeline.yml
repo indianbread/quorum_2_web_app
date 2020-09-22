@@ -2,19 +2,22 @@ steps:
   
   - label: ":test_tube: Building image for testing"
     command:
-      - docker build -f Dockerfile.Build -t nhan-frameworkless-app:$(git rev-parse --short HEAD) .
+      - docker-compose up
     artifact_paths:
-      - "nhan-frameworkless-web-app/"
+      - "src/nhan-frameworkless-web-app/"
     agents:
       queue: "katherine-lab"
+    plugins:
+      - docker-compose#v3.0.3:
+          run: app
         
-  - wait
-    
-  - label: ":test_tube: Running Tests"
-    command: 
-      - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
-    agents:
-     queue: "katherine-lab"
+#  - wait
+#    
+#  - label: ":test_tube: Running Tests"
+#    command: 
+#      - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
+#    agents:
+#     queue: "katherine-lab"
  
   - wait
 
