@@ -22,9 +22,11 @@ steps:
     
   - label: ":pick: Publish application"
     command: 
-      - "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
+      - "dotnet publish src/kata_frameworkless_web_app -c Release -o /src/publish"
+      - ls
+      - "ls src/kata_frameworkless_web_app"
     artifact_paths:
-      - "/workdir/publish/"
+      - "/src/publish/"
     agents:
       queue: "katherine-lab"
     plugins:
