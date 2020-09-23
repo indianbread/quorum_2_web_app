@@ -18,7 +18,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 # Build runtime image
 FROM base AS runtime
 WORKDIR /app
-COPY /src/kata_frameworkless_web_app/publish ./
+COPY /publish/ ./
 #COPY --from=publish /app/src/kata_frameworkless_web_app/publish ./
 COPY ops/scripts/startup.sh /startup.sh 
 ENTRYPOINT ["/startup.sh"]
