@@ -21,7 +21,8 @@ steps:
   - wait
     
   - label: ":pick: Publish application"
-    command: "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
+    command: 
+      - "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
     plugins:
       - docker#v3.5.0:
           image: "mcr.microsoft.com/dotnet/core/sdk"
