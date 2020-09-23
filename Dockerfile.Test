@@ -29,4 +29,5 @@ RUN sh test_with_dynamodb.sh
 FROM build AS publish
 WORKDIR /app/src/kata_frameworkless_web_app
 RUN dotnet publish -c Release -o publish
+RUN buildkite-agent artifact upload "app/src/kata_frameworkless_web_app/publish"
 
