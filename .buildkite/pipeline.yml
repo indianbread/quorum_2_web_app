@@ -2,12 +2,12 @@ steps:
   
   - label: ":test_tube: Building image for testing"
     artifact_paths:
-      - "src/nhan-frameworkless-web-app/"
+      - "src/**/*"
     agents:
       queue: "katherine-lab"
     plugins:
       - docker-compose#v3.0.3:
-          build: test
+          run: app
           
         
 #  - wait
