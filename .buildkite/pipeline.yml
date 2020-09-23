@@ -25,7 +25,7 @@ steps:
       - "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
     plugins:
       - docker#v3.5.0:
-          image: "mcr.microsoft.com/dotnet/core/sdk"
+          image: "mcr.microsoft.com/dotnet/core/sdk:3.1"
           always-pull: true
     artifact_paths:
       - "src/kata_frameworkless_web_app/publish/*"
