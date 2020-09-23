@@ -1,23 +1,34 @@
 steps:
   
-  - label: ":test_tube: Building image for testing"
-    artifact_paths:
-      - "src/**/*"
-    agents:
-      queue: "katherine-lab"
-    plugins:
-      - docker-compose#v3.0.3:
-          run: app
-          
-        
-#  - wait
-#    
-#  - label: ":test_tube: Running Tests"
-#    command: 
-#      - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
+#  - label: ":test_tube: Building image for testing"
+#    artifact_paths:
+#      - "src/**/*"
 #    agents:
-#     queue: "katherine-lab"
+#      queue: "katherine-lab"
+#    plugins:
+#      - docker-compose#v3.0.3:
+#          run: app
+#          
+#        
+#  - wait
+
+  - label: ":test_tube: Running Tests"
+    command: 
+      - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
+    agents:
+     queue: "katherine-lab"
  
+  - wait
+    
+  - label: ":pick: Publish application"
+  - command: "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
+    plugins:
+      - docker#v3.5.0:
+          image: "microsoft/dotnet:latest"
+          always-pull: true
+  - artifact_paths:
+      - "src/kata_frameworkless_web_app/publish/*"
+          
   - wait
 
   - label: ":docker: Publish and push image to ECR"
