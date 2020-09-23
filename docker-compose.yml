@@ -4,5 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.Test
+    working_dir: /app
     volumes:
       - .:/app

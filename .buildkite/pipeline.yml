@@ -2,7 +2,8 @@ steps:
   
   - label: ":test_tube: Building image for testing"
     command:
-      - ops/scripts/test.sh
+      - ls
+      - test.sh
     artifact_paths:
       - "src/nhan-frameworkless-web-app/"
     agents:
