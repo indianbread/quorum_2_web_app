@@ -1,17 +1,4 @@
 steps:
-  
-#  - label: ":test_tube: Building image for testing"
-#    artifact_paths:
-#      - "src/**/*"
-#    agents:
-#      queue: "katherine-lab"
-#    plugins:
-#      - docker-compose#v3.0.3:
-#          run: app
-#          
-#        
-#  - wait
-
   - label: ":test_tube: Build test image and run tests"
     command: 
       - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
@@ -32,13 +19,10 @@ steps:
           image: "mcr.microsoft.com/dotnet/core/sdk:3.1"
           always-pull: true
 
-          
   - wait
      
   - label: ":docker: Build runtime image and push to ECR"
     command:
-      - ls
-      - ls src/kata_frameworkless_web_app
       - buildkite-agent artifact download "publish/*" .
       - "./ops/scripts/publish.sh $(git rev-parse --short HEAD)"
     #branches: master
