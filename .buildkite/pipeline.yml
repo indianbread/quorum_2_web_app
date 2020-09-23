@@ -23,6 +23,8 @@ steps:
   - label: ":pick: Publish application"
     command: 
       - "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
+    agents:
+      queue: "katherine-lab"
     plugins:
       - docker#v3.5.0:
           image: "mcr.microsoft.com/dotnet/core/sdk:3.1"
