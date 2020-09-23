@@ -43,7 +43,7 @@ steps:
     command:
       - ls
       - ls src
-      - buildkite-agent artifact download publish/ publish/
+      - buildkite-agent artifact download "publish/*"
       - "./ops/scripts/publish.sh $(git rev-parse --short HEAD)"
     #branches: master
     agents:
