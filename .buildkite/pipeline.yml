@@ -7,7 +7,6 @@ steps:
       queue: "katherine-lab"
     plugins:
       - docker-compose#v3.0.3:
-          run: app
         
 #  - wait
 #    
