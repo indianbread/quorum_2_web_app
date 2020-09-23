@@ -26,7 +26,7 @@ steps:
       - ls
       - "ls src/kata_frameworkless_web_app"
     artifact_paths:
-      - "/src/publish/"
+      - "/src/publish/*"
     agents:
       queue: "katherine-lab"
     plugins:
