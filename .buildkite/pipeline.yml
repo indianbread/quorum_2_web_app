@@ -24,7 +24,7 @@ steps:
     command: 
       - "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
     artifact_paths:
-      - "src/kata_frameworkless_web_app/publish/*"
+      - "./src/kata_frameworkless_web_app/publish/"
     agents:
       queue: "katherine-lab"
     plugins:
