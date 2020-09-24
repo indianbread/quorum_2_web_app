@@ -28,13 +28,12 @@ namespace kata_frameworkless_web_app
             Console.WriteLine($"Listening on port {Port}");
         }
 
-        public async Task ProcessRequestAsync()
+        public void ProcessRequest()
         {
-
+            var requests = new List<Task>();
             while (IsListening)
             {
-                var context = await _listener.GetContextAsync();
-                var requests = new List<Task>();
+                var context = _listener.GetContext();
                 requests.Add(Task.Run(() => ProcessResponseAsync(context)));
                 if (requests.Count % 5 == 0)
                 {
@@ -63,22 +62,21 @@ namespace kata_frameworkless_web_app
             IRequest request = new Request(context.Request);
             Console.WriteLine($"{request.HttpMethod} {request.Url}");
             var response = await _requestRouter.RouteRequestAsync(request);
-
             using (var httpListenerResponse = context.Response)
             {
-                await SendResponseAsync(httpListenerResponse, response);
+                SendResponse(httpListenerResponse, response);
             }
         }
 
-        private async Task SendResponseAsync(HttpListenerResponse httpListenerResponse, IResponse response)
+        private void SendResponse(HttpListenerResponse httpListenerResponse, IResponse response)
         {
 
             httpListenerResponse.StatusCode = response.StatusCode;
             httpListenerResponse.RedirectLocation = response.RedirectLocation;
             var buffer = Encoding.UTF8.GetBytes(response.Body);
             httpListenerResponse.ContentLength64 = buffer.Length;
-            await httpListenerResponse.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            await httpListenerResponse.OutputStream.DisposeAsync();
+            httpListenerResponse.OutputStream.Write(buffer, 0, buffer.Length);
+            httpListenerResponse.OutputStream.Dispose();
         }
 
         private const int Port = 8080;
