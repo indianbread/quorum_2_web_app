@@ -7,5 +7,5 @@ FROM base AS runtime
 WORKDIR /app
 COPY /publish/ ./
 COPY ops/scripts/startup.sh ./
-ENTRYPOINT ["/startup.sh"]
+ENTRYPOINT ["/app/startup.sh"]
 EXPOSE 8080
