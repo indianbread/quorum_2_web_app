@@ -23,4 +23,9 @@ WORKDIR /app/src/kata_frameworkless_web_app.tests
 COPY /ops/scripts/test_with_dynamodb.sh ./
 COPY /dynamodb_local/tables/ ./dynamodb_local/tables/
 COPY /dynamodb_local/testusers.json ./dynamodb_local/
+#RUN sh test_with_dynamodb.sh
 CMD [ "sh", "test_with_dynamodb.sh" ]
+
+
+
+

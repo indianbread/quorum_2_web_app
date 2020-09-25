@@ -1,16 +1,31 @@
 steps:
-  - label: ":test_tube: Running Tests"
+  - label: ":test_tube: Build test image and run tests"
     command: 
       - "./ops/scripts/test.sh $(git rev-parse --short HEAD)"
     agents:
      queue: "katherine-lab"
  
   - wait
-      
-  - label: ":docker: Publish and push image to ECR"
+    
+  - label: ":pick: Publish application"
+    command: 
+      - "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
+    artifact_paths:
+      - "publish/*"
+    agents:
+      queue: "katherine-lab"
+    plugins:
+      - docker#v3.5.0:
+          image: "mcr.microsoft.com/dotnet/core/sdk:3.1"
+          always-pull: true
+
+  - wait
+     
+  - label: ":docker: Build runtime image and push to ECR"
     command:
+      - buildkite-agent artifact download "publish/*" .
       - "./ops/scripts/publish.sh $(git rev-parse --short HEAD)"
-    branches: master
+    #branches: master
     agents:
       queue: "katherine-lab"
     plugins:
