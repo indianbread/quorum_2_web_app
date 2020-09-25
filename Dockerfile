@@ -20,6 +20,6 @@ FROM base AS runtime
 WORKDIR /app
 COPY /publish/ ./
 #COPY --from=publish /app/src/kata_frameworkless_web_app/publish ./
-COPY ops/scripts/startup.sh /startup.sh 
+COPY ops/scripts/startup.sh ./
 ENTRYPOINT ["/startup.sh"]
 EXPOSE 8080
