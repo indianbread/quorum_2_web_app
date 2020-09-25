@@ -9,7 +9,7 @@ steps:
     
   - label: ":pick: Publish application"
     command: 
-      - "dotnet publish src/kata_frameworkless_web_app -c Release -o publish"
+      - "dotnet publish src/kata_frameworkless_web_app /p:DebugType=None /p:DebugSymbols=false -c Release -o publish"
     artifact_paths:
       - "publish/*"
     agents:

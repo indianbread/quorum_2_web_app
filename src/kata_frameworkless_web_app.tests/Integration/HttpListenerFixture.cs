@@ -20,7 +20,7 @@ namespace kata_frameworkless_basic_web_application.tests.Integration
             var controllers = SetUpControllers();
             var server = new Server(_userService,controllers);
             server.Start();
-            WebAppThread = new Thread(async () => await server.ProcessRequestAsync());
+            WebAppThread = new Thread(server.ProcessRequest);
             WebAppThread.Start();
         }
 
