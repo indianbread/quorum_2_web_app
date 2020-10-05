@@ -10,7 +10,7 @@ steps:
   - label: ":pick: Publish application"
     command: 
       - "dotnet publish src/kata_frameworkless_web_app /p:DebugType=None /p:DebugSymbols=false -c Release -o publish"
-    branches: master, break-pipeline-2
+    branches: "master break-pipeline-2"
     artifact_paths:
       - "publish/*"
     agents:
@@ -26,7 +26,7 @@ steps:
     command:
       - buildkite-agent artifact download "publish/*" .
       - "./ops/scripts/publish.sh $(git rev-parse --short HEAD)"
-    branches: master, break-pipeline-2
+    branches: "master break-pipeline-2"
     agents:
       queue: "katherine-lab"
     plugins:
@@ -38,7 +38,7 @@ steps:
   - label: ":rocket: Deploy to Jupiter"
     command:
       - "./ops/scripts/deploy.sh $(git rev-parse --short HEAD)"
-    branches: master, break-pipeline-2
+    branches: "master break-pipeline-2"
     agents:
       queue: "europa-preprod-fma"
       
