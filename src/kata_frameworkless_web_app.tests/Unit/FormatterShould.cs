@@ -12,6 +12,8 @@ namespace kata_frameworkless_basic_web_application.tests.Unit
         {
             var currentDatetime = DateTime.Now.ToString("hh:mm tt on dd MMMM yyyy");
             var names = new List<string>() { "Nhan"};
+            //var expectedGreeting = "Hello Nhan - the time on the server is " + currentDatetime;
+            //breaking pipeline:
             var expectedGreeting = "Hello Nhan - the time on the server is " + currentDatetime;
 
             var actual = Formatter.FormatGreeting(names);
