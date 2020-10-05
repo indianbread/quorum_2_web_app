@@ -30,8 +30,7 @@ objects:
             iam.amazonaws.com/role: arn:aws:iam::741922737521:role/k8s/NhanFrameworklessWebApp
         spec:
           containers:
-       #     - name: nhan-frameworkless-app
-            - name : nginx
+            - name: nhan-frameworkless-app
               image: "741922737521.dkr.ecr.ap-southeast-2.amazonaws.com/nhan-frameworkless-app:$(imageTag)"
               ports:
                 - containerPort: 8080
