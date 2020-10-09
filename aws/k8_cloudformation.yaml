@@ -1,0 +1,21 @@
+# secret-manager.yaml
+---
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  KubeApplicationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: NhanFrameworklessWebApp
+      Path: /k8s/
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: 967276157215
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::741922737521:policy/nhan-secretsmanager-role
+        - arn:aws:iam::741922737521:policy/nhan-s3-policy
+        - arn:aws:iam::741922737521:policy/nhan-dynanodb-user-table
